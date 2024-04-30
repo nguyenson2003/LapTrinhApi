@@ -81,7 +81,11 @@ create table tblSubmissions(
 		foreign key references tblAccount(UserName),
 	SubmissionTime datetime not null,
 	LanguageName nvarchar(100) not null
-		foreign key references tblLanguage(LanguageName)
+		foreign key references tblLanguage(LanguageName),
+	TheAnswer varchar(max) not null,
+	Memory varchar(100) not null,
+	TotalTime varchar(100) not null,
+	SubStatus varchar(100) not null
 );
 go 
 create table tblJoinContestDetail(
