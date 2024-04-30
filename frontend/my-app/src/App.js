@@ -1,5 +1,4 @@
-import logo from './logo.svg';
-import Nav from './Nav.js';
+import Nav from './component/Nav.js';
 import './App.css';
 
 function App() {
