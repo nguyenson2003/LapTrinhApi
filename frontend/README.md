@@ -1,4 +1,4 @@
-Cách mở project:
+Cách mở frontend:
 * Bước 1: Cài nodejs: https://nodejs.org/en
 * Bước 2: Mở terminal gõ lệnh mở folder
 ```

@@ -1,24 +1,16 @@
 import Nav from './component/Nav.js';
-import './App.css';
+import ProblemList from './view/problem/ProblemList.js';
 
 function App() {
   return (
     <div className="App">
-      <Nav />
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
+      <div  id="header">
+        <Nav />
+      </div>
+      <div className="content-app" style={{background:'none'}}>
+        <ProblemList/>
+        {/* <h1>test</h1> */}
+      </div>
     </div>
   );
 }

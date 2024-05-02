@@ -4,7 +4,7 @@ from SQLQuery import *
 #tạo chuỗi kết nối
 con_str = (
     "Driver={SQL Server};"
-    "Server=DESKTOP-1CHI5GD\SQLEXPRESS;"
+    "Server=ADMIN-PC\\NQSON;"
     "Database=btl_laptrinhapi;"
     #UID, PWD
     "Trusted_Connection=yes;"
@@ -30,6 +30,7 @@ try:
                 results.append(dict(zip(keys, i)))
             resp = flask.jsonify(results)
             resp.status_code = 200
+            resp.headers.add("Access-Control-Allow-Origin","*")
             return resp
         except Exception as e:
             return flask.jsonify({"lỗi":e})

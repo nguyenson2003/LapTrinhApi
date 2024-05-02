@@ -1,6 +1,7 @@
 import './Nav.css';
+
 export default function Nav() {
-    return <div  id="header">
+    return (
         <ul  className="oj-menu ivu-menu ivu-menu-light ivu-menu-horizontal">
             <div  className="logo"><span>
                 <font style={{ verticalAlign: 'inherit' }}>
@@ -8,14 +9,14 @@ export default function Nav() {
                 </font>
             </span></div>
             <NavItem href="/" text="Trang chủ" fa="fa-home" />
-            <NavItem href="/problem" text="Các vấn đề" fa="fa-list" />
+            <NavItem href="/problems" text="Các vấn đề" fa="fa-list" />
             <NavItem href="/submissions" text="Bài nộp" fa="fa-sliders" />
             <NavItem href="/rank" text="Bảng xếp hạng" fa="fa-ranking-star" />
-            <NavItem href="/contest" text="Cuộc thi" fa="fa-trophy" />
+            <NavItem href="/contests" text="Cuộc thi" fa="fa-trophy" />
 
             <NavLogin user={null} />
         </ul>
-    </div>
+    )
 }
 
 function NavItem({ href, text, fa }) {
