@@ -131,31 +131,20 @@ export default function ProblemList() {
                         <div className="panel-title">
                             <div className="taglist-title">
                                 <font>
-                                    <h3>Tìm kiếm</h3>
+                                    <h3>Tìm kiếm bài tập</h3>
                                 </font>
                             </div>
                         </div>
                     </div>
                     <div className="ivu-card-body">
                         <input type="email" className="form-control" id="nameSearch" placeholder="Tên đề bài" />
-                        <div className=" mt-3">
-
-                            <div className="dropdown btn-group me-3">
-                                <button type="button" className="btn btn-primary">
-                                    Kiểu bài tập
-                                </button>
-                                <button type="button" className="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span class="visually-hidden">Toggle Dropdown</span>
-                                </button>
-                                <form className="dropdown-menu p-4 dropdown-menu-lg-end">
-
-                                </form>
-                            </div>
+                        <div className="mt-2 row">
+                            <label className="form-label col-12">Kiểu bài tập:</label>
                             <div className="dropdown btn-group">
-                                <button type="button" className="btn btn-primary">
-                                    Độ khó
+                                <button type="button" className="btn btn-outline-primary">
+                                    Tất cả
                                 </button>
-                                <button type="button" className="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="visually-hidden">Toggle Dropdown</span>
                                 </button>
                                 <form className="dropdown-menu p-4 dropdown-menu-lg-end">
@@ -163,8 +152,15 @@ export default function ProblemList() {
                                 </form>
                             </div>
                         </div>
-                        <div class="d-grid gap-2 mt-2">
-
+                        <div className="mt-2">
+                            <label className="form-label">Độ khó:</label>
+                            <ul className="">
+                                <li className="col me-1 btn btn-outline-success">Dễ</li>
+                                <li className="col me-1 btn btn-outline-warning">Trung bình</li>
+                                <li className="col me-1 btn btn-outline-danger">Khó</li>
+                            </ul>
+                        </div>
+                        <div class="d-grid gap-2 mt-3">
                             <button className="btn btn-primary btn-submit" type="submit">
                                 Tìm kiếm
                             </button>
