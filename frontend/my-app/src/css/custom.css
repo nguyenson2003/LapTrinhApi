@@ -19,7 +19,9 @@ table {
 .ivu-card-head {
     border-bottom-width: 0;
 }
-
+.ivu-card{
+    font-size: inherit;
+}
 .ivu-table td {
     border-bottom-color: #dddddd;
 }

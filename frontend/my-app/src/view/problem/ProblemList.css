@@ -1,0 +1,9 @@
+.btn-mid:hover{
+    color:white
+}
+.table-hover *{
+    transition: 0.15s ease-in-out;
+}
+.btn-problem:hover{
+    color:#0d6efd
+}

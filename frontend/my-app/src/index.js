@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import 'view-ui-plus/dist/styles/viewuiplus.css';
+import './css/bootstrap.css';
 import './css/custom.css';
 import './index.css';
 import App from './App';
