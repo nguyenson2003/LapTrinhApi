@@ -2,7 +2,9 @@ import "./ProblemList.css";
 import { useState } from 'react';
 
 export default function ProblemList() {
-    const [res,setRes] = useState(null);
+    const [res, setRes] = useState(null);
+    const [curPage, setCurPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(0);
     const requestOptions = {
         method: "GET",
         redirect: "follow"
@@ -14,40 +16,31 @@ export default function ProblemList() {
             setRes(result);
         })
         .catch((error) => {
+            setRes(null);
             console.error(error)
         });
-    // console.log(1);
     return (
         <div className="ivu-row" style={{ marginLeft: '-9px', marginRight: '-9px' }}>
             <div className="ivu-col ivu-col-span-18" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
                 <div className="ivu-card ">
                     <div className="ivu-card-head">
                         <div className="panel-title">
-                                <h2>
-                                    Danh sách vấn đề
-                                </h2>
+                            <h2>
+                                Danh sách vấn đề
+                            </h2>
                         </div>
                     </div>
                     <div className="ivu-card-body">
-                        <PageList />
+                        <PageList curPage={curPage} maxPage={maxPage} setCurPage={setCurPage} />
                         <table cellSpacing="0" cellPadding="0" border="1" className="table table-hover transitions align-middle m-0 mt-2 mb-2" >
                             <thead>
-                                <tr className="table-light">
-                                    <th>#</th>
-                                    <th>Tiêu đề</th>
-                                    <th>Mức độ</th>
-                                    <th>Tổng cộng</th>
-                                    <th>Tỷ lệ AC</th>
-                                </tr>
+                                <HeadRow />
                             </thead>
                             <tbody className="ivu-table-tbody">
-                                {/* <ProblemRow id='1' name='Hello World!' difficult='Trung bình' totalSubmit="8123" percentSubmit="75.31%" />
-                                <ProblemRow /> */}
-                                <RowList result={res}/>
+                                <RowList result={res} curPage={curPage} maxPage={maxPage} setMaxPage={setMaxPage} />
                             </tbody>
                         </table>
-
-                        <PageList />
+                        <PageList curPage={curPage} maxPage={maxPage} setCurPage={setCurPage} />
                     </div>
                 </div>
             </div>
@@ -98,20 +91,34 @@ export default function ProblemList() {
         </div>
     );
 }
-function RowList({result}) {
-    if(result==null)return <NoDataRow/>
+function HeadRow() {
+    return (
+        <tr className="table-light">
+            <th>#</th>
+            <th>Tiêu đề</th>
+            <th>Mức độ</th>
+            <th>Tổng cộng</th>
+            <th>Tỷ lệ AC</th>
+        </tr>
+    );
+}
+function RowList({ result, curPage, maxPage, setMaxPage, numPerPage }) {
+    if (numPerPage == 0 || numPerPage == null) numPerPage = 10;
+    if (result == null) return <NoDataRow />
     const rowList = [];
-    console.log(result);
-    result=JSON.parse(result);
-    result.forEach(element => {
-        rowList.push(<ProblemRow 
+    result = JSON.parse(result);
+    for (let i = (curPage - 1) * numPerPage; i < curPage * numPerPage && i < result.length; i++) {
+        let element = result[i];
+        rowList.push(<ProblemRow
             id={element['ProblemId']}
             name={element['ProblemName']}
             difficult='Trung bình'
             totalSubmit={123}
             percentSubmit='69.96%'
         />);
-    });
+    }
+    let temp = Math.floor((result.length - 1) / numPerPage) + 1;
+    if (temp != maxPage) setMaxPage(temp);
     return rowList;
 }
 function ProblemRow({ id, name, difficult, totalSubmit, percentSubmit }) {
@@ -137,11 +144,12 @@ function ProblemRow({ id, name, difficult, totalSubmit, percentSubmit }) {
         </tr>
     )
 }
-function NoDataRow() {
+function NoDataRow({ text }) {
+    if (text == null) text = "Không có bài tập"
     return (
         <tr>
             <td colSpan='5' className="text-center">
-                Không có bài tập
+                {text}
             </td>
         </tr>
     )
@@ -149,32 +157,45 @@ function NoDataRow() {
 function LoadingRow() {
 
 }
-function PageList() {
+function PageList({ curPage, maxPage, setCurPage }) {
+    const compList = [];
+    for (let i = 1; i <= maxPage; i++) {
+        compList.push(<BtnPage
+            curPage={curPage}
+            setCurPage={setCurPage}
+            numThisPage={i}
+            maxPage={maxPage}
+        />)
+    }
     return (
         <div className="page">
             <ul className="ivu-page p-0 m-0">
-                <li title="Trang trước" className="ivu-page-prev ivu-page-disabled"><a>
-                    <i className="ivu-icon ivu-icon-ios-arrow-left">&lt;</i></a></li>
-                <li title="1" className="ivu-page-item ivu-page-item-active"><a>
-                    <font>1</font>
-                </a></li>
-                <li title="2" className="ivu-page-item"><a>
-                    <font>2</font>
-                </a></li>
-                <li title="3" className="ivu-page-item"><a>
-                    <font>3</font>
-                </a></li>
-                <li title="5 trang tiếp theo" className="ivu-page-item-jump-next"><a><i
-                    className="ivu-icon ivu-icon-ios-arrow-right"></i></a></li>
-                <li title="43" className="ivu-page-item"><a>
-                    <font>43</font>
-                </a></li>
-                <li title="Trang tiếp theo" className="ivu-page-next">
+                <BtnPage curPage={curPage} setCurPage={setCurPage} maxPage={maxPage} numThisPage={curPage - 1} text="&lt;" />
+                {compList}
+                <BtnPage curPage={curPage} setCurPage={setCurPage} maxPage={maxPage} numThisPage={curPage + 1} text="&gt;" />
+                {/* <li title="Trang tiếp theo" className="ivu-page-next">
                     <a>
                         <i className="ivu-icon ivu-icon-ios-arrow-right">&gt;</i>
                     </a>
-                </li>
+                </li> */}
             </ul>
         </div>
+    )
+}
+function BtnPage({ curPage, setCurPage, maxPage, numThisPage, text }) {
+    if (text == null) text = numThisPage;
+    return (
+        <li className="ivu-page-item border-0">
+            <button
+                className={
+                    "btn btn-outline-primary m-0 p-0 w-100 h-100"
+                    + (numThisPage < 1 || numThisPage > maxPage ? " disabled" : "")
+                    + (numThisPage == curPage ? " active" : "")
+                }
+                onClick={() => setCurPage(numThisPage)}
+            >
+                <font>{text}</font>
+            </button>
+        </li>
     )
 }
