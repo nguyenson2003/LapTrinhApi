@@ -71,10 +71,27 @@ insert into tblProblemInContest
 values(N'pbic5',null,N'pb3')
 insert into tblProblemInContest
 values(N'pbic6',null,N'pb2')
+insert into tblProblemInContest
+values(N'pbic7',null,N'pb5')
 go
 insert into tblSubmissions
 values(N'sms1',N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','0.2ms','AC')
+
 insert into tblSubmissions
 values(N'sms2',N'pbic2',N'lvminh','2024-01-02 13:20:00',N'python','','1MB','0.2ms','AC')
 insert into tblSubmissions
 values(N'sms3',N'pbic4',N'lvminh','2024-01-02 13:20:00',N'python','','1MB','0.2ms','AC')
+insert into tblSubmissions
+values(N'sms4',N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','0.2ms','AC')
+insert into tblSubmissions
+values(N'sms5',N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','0.2ms','WA')
+insert into tblSubmissions
+values(N'sms6',N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','0.2ms','WA')
+insert into tblSubmissions
+values(N'sms7',N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','0.2ms','WA')
+insert into tblSubmissions
+values(N'sms8',N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','0.2ms','RTE')
+insert into tblSubmissions
+values(N'sms9',N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','0.2ms','RTE')
+insert into tblSubmissions
+values(N'sms10',N'pbic7',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','0.2ms','AC')

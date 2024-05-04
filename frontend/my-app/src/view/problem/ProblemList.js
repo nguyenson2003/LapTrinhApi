@@ -8,7 +8,7 @@ export default function ProblemList() {
         redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:5000/problem/getall", requestOptions)
+    fetch("http://127.0.0.1:5000/Problems", requestOptions)
         .then((response) => response.text())
         .then((result) => {
             setRes(result);
