@@ -1,14 +1,9 @@
 import flask
 import pyodbc
 from SQLQuery import *
+from config import con_str
 #tạo chuỗi kết nối
-con_str = (
-    "Driver={SQL Server};"
-    "Server=DESKTOP-1CHI5GD\SQLEXPRESS;"
-    "Database=btl_laptrinhapi;"
-    #UID, PWD
-    "Trusted_Connection=yes;"
-)
+
 conn = pyodbc.connect(con_str)
 app = flask.Flask(__name__)
 def executeSqlQuery(sqlQuery,*args):
