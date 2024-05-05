@@ -68,3 +68,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Cách mở frontend:
+* Bước 1: Cài nodejs: https://nodejs.org/en
+* Bước 2: Mở terminal gõ lệnh mở folder
+```
+cd frontend
+cd my-app
+```
+* Bước 3: Chạy web
+```
+npm start
+```
