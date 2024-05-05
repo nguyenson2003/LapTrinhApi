@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./ProblemList.css";
 import { useState } from 'react';
 
@@ -47,44 +48,40 @@ export default function ProblemList() {
             <div className="ivu-col ivu-col-span-6" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
                 <div className="ivu-card ivu-card-bordered">
                     <div className="ivu-card-head">
-                        <div className="panel-title">
-                            <div className="taglist-title">
-                                <font>
-                                    <h3>Tìm kiếm bài tập</h3>
-                                </font>
-                            </div>
-                        </div>
+                        <h3>Tìm kiếm bài tập</h3>
                     </div>
                     <div className="ivu-card-body">
-                        <label className="label-form" htmlFor="nameProblem">Tên đề bài</label>
-                        <input type="problemName" className="form-control " id="nameProblem" placeholder="Ví dụ: Hello World!" />
-                        <div className="mt-2 row">
-                            <label className="form-label col-12">Kiểu bài tập:</label>
-                            <div className="dropdown btn-group">
-                                <button type="button" className="btn btn-outline-primary">
-                                    Tất cả
-                                </button>
-                                <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span className="visually-hidden">Toggle Dropdown</span>
-                                </button>
-                                <form className="dropdown-menu p-4 dropdown-menu-lg-end">
+                        <form>
+                            <label className="label-form" htmlFor="nameProblem">Tên đề bài</label>
+                            <input type="problemName" className="form-control " id="nameProblem" placeholder="Ví dụ: Hello World!" />
+                            <div className="mt-2 row">
+                                <label className="form-label col-12">Kiểu bài tập:</label>
+                                <div className="dropdown btn-group">
+                                    <button type="button" className="btn btn-outline-primary">
+                                        Tất cả
+                                    </button>
+                                    <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span className="visually-hidden">Toggle Dropdown</span>
+                                    </button>
+                                    <form className="dropdown-menu p-4 dropdown-menu-lg-end">
 
-                                </form>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                        <div className="mt-2">
-                            <label className="form-label">Độ khó:</label>
-                            <ul className="p-0">
-                                <li className="col me-1 btn btn-outline-success">Dễ</li>
-                                <li className="col me-1 btn btn-outline-warning btn-mid">Trung bình</li>
-                                <li className="col me-1 btn btn-outline-danger">Khó</li>
-                            </ul>
-                        </div>
-                        <div className="d-grid gap-2 mt-3">
-                            <button className="btn btn-primary btn-submit" type="submit">
-                                Tìm kiếm
-                            </button>
-                        </div>
+                            <div className="mt-2">
+                                <label className="form-label">Độ khó:</label>
+                                <ul className="p-0">
+                                    <BtnDifficult difficult={1} />
+                                    <BtnDifficult difficult={2} />
+                                    <BtnDifficult difficult={3} />
+                                </ul>
+                            </div>
+                            <div className="d-grid gap-2 mt-3">
+                                <button className="btn btn-primary btn-submit" type="submit">
+                                    Tìm kiếm
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -103,7 +100,7 @@ function HeadRow() {
     );
 }
 function RowList({ result, curPage, maxPage, setMaxPage, numPerPage }) {
-    if (numPerPage == 0 || numPerPage == null) numPerPage = 10;
+    if (numPerPage === 0 || numPerPage == null) numPerPage = 10;
     if (result == null) return <NoDataRow />
     const rowList = [];
     result = JSON.parse(result);
@@ -118,21 +115,25 @@ function RowList({ result, curPage, maxPage, setMaxPage, numPerPage }) {
         />);
     }
     let temp = Math.floor((result.length - 1) / numPerPage) + 1;
-    if (temp != maxPage) setMaxPage(temp);
+    if (temp !== maxPage) setMaxPage(temp);
     return rowList;
 }
 function ProblemRow({ id, name, difficult, totalSubmit, percentSubmit }) {
     return (
         <tr>
             <td>
-                <button type="button" className="btn btn-problem p-0">
-                    {id}
-                </button>
+                <Link to={'/problem/' + id}>
+                    <button type="button" className="btn btn-problem p-0">
+                        {id}
+                    </button>
+                </Link>
             </td>
             <td>
-                <button type="button" className="btn btn-problem p-0">
-                    {name}
-                </button>
+                <Link to={'/problem/' + id}>
+                    <button type="button" className="btn btn-problem p-0">
+                        {name}
+                    </button>
+                </Link>
             </td>
             <td>
                 <div className="ivu-tag ivu-tag-checked text-bg-warning rounded bold  text-white">
@@ -190,11 +191,24 @@ function BtnPage({ curPage, setCurPage, maxPage, numThisPage, text }) {
                 className={
                     "btn btn-outline-primary m-0 p-0 w-100 h-100"
                     + (numThisPage < 1 || numThisPage > maxPage ? " disabled" : "")
-                    + (numThisPage == curPage ? " active" : "")
+                    + (numThisPage === curPage ? " active" : "")
                 }
                 onClick={() => setCurPage(numThisPage)}
             >
                 <font>{text}</font>
+            </button>
+        </li>
+    )
+}
+function BtnDifficult({ difficult, curDifficult }) {
+    let className, text;
+    if (difficult == 1) { className = 'btn-outline-success'; text = 'Dễ'; }
+    if (difficult == 2) { className = 'btn-outline-warning btn-mid'; text = 'Trung bình'; }
+    if (difficult == 3) { className = 'btn-outline-danger'; text = 'Khó'; }
+    return (
+        <li className="col d-inline-block me-1">
+            <button type="button" className={"btn " + className}>
+                {text}
             </button>
         </li>
     )

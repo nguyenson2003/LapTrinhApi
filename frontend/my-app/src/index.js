@@ -4,9 +4,9 @@ import 'view-ui-plus/dist/styles/viewuiplus.css';
 import './css/bootstrap.css';
 import './css/custom.css';
 import './index.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

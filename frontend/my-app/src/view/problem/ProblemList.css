@@ -1,6 +1,16 @@
 .btn-mid:hover{
     color:white
 }
+.btn-mid:focus-visible{
+    color:white
+}
+.btn-mid:active{
+    color:white !important
+}
+.btn-mid.active{
+    color:white
+}
+
 .table-hover *{
     transition: 0.15s ease-in-out;
 }

@@ -1,43 +1,46 @@
 import './Nav.css';
+import { Link } from 'react-router-dom';
 
 export default function Nav() {
     return (
-        <ul  className="oj-menu ivu-menu ivu-menu-light ivu-menu-horizontal">
-            <div  className="logo"><span>
+        <ul className="oj-menu ivu-menu ivu-menu-light ivu-menu-horizontal">
+            <div className="logo"><span>
                 <font style={{ verticalAlign: 'inherit' }}>
                     <font style={{ verticalAlign: 'inherit' }}>MSC OJ</font>
                 </font>
             </span></div>
-            <NavItem href="/" text="Trang chủ" fa="fa-home" />
-            <NavItem href="/problems" text="Các vấn đề" fa="fa-list" />
-            <NavItem href="/submissions" text="Bài nộp" fa="fa-sliders" />
-            <NavItem href="/rank" text="Bảng xếp hạng" fa="fa-ranking-star" />
-            <NavItem href="/contests" text="Cuộc thi" fa="fa-trophy" />
+            <NavItem to="/" text="Trang chủ" fa="fa-home" />
+            <NavItem to="/problems" text="Các vấn đề" fa="fa-list" />
+            <NavItem to="/submissions" text="Bài nộp" fa="fa-sliders" />
+            <NavItem to="/rank" text="Bảng xếp hạng" fa="fa-ranking-star" />
+            <NavItem to="/contests" text="Cuộc thi" fa="fa-trophy" />
 
             <NavLogin user={null} />
         </ul>
     )
 }
 
-function NavItem({ href, text, fa }) {
+function NavItem({ to, text, fa }) {
     let path = window.location.pathname;
-    function goToLink(){
-        window.location = href;
+    function goToLink() {
+        window.location = to;
     }
     return (
-        <li  className={"ivu-menu-item " + ((path.startsWith(href) && href!=="/") || path===href ? "ivu-menu-item-active ivu-menu-item-selected" : "")} onClick={goToLink}>
-            <i  className={"fa-solid " + fa}></i>
-            <font style={{ verticalAlign: 'inherit' }}>
-                {text}
-            </font>
-        </li>
+        <Link to={to} className='ivu-menu-item p-0 m-0'>
+            <li className={"ivu-menu-item " + ((path.startsWith(to) && to !== "/") || path === to ? "ivu-menu-item-active ivu-menu-item-selected" : "")} >
+                <i className={"fa-solid " + fa}></i>
+                <font style={{ verticalAlign: 'inherit' }}>
+                    {text}
+                </font>
+            </li>
+        </Link>
     )
 
 }
 function NavLogin({ user }) {
     if (user == null) {
         return (
-            <div  className="btn-menu" >
+            <div className="btn-menu" >
                 <button type="button" className="ivu-btn ivu-btn-ghost ivu-btn-circle">
                     <span>
                         <font style={{ verticalAlign: 'inherit' }}>
@@ -67,7 +70,7 @@ function NavLogin({ user }) {
                         </span>
                     </button>
                 </div>
-                <div class="ivu-select-dropdown" style={{display: 'none'}}>
+                <div class="ivu-select-dropdown" style={{ display: 'none' }}>
                     <ul class="ivu-dropdown-menu">
                         <li class="ivu-dropdown-item">Home</li>
                         <li class="ivu-dropdown-item">Submissions</li>
