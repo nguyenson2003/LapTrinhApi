@@ -81,6 +81,23 @@ from tblSubmissions
 --where tblSubmissions.UserName='lvminh'
 --where tblSubmissions.SubStatus='AC'
 where tblSubmissions.LanguageName='java'
+--order by tblSubmissions.SubmissionTime desc
+order by tblSubmissions.TotalTime
+
+--bảng xếp hạng
+select tblAccount.UserName,tblAccount.FullName, 
+		(select count(ProblemId)  from
+		(select distinct ProblemInContestId from tblSubmissions
+		where tblSubmissions.SubStatus='AC' and tblSubmissions.UserName=tblAccount.UserName)
+		temp1 join tblProblemInContest on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId) as TotalProblemAC,
+
+		isnull((select sum(tblProblem.Point) from (select ProblemId  from
+		(select distinct ProblemInContestId from tblSubmissions
+		where tblSubmissions.SubStatus='AC' and tblSubmissions.UserName=tblAccount.UserName)
+		temp1 join tblProblemInContest on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId) temp1 
+		join tblProblem on temp1.ProblemId=tblProblem.ProblemId),0) as TotalPointProblemAC
+from tblAccount
+order by TotalPointProblemAC desc
 
 
 select *
