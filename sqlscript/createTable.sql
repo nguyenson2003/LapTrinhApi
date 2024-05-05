@@ -84,7 +84,7 @@ create table tblSubmissions(
 		foreign key references tblLanguage(LanguageName),
 	TheAnswer varchar(max) not null,
 	Memory varchar(100) not null,
-	TotalTime varchar(100) not null,
+	TotalTime time not null,
 	SubStatus varchar(100) not null
 );
 go 
