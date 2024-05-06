@@ -1,37 +1,41 @@
 import './Nav.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Nav() {
     return (
-        <ul className="oj-menu ivu-menu ivu-menu-light ivu-menu-horizontal">
-            <div className="logo"><span>
-                <font style={{ verticalAlign: 'inherit' }}>
-                    <font style={{ verticalAlign: 'inherit' }}>MSC OJ</font>
-                </font>
-            </span></div>
-            <NavItem to="/" text="Trang chủ" fa="fa-home" />
-            <NavItem to="/problems" text="Các vấn đề" fa="fa-list" />
-            <NavItem to="/submissions" text="Bài nộp" fa="fa-sliders" />
-            <NavItem to="/rank" text="Bảng xếp hạng" fa="fa-ranking-star" />
-            <NavItem to="/contests" text="Cuộc thi" fa="fa-trophy" />
+        <>
+            <div id="header">
+                <ul className="oj-menu ivu-menu ivu-menu-light ivu-menu-horizontal">
+                    <div className="logo"><span>
 
-            <NavLogin user={null} />
-        </ul>
+                        MSC OJ
+
+                    </span></div>
+                    <NavItem to="/" text="Trang chủ" fa="fa-home" />
+                    <NavItem to="/problems" text="Các vấn đề" fa="fa-list" />
+                    <NavItem to="/submissions" text="Bài nộp" fa="fa-sliders" />
+                    <NavItem to="/rank" text="Bảng xếp hạng" fa="fa-ranking-star" />
+                    <NavItem to="/contests" text="Cuộc thi" fa="fa-trophy" />
+
+                    <NavLogin user={null} />
+
+                </ul>
+            </div>
+            <LoginDialog />
+            <SigninDialog/>
+        </>
     )
 }
 
 function NavItem({ to, text, fa }) {
-    let path = window.location.pathname;
-    function goToLink() {
-        window.location = to;
-    }
+    let location = useLocation();
     return (
         <Link to={to} className='ivu-menu-item p-0 m-0'>
-            <li className={"ivu-menu-item " + ((path.startsWith(to) && to !== "/") || path === to ? "ivu-menu-item-active ivu-menu-item-selected" : "")} >
+            <li className={"ivu-menu-item " + (location.pathname == to ? "ivu-menu-item-active ivu-menu-item-selected" : "")} >
                 <i className={"fa-solid " + fa}></i>
-                <font style={{ verticalAlign: 'inherit' }}>
-                    {text}
-                </font>
+
+                {text}
+
             </li>
         </Link>
     )
@@ -41,21 +45,11 @@ function NavLogin({ user }) {
     if (user == null) {
         return (
             <div className="btn-menu" >
-                <button type="button" className="ivu-btn ivu-btn-ghost ivu-btn-circle">
-                    <span>
-                        <font style={{ verticalAlign: 'inherit' }}>
-                            <font style={{ verticalAlign: 'inherit' }}>Đăng nhập
-                            </font>
-                        </font>
-                    </span>
+                <button type="button" className="ivu-btn ivu-btn-ghost ivu-btn-circle" data-bs-toggle="modal" data-bs-target="#loginDialog">
+                    Đăng nhập
                 </button>
-                <button type="button" className="ivu-btn ivu-btn-ghost ivu-btn-circle" style={{ marginLeft: '5px' }}>
-                    <span>
-                        <font style={{ verticalAlign: 'inherit' }}>
-                            <font style={{ verticalAlign: 'inherit' }}>Đăng ký
-                            </font>
-                        </font>
-                    </span>
+                <button type="button" className="ivu-btn ivu-btn-ghost ivu-btn-circle ms-1" data-bs-toggle="modal" data-bs-target="#signinDialog">
+                    Đăng ký
                 </button>
             </div>
         )
@@ -81,4 +75,72 @@ function NavLogin({ user }) {
             </div>
         )
     }
+}
+function LoginDialog() {
+    return (
+        <div class="modal fade" id="loginDialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Đăng nhập</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Tên tài khoản</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" />
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+                                <label class="form-check-label" for="exampleCheck1">Ghi nhớ đăng nhập</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-primary">Đăng nhập</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    )
+}
+function SigninDialog() {
+    return (
+        <div class="modal fade" id="signinDialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Đăng ký</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Tên tài khoản</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Nhập lại mật khẩu</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-primary">Đăng ký</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    )
 }
