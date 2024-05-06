@@ -1,6 +1,6 @@
 import Nav from './component/Nav.js';
-import ProblemList from './view/ProblemList.js';
-import Problem from './view/Problem.js';
+import ProblemList from './view/Problem/ProblemList.js';
+import Problem from './view/Problem/Problem.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 function App() {
   return (
