@@ -86,7 +86,7 @@ export default function Problem() {
                     <div className="ivu-card-body">
                         <div style={{ height: "300px" }}>
                             <Editor
-                                defaultLanguage="javascript"
+                                defaultLanguage="cpp"
                                 defaultValue={'//some code here'}
                                 theme="vs-dark"
                                 onMount={handleEditorDidMount}
