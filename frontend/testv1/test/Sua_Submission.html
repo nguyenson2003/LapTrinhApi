@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Them cuoc thi</title>
+    <title>Chinh sua Submission</title>
     <link rel="stylesheet" href="./css/bootstrap.css" />
     <script src="./js/jquery.min.js"></script>
     <script src="./js/bootstrap.bundle.js"></script>
@@ -20,7 +20,7 @@
         </button>
     </div>
     <a class="navbar-brand flex-grow-1" href="#">
-        Quản lý cuộc thi
+        Quản lý Submission
     </a>
     <div class="me-3">
         
@@ -84,7 +84,7 @@
                     <!-- Begin Main -->
                     <main>
                         <div class="shadow p-3">
-                            <h1>Thêm Cuộc Thi</h1>
+                            <h1>Chỉnh sửa Submission</h1>
                         </div>
                         <div class="m-3">
                             <div class="mx-2">
@@ -92,11 +92,11 @@
 </ul></div>
     <form>
         <div style="margin-top:7px" class="form-group row">
-            <label class="col-sm-3 col-form-label" for="TenMon">Tên cuộc thi</label>
+            <label class="col-sm-3 col-form-label" for="TenMon">Tên Submission</label>
             <div class="col-sm-9">
                 <div class="form-floating">
                     <input class="form-control" placeholder="Tên cuộc thi" id="1" required pattern="[A-za-z]+" type="text" data-val="true" data-val-required="The Tencuocthi field is required." name="" value="" />
-                    <label for="1">Tên cuộc thi </label>
+                    <label for="1">Tên Submission </label>
                     <div class="invalid-feedback">Không hợp lệ!</div>
                 </div>
             </div>
@@ -104,7 +104,51 @@
         </div>
 
         <div style="margin-top:7px" class="form-group row">
-            <label class="col-sm-3 col-form-label" >Thời gian bắt đầu</label>
+            <label class="col-sm-3 col-form-label" for="TenMon">Mã Submission</label>
+            <div class="col-sm-9">
+                <div class="form-floating">
+                    <input class="form-control" placeholder="Tên cuộc thi" id="1" required pattern="[A-za-z]+" type="text" data-val="true" data-val-required="The Tencuocthi field is required." name="" value="" />
+                    <label for="1">Mã Submission </label>
+                    <div class="invalid-feedback">Không hợp lệ!</div>
+                </div>
+            </div>
+            <span class="text-danger field-validation-valid" data-valmsg-for="TenMon" data-valmsg-replace="true"></span>
+        </div>
+
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" for="TenMon">Tài Khoản Làm</label>
+            <div class="col-sm-9">
+                <div class="form-floating" >
+                    <input class="form-control" placeholder="" id="1" required pattern="[A-za-z]+" type="text" data-val="true" data-val-required="" name="" value="" />
+                    <label for="1">Tài Khoản </label>
+                    <div class="invalid-feedback">Không hợp lệ!</div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" >Ngôn ngữ làm bài</label>
+            <div class="col-sm-9">
+                <div class="form-floating">
+                    <!-- <input type="number" class="form-control" placeholder="Hệ số môn" id="2" required pattern="[0-9]+" data-val="true" data-val-required="The HeSoMon field is required." name="HeSoMon" value="" />
+                    <label for="2">Hệ số môn</label>
+                    <div class="invalid-feedback">Không hợp lệ!</div> -->
+                    <select name="lang" id="lang-select">
+                        <option value="">--ngôn ngữ làm bài--</option>
+                        <option value="csharp">C#</option>
+                        <option value="cpp">C++</option>
+                        <option value="c">C</option>
+                        <option value="python">PyThon</option>
+                        <option value="java">Java</option>
+                    </select>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" >Thời gian nộp</label>
             <div class="col-sm-9">
                 <div class="form-floating">
                     <!-- <input type="number" class="form-control" placeholder="Hệ số môn" id="2" required pattern="[0-9]+" data-val="true" data-val-required="The HeSoMon field is required." name="HeSoMon" value="" />
@@ -117,33 +161,7 @@
         </div>
 
         <div style="margin-top:7px" class="form-group row">
-            <label class="col-sm-3 col-form-label" >Thời gian kết thúc</label>
-            <div class="col-sm-9">
-                <div class="form-floating">
-                    <!-- <input type="number" class="form-control" placeholder="Hệ số môn" id="2" required pattern="[0-9]+" data-val="true" data-val-required="The HeSoMon field is required." name="HeSoMon" value="" />
-                    <label for="2">Hệ số môn</label>
-                    <div class="invalid-feedback">Không hợp lệ!</div> -->
-                    <input type="datetime-local" class="form-control">
-                    
-                </div>
-            </div>
-        </div>
-
-        <div style="margin-top:7px" class="form-group row">
-            <label class="col-sm-3 col-form-label" >Có công khai không</label>
-            <div class="col-sm-9">
-                <div class="form-floating">
-                    <!-- <input type="number" class="form-control" placeholder="Hệ số môn" id="2" required pattern="[0-9]+" data-val="true" data-val-required="The HeSoMon field is required." name="HeSoMon" value="" />
-                    <label for="2">Hệ số môn</label>
-                    <div class="invalid-feedback">Không hợp lệ!</div> -->
-                  <td> Có &ensp;<input type="radio" name="public" id=""></td> &nbsp;&nbsp;&nbsp;&nbsp; Không &ensp;<input type="radio" name="public" id="">
-                    
-                </div>
-            </div>
-        </div>
-
-        <div style="margin-top:7px" class="form-group row">
-            <label class="col-sm-3 col-form-label" >Mô tả</label>
+            <label class="col-sm-3 col-form-label" >Bài làm</label>
             <div class="col-sm-9">
                 <div class="form-floating">
                     <!-- <input type="number" class="form-control" placeholder="Hệ số môn" id="2" required pattern="[0-9]+" data-val="true" data-val-required="The HeSoMon field is required." name="HeSoMon" value="" />
@@ -154,9 +172,45 @@
                 </div>
             </div>
         </div>
+
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" >Tổng thời gian</label>
+            <div class="col-sm-9">
+                <div class="form-floating">
+                    <!-- <input type="number" class="form-control" placeholder="Hệ số môn" id="2" required pattern="[0-9]+" data-val="true" data-val-required="The HeSoMon field is required." name="HeSoMon" value="" />
+                    <label for="2">Hệ số môn</label>
+                    <div class="invalid-feedback">Không hợp lệ!</div> -->
+                    <input type="time" class="form-control">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" for="TenMon">memory</label>
+            <div class="col-sm-9">
+                <div class="form-floating" >
+                    <input class="form-control" placeholder="" id="1" required pattern="[A-za-z]+" type="text" data-val="true" data-val-required="" name="" value="" />
+                    
+                    <div class="invalid-feedback">Không hợp lệ!</div>
+                </div>
+            </div>
+        </div>
+          
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" for="TenMon">Trạng thái</label>
+            <div class="col-sm-9">
+                <div class="form-floating" >
+                    <input class="form-control" placeholder="" id="1" required pattern="[A-za-z]+" type="text" data-val="true" data-val-required="" name="" value="" />
+                    
+                    <div class="invalid-feedback">Không hợp lệ!</div>
+                </div>
+            </div>
+        </div>
         <div style="margin-top:10px" class="form-group row">
             <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Thêm cuộc thi</button>
+                <button type="submit" class="btn btn-primary">Sửa Submission</button>
+                <button style="margin-left: 20px;" type="submit" class="btn btn-primary">Xoá  Submission</button>
             </div>
         </div>
     <input name="__RequestVerificationToken" type="hidden" value="CfDJ8OwYmjO3DcNFnsGJrYbgJts2sENw7ekUOV-1mmDy-uyXF3-Va1MX3Pukf0AUOS0KunHKqGIrvQiZhr_NEoO3QF6qi-ziHcPr-TWwjsZRCJM4aVIVTuiizNgzh56DMyqCU-Yzu0pxjQUg--kpc5niBrw7-ww5rkg9NjJ4vzwXA6FbNEU8nVgM5x6fgnfpfmTGCg" /></form>
