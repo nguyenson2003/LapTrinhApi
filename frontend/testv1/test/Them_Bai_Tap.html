@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Them Bai Tap</title>
+    <link rel="stylesheet" href="./css/bootstrap.css" />
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.bundle.js"></script>
+</head>
+<body>
+    <main style="height:100vh;display:flex; flex-direction:column;">
+        <nav class="navbar justify-content-start navbar-dark bg-dark">
+    <div class="d-inline">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-controls="collapseWidthExample" aria-expanded="false" >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+    <a class="navbar-brand flex-grow-1" href="#">
+        Quản lý Bài Tập
+    </a>
+    <div class="me-3">
+        
+
+<ul class="navbar-nav flex-row">
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-light" title="Manage" href="/Identity/Account/Manage">Hello Admin!</a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link text-white">&nbsp;-&nbsp;</a>
+        </li>
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" action="/Identity/Account/Logout?returnUrl=%2F" method="post">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-light">Đăng xuất</button>
+            <input name="__RequestVerificationToken" type="hidden" value="CfDJ8OwYmjO3DcNFnsGJrYbgJts2sENw7ekUOV-1mmDy-uyXF3-Va1MX3Pukf0AUOS0KunHKqGIrvQiZhr_NEoO3QF6qi-ziHcPr-TWwjsZRCJM4aVIVTuiizNgzh56DMyqCU-Yzu0pxjQUg--kpc5niBrw7-ww5rkg9NjJ4vzwXA6FbNEU8nVgM5x6fgnfpfmTGCg" /></form>
+        </li>
+</ul>
+
+    </div>
+</nav>
+        <main style="display:flex;flex-grow:1;height:100%;overflow: clip;">
+            <!-- Begin nav -->
+            
+<div class=" collapse collapse-horizontal" id="collapseWidthExample">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;height:100%;">
+        <ul class="nav nav-pills flex-column mb-auto">
+                <li class="btn btn-dark">
+                    <a class="nav-link text-white" aria-current="page" href="/">
+                        Home
+                    </a>
+        </ul>
+    </div>
+</div>
+
+            <!-- End nav -->
+
+            <div id="layoutContent" style="flex-grow:1;overflow-y: auto;">
+                <!-- Begin Right content -->
+                <div id="layoutSidenav_content">
+                    <!-- Begin Main -->
+                    <main>
+                        <div class="shadow p-3">
+                            <h1>Thêm Bài Tập</h1>
+                        </div>
+                        <div class="m-3">
+                            <div class="mx-2">
+    <div class="text-danger validation-summary-valid" data-valmsg-summary="true"><ul><li style="display:none"></li>
+</ul></div>
+    <form>
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" for="TenMon">Tên bài Tập</label>
+            <div class="col-sm-9">
+                <div class="form-floating" >
+                    <input class="form-control" placeholder="" id="1" required pattern="[A-za-z]+" type="text" data-val="true" data-val-required="" name="" value="" />
+                    <label for="1">Tên Bài Tập </label>
+                    <div class="invalid-feedback">Không hợp lệ!</div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" >Mã bài tập</label>
+            <div class="col-sm-9">
+                <div class="form-floating">
+                  
+                        <input class="form-control" placeholder="" id="1" required pattern="[A-za-z]+" type="text" data-val="true" data-val-required="" name="" value="" />
+                        <label for="1">Mã bài tập</label>
+                        <div class="invalid-feedback">Không hợp lệ!</div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" >Loại bài tập</label>
+            <div class="col-sm-9">
+                <div class="form-floating">
+                    <select class="form-control" name="lang" id="lang-select">
+                        <option value="admin">Dễ</option>
+                        <option value="Nv">Vừa</option>
+                        <option value="Nguoi">Khó</option>
+                        
+                    </select>
+                </div>
+            </div>
+        </div>
+       
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" >Điểm </label>
+            <div class="col-sm-9">
+                <div class="form-floating">
+                    <!-- <input type="number" class="form-control" placeholder="Hệ số môn" id="2" required pattern="[0-9]+" data-val="true" data-val-required="The HeSoMon field is required." name="HeSoMon" value="" />
+                    <label for="2">Hệ số môn</label>
+                    <div class="invalid-feedback">Không hợp lệ!</div> -->
+                    <input class="form-control" type="number" value="1" step="1">
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top:7px" class="form-group row">
+            <label class="col-sm-3 col-form-label" >Mô tả</label>
+            <div class="col-sm-9">
+                <div class="form-floating">
+                    <!-- <input type="number" class="form-control" placeholder="Hệ số môn" id="2" required pattern="[0-9]+" data-val="true" data-val-required="The HeSoMon field is required." name="HeSoMon" value="" />
+                    <label for="2">Hệ số môn</label>
+                    <div class="invalid-feedback">Không hợp lệ!</div> -->
+                    <textarea  class="form-control" rows="5" cols="100"> </textarea>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div style="margin-top:10px" class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">Thêm Bài Tập</button>
+            </div>
+        </div>
+    <input name="__RequestVerificationToken" type="hidden" value="CfDJ8OwYmjO3DcNFnsGJrYbgJts2sENw7ekUOV-1mmDy-uyXF3-Va1MX3Pukf0AUOS0KunHKqGIrvQiZhr_NEoO3QF6qi-ziHcPr-TWwjsZRCJM4aVIVTuiizNgzh56DMyqCU-Yzu0pxjQUg--kpc5niBrw7-ww5rkg9NjJ4vzwXA6FbNEU8nVgM5x6fgnfpfmTGCg" /></form>
+</div>
+<script>
+    const form = document.querySelector("form");
+    form.addEventListener('submit', e => {
+        if (!form.checkValidity()) {
+            e.preventDefault()
+        }
+        form.classList.add('was-validated')
+    })
+</script>
+
+                        </div>
+                        
+                    </main>
+                    <!-- End Main -->
+                </div>
+                <!-- End Right content -->
+            </div>
+        </main>
+    </main>
+</body>
+</html>
