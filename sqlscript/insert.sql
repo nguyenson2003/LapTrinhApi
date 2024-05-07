@@ -27,11 +27,11 @@ insert into tblPermission
 values(N'pms3',N'User',N'Chỉ làm bài và thi')
 go
 insert into tblAccount
-values(N'lvminh',N'123',N'pms3',N'Le van minh',1)
+values(N'lvminh',N'123',N'pms3',N'Le van minh',1,'2024-01-01')
 insert into tblAccount
-values(N'lmhung',N'123',N'pms3',N'Ly manh hung',1)
+values(N'lmhung',N'123',N'pms3',N'Ly manh hung',1,'2024-01-01')
 insert into tblAccount
-values(N'nqson',N'123',N'pms3',N'Nguyen quynh son',1)
+values(N'nqson',N'123',N'pms3',N'Nguyen quynh son',1,'2024-01-01')
 go
 insert into tblProblemType
 values(N'pbt1',N'Cơ bản')

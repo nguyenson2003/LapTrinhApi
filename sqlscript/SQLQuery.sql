@@ -197,7 +197,9 @@ select N'cơ bản' as temp
 --sửa bt
 update tblProblem 
 set Decribe='a',
+	isActive=1,
 	Point=2,
-	IsDelete
-
+	ProblemName='b'
+where tblProblem.ProblemId like '%pb1%'
+select * from tblProblem
 --xóa bt
