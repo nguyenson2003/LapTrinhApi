@@ -1,11 +1,9 @@
 import { Link, useSearchParams } from "react-router-dom";
-import "./ProblemList.css";
 import { useState, useEffect } from 'react';
 
-export default function ProblemList() {
+export default function SubmissionList() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [problemData, setProblemData] = useState(null);
-    const [tagData, setTagData] = useState([]);
+    const [res, setRes] = useState(null);
     const [curPage, setCurPage] = useState(1);
     const [maxPage, setMaxPage] = useState(0);
     const [filterTagSearch, setFilterTagSearch] = useState('');
@@ -30,74 +28,60 @@ export default function ProblemList() {
         if (difficult !== 0) param['difficult'] = difficult
         setSearchParams(param);
     }
-    useState(() => {
+    useEffect(() => {
         if (searchParams.has('nameProblem')) {
             setFilterName(searchParams.get('nameProblem'))
+            // searchParams.delete('nameProblem');
         };
         if (searchParams.has('tag')) {
             let tag = (searchParams.get('tag'))
-            tagData.forEach(e => { if (e.id == tag.id) setFilterTag(e) })
+            tagDemo.forEach(e => { if (e.id == tag.id) setFilterTag(e) })
+            // searchParams.delete('tag');
         };
         if (searchParams.has('difficult')) {
             setFilterDifficult(searchParams.get('difficult'))
+            // searchParams.delete('difficult');
         };
     }, [searchParams])
     useEffect(() => {
-        setProblemData(null);
         setTimeout(() => {
             const requestOptions = {
                 method: "GET",
                 redirect: "follow"
             };
-            var url = new URL("http://127.0.0.1:5000/problems");
-            if (filterName != null && filterName !== '') url.searchParams.set('name', filterName);
-            if (filterTag != null) url.searchParams.set('type', filterTag.id);
-            if (filterDifficult != null && filterDifficult !== 0) url.searchParams.set('dif', filterDifficult);
-            fetch(url, requestOptions)
+            fetch("http://127.0.0.1:5000/submissions", requestOptions)
                 .then((response) => response.text())
                 .then((result) => {
-                    let data = JSON.parse(result);
-                    setProblemData(data);
-                    if (problemData == null) return;
-                    let temp = Math.floor((data.length - 1) / numPerPage) + 1;
-                    if (temp !== maxPage) setMaxPage(temp);
+                    let data = JSON.parse(result)
+                    console.log(data)
+                    setRes(result);
+
                 })
                 .catch((error) => {
-                    setProblemData('[]');
+                    setRes('[]');
                     console.error(error)
                 })
         }, 1000)
     }, [searchParams]);
     useEffect(() => {
-        setTimeout(() => {
-            setTagData(tagDemo);
-            //         const requestOptions = {
-            //             method: "GET",
-            //             redirect: "follow"
-            //         };
-            //         var url = new URL("http://127.0.0.1:5000/typeprob");
-            //         fetch(url, requestOptions)
-            //             .then((response) => response.text())
-            //             .then((result) => {
-            //                 let temp = JSON.parse(result);
-            //                 setTagData(temp);
-            //             })
-            //             .catch((error) => {
-            //                 setTagData('[]');
-            //                 console.error(error)
-            //             })
-        }, 1000)
-    }, []);
+        if (res == null) return;
+        let data = JSON.parse(res);
+        let temp = Math.floor((data.length - 1) / numPerPage) + 1;
+        if (temp !== maxPage) setMaxPage(temp);
+    }, [res])
     return (
-        <div className="ivu-row">
-            {/* <LoadParam setFilterName={setFilterName} tags={tagData} setFilterTag={setFilterTag} setFilterDifficult={setFilterDifficult} searchParams={searchParams} /> */}
-            <div className="ivu-col ivu-col-span-18 pe-3">
+        <div className="ivu-row" style={{ marginLeft: '-9px', marginRight: '-9px' }}>
+            {/* <LoadParam setFilterName={setFilterName} tags={tagDemo} setFilterTag={setFilterTag} setFilterDifficult={setFilterDifficult} searchParams={searchParams} /> */}
+            <div className="ivu-col ivu-col-span-24" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
                 <div className="ivu-card ">
                     <div className="ivu-card-head">
-                        <div className="panel-title">
+                        <div className="panel-title d-flex justify-content-between align-items-center">
                             <h2>
-                                Danh sách vấn đề
+                                Danh sách bài nộp
                             </h2>
+                            <div className="btn btn-primary">
+                                Lọc kết quả
+                            </div>
                         </div>
                     </div>
                     <div className="ivu-card-body">
@@ -107,22 +91,20 @@ export default function ProblemList() {
                                 <HeadRow />
                             </thead>
                             <tbody className="ivu-table-tbody">
-                                <RowList data={problemData} numPerPage={numPerPage} curPage={curPage} maxPage={maxPage} setMaxPage={setMaxPage} />
+                                <RowList result={res} numPerPage={numPerPage} curPage={curPage} maxPage={maxPage} setMaxPage={setMaxPage} />
                             </tbody>
                         </table>
                         <PageList curPage={curPage} maxPage={maxPage} setCurPage={setCurPage} />
                     </div>
                 </div>
             </div>
-            <div className="ivu-col ivu-col-span-6 ">
+            {/* <div className="ivu-col ivu-col-span-6" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
                 <div className="ivu-card ivu-card-bordered">
                     <div className="ivu-card-head">
                         <h3>Tìm kiếm bài tập</h3>
                     </div>
                     <div className="ivu-card-body">
                         <form onSubmit={filterSubmitHandle}>
-                            <label className="form-label" htmlFor="nameProblem">Tên đề bài</label>
-                            <input onChange={(e) => setFilterName(e.target.value)} type="text" className="form-control " id="nameProblem" name="nameProblem" placeholder="Ví dụ: Hello World!" value={filterName} />
                             <div className="mt-2 row">
                                 <input type="hidden" value={filterTag === null ? 0 : filterTag.id} name="tag" />
                                 <label className="form-label col-12">Kiểu bài tập:</label>
@@ -139,19 +121,10 @@ export default function ProblemList() {
                                             <button type="button" onClick={() => setFilterTag(null)} className="btn p-0 m-0 link-primary text-decoration-underline">tất cả</button>
                                         </div>
                                         <div className="d-flex flex-wrap">
-                                            <TagList tags={tagData} filterTagSearch={filterTagSearch} setFilterTag={setFilterTag} />
+                                            <TagList tags={tagDemo} filterTagSearch={filterTagSearch} setFilterTag={setFilterTag} />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="mt-2">
-                                <label className="form-label">Độ khó:</label>
-                                <ul className="p-0">
-                                    <input type="hidden" name="difficult" value={filterDifficult} />
-                                    <DifficultButton difficult={1} curDifficult={filterDifficult} setFilterDifficult={setFilterDifficult} />
-                                    <DifficultButton difficult={2} curDifficult={filterDifficult} setFilterDifficult={setFilterDifficult} />
-                                    <DifficultButton difficult={3} curDifficult={filterDifficult} setFilterDifficult={setFilterDifficult} />
-                                </ul>
                             </div>
                             <div className="d-grid gap-2 mt-3">
                                 <button className="btn btn-primary btn-submit" type="submit">
@@ -161,65 +134,66 @@ export default function ProblemList() {
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
 function HeadRow() {
     return (
-        <tr className="table-light table-row">
-            <th className="col-1">#</th>
-            <th className="col-4">Tiêu đề</th>
-            <th className="col-2">Mức độ</th>
-            <th className="col-2">Số bài nộp</th>
-            <th className="col-2">Tỷ lệ AC</th>
+        <tr className="table-light table-row text-center">
+            <th className="col-2">Tên bài tập</th>
+            <th className="col-1">Trạng thái</th>
+            <th className="col-1">Ngày nộp</th>
+            <th className="col-1">Ngôn ngữ</th>
+            <th className="col-2">Thời gian, bộ nhớ</th>
+            <th className="col-1">Điểm bài nộp</th>
+            <th className="col-1">Người nộp</th>
         </tr>
     );
 }
-function RowList({ data, curPage, maxPage, setMaxPage, numPerPage }) {
+function RowList({ result, curPage, maxPage, setMaxPage, numPerPage }) {
     if (numPerPage === 0 || numPerPage == null) numPerPage = 10;
     const rowList = [];
-    if (data == null) {
+    if (result == null) {
         for (let i = 0; i < numPerPage; i++)
             rowList.push(<LoadingRow />)
     } else {
-        for (let i = (curPage - 1) * numPerPage; i < curPage * numPerPage && i < data.length; i++) {
-            let element = data[i];
+        result = JSON.parse(result);
+        for (let i = (curPage - 1) * numPerPage; i < curPage * numPerPage && i < result.length; i++) {
+            let element = result[i];
+
             rowList.push(<ProblemRow
                 key={element['ProblemId']}
                 id={element['ProblemId']}
                 name={element['ProblemName']}
-                difficult={element['Point']}
-                totalSubmit={element['TotalSubmit']}
-                percentSubmit={element['RateAC']}
+                status={element['SubStatus']}
+                dateSubmit={element['SubmissionTime']}
+                lang={element['LanguageName']}
+                timeAndMemory={element['TotalTime'] + " - " + element['Memory']}
+                point={element['Point']}
+                username={element['UserName']}
             />);
         }
     }
     if (rowList.length === 0) rowList.push(<NoDataRow />)
     return rowList;
 }
-function ProblemRow({ id, name, difficult, totalSubmit, percentSubmit }) {
+function ProblemRow({ id, name, status, dateSubmit, lang, timeAndMemory, point, username }) {
     return (
         <tr>
-            <td>
-                <Link to={'/problem/' + id}>
-                    <button type="button" className="btn btn-problem p-0">
-                        {id}
-                    </button>
-                </Link>
-            </td>
-            <td>
+            <td >
                 <Link to={'/problem/' + id}>
                     <button type="button" className="btn btn-problem p-0">
                         {name}
                     </button>
                 </Link>
             </td>
-            <td>
-                <DifficultBadge difficult={difficult} />
-            </td>
-            <td>{totalSubmit}</td>
-            <td>{percentSubmit}</td>
+            <td className="text-center"><StatusBadge status={status}/></td>
+            <td className="text-center">{dateSubmit}</td>
+            <td className="text-center">{lang}</td>
+            <td className="text-center">{timeAndMemory}</td>
+            <td className="text-center">{point}</td>
+            <td className="text-center">{username}</td>
         </tr>
     )
 }
@@ -236,34 +210,25 @@ function NoDataRow({ text }) {
 function LoadingRow() {
     return (
         <tr>
-            <td>
-                <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class="placeholder col-6"></span>
-                </p>
-
-            </td>
-            <td>
-                <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class={"placeholder col-" + parseInt(Math.random() * 6 + 7)}></span>
-                </p>
-            </td>
-            <td>
-                <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class={"placeholder col-" + parseInt(Math.random() * 6 + 1)}></span>
-                </p>
-
-            </td>
-            <td>
-                <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class="placeholder col-3"></span>
-                </p>
-            </td>
-            <td>
-                <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class="placeholder col-3"></span>
-                </p>
-            </td>
+            <td className="placeholder-wave placeholder-glow"><span className={"placeholder col-" + parseInt(Math.random() * 5 + 8)}></span></td>
+            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
+            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-12"></span></td>
+            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
+            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
+            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-5"></span></td>
+            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-10"></span></td>
         </tr>
+    )
+}
+function StatusBadge({ status }) {
+    let className;
+    if (status == 'AC') className = 'text-bg-success'
+    else if (status == 'WA') className = 'text-bg-danger'
+    else className = 'text-bg-warning'
+    return (
+        <div className={"ivu-tag ivu-tag-checked "+className+" rounded fw-bold text-white"}>
+            {status}
+        </div>
     )
 }
 function PageList({ curPage, maxPage, setCurPage }) {
@@ -309,24 +274,6 @@ function PageButton({ curPage, setCurPage, maxPage, numThisPage, text }) {
         </li>
     )
 }
-function DifficultButton({ difficult, curDifficult, setFilterDifficult }) {
-    let className, text;
-    if (difficult == 1) { className = ' btn-outline-success'; text = 'Dễ'; }
-    if (difficult == 2) { className = ' btn-outline-warning btn-mid'; text = 'Trung bình'; }
-    if (difficult == 3) { className = ' btn-outline-danger'; text = 'Khó'; }
-    if (difficult == curDifficult) className += ' active';
-    function setDiff() {
-        if (curDifficult == difficult) setFilterDifficult(0);
-        else setFilterDifficult(difficult)
-    }
-    return (
-        <li className="col d-inline-block me-1">
-            <button type="button" className={"btn" + className} onClick={setDiff}>
-                {text}
-            </button>
-        </li>
-    )
-}
 function TagList({ tags, filterTagSearch, setFilterTag }) {
     const item = [];
     tags.forEach((tag) => {
@@ -345,20 +292,4 @@ function TagButton({ tag, setFilterTag }) {
             {tag.name}
         </button>
     )
-}
-function DifficultBadge({ difficult }) {
-    let component;
-    if (difficult == 1)
-        component = <div className="ivu-tag ivu-tag-checked text-bg-success rounded fw-bold text-white">
-            Dễ
-        </div>
-    if (difficult == 2)
-        component = <div className="ivu-tag ivu-tag-checked text-bg-warning rounded fw-bold text-white">
-            Trung bình
-        </div>
-    if (difficult == 3)
-        component = <div className="ivu-tag ivu-tag-checked text-bg-danger rounded fw-bold text-white">
-            Khó
-        </div>
-    return component
 }

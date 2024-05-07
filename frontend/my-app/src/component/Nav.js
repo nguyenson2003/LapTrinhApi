@@ -5,12 +5,10 @@ export default function Nav() {
     return (
         <>
             <div id="header">
-                <ul className="oj-menu ivu-menu ivu-menu-light ivu-menu-horizontal">
-                    <div className="logo"><span>
-
+                <div className="oj-menu ivu-menu ivu-menu-light ivu-menu-horizontal d-flex flex-wrap h-auto">
+                    <div className="logo">
                         MSC OJ
-
-                    </span></div>
+                    </div>
                     <NavItem to="/" text="Trang chủ" fa="fa-home" />
                     <NavItem to="/problems" text="Các vấn đề" fa="fa-list" />
                     <NavItem to="/submissions" text="Bài nộp" fa="fa-sliders" />
@@ -19,10 +17,10 @@ export default function Nav() {
 
                     <NavLogin user={null} />
 
-                </ul>
+                </div>
             </div>
             <LoginDialog />
-            <SigninDialog/>
+            <SigninDialog />
         </>
     )
 }
@@ -30,13 +28,9 @@ export default function Nav() {
 function NavItem({ to, text, fa }) {
     let location = useLocation();
     return (
-        <Link to={to} className='ivu-menu-item p-0 m-0'>
-            <li className={"ivu-menu-item " + (location.pathname == to ? "ivu-menu-item-active ivu-menu-item-selected" : "")} >
-                <i className={"fa-solid " + fa}></i>
-
-                {text}
-
-            </li>
+        <Link to={to} className={'ps-3 pe-3 ivu-menu-item ' + (location.pathname == to ? "ivu-menu-item-active ivu-menu-item-selected" : "")}>
+            <i className={"m-1 fa-solid " + fa}></i>
+            {text}
         </Link>
     )
 
@@ -44,7 +38,10 @@ function NavItem({ to, text, fa }) {
 function NavLogin({ user }) {
     if (user == null) {
         return (
-            <div className="btn-menu" >
+            <div className="btn-menu" style={{
+                flexGrow: '1',
+                textAlign: 'right'
+            }}>
                 <button type="button" className="ivu-btn ivu-btn-ghost ivu-btn-circle" data-bs-toggle="modal" data-bs-target="#loginDialog">
                     Đăng nhập
                 </button>
@@ -55,21 +52,20 @@ function NavLogin({ user }) {
         )
     } else {
         return (
-            <div class="drop-menu ivu-dropdown">
-                <div class="ivu-dropdown-rel">
-                    <button type="button" class="drop-menu-title ivu-btn ivu-btn-text">
+            <div className="drop-menu ivu-dropdown">
+                <div className="ivu-dropdown-rel">
+                    <button type="button" className="drop-menu-title ivu-btn ivu-btn-text">
                         <span>
                             {user}
-                            <i class="ivu-icon ivu-icon-arrow-down-b"></i>
+                            <i className="ivu-icon ivu-icon-arrow-down-b"></i>
                         </span>
                     </button>
                 </div>
-                <div class="ivu-select-dropdown" style={{ display: 'none' }}>
-                    <ul class="ivu-dropdown-menu">
-                        <li class="ivu-dropdown-item">Home</li>
-                        <li class="ivu-dropdown-item">Submissions</li>
-                        <li class="ivu-dropdown-item">Settings</li>
-                        <li class="ivu-dropdown-item ivu-dropdown-item-divided">Logout</li>
+                <div className="ivu-select-dropdown" style={{ display: 'none' }}>
+                    <ul className="ivu-dropdown-menu">
+                        <li className="ivu-dropdown-item">Thông tin</li>
+                        <li className="ivu-dropdown-item">Đổi mật khẩu</li>
+                        <li className="ivu-dropdown-item ivu-dropdown-item-divided">Logout</li>
                     </ul>
                 </div>
             </div>
@@ -78,31 +74,34 @@ function NavLogin({ user }) {
 }
 function LoginDialog() {
     return (
-        <div class="modal fade" id="loginDialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Đăng nhập</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div className="modal fade" id="loginDialog" tabindex="-1" aria-labelledby="LoginLabel" aria-hidden="true">
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h1 className="modal-title fs-5" id="LoginLabel">Đăng nhập</h1>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Tên tài khoản</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                        <div className="modal-body">
+                            <div className="mb-3">
+                                <label htmlFor="loginUsername" className="form-label">Tên tài khoản</label>
+                                <input required type="text" className="form-control" id="loginUsername" name="loginUsername" />
                             </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" />
+                            <div className="mb-3">
+                                <label htmlFor="loginPassword" className="form-label">Mật khẩu</label>
+                                <input required type="password" className="form-control" id="loginPassword" name="loginPassword" />
                             </div>
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                                <label class="form-check-label" for="exampleCheck1">Ghi nhớ đăng nhập</label>
+                            <div className="mb-3 form-check">
+                                <input type="checkbox" className="form-check-input" id="loginRemember" name="loginRemember" />
+                                <label className="form-check-label" htmlFor="loginRemember">Ghi nhớ đăng nhập</label>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="button" class="btn btn-primary">Đăng nhập</button>
+                        <div className="modal-footer d-flex justify-content-between">
+                            <a className='text-decoration-underline link-underline link-underline-primary link-underline-opacity-75"' data-bs-toggle="modal" data-bs-target="#signinDialog">Bạn chưa có tài khoản? - đăng ký</a>
+                            <div>
+                                <button type="button" className="btn btn-secondary me-1" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" className="btn btn-primary">Đăng nhập</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -112,31 +111,34 @@ function LoginDialog() {
 }
 function SigninDialog() {
     return (
-        <div class="modal fade" id="signinDialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Đăng ký</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div className="modal fade" id="signinDialog" tabindex="-1" aria-labelledby="SigninLabel" aria-hidden="true">
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h1 className="modal-title fs-5" id="SigninLabel">Đăng ký</h1>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Tên tài khoản</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                        <div className="modal-body">
+                            <div className="mb-3">
+                                <label htmlFor="SigninUsername" className="form-label">Tên tài khoản</label>
+                                <input type="text" className="form-control" id="SigninUsername" required />
                             </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" />
+                            <div className="mb-3">
+                                <label htmlFor="SigninPassword" className="form-label">Mật khẩu</label>
+                                <input type="password" className="form-control" id="SigninPassword" required />
                             </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Nhập lại mật khẩu</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" />
+                            <div className="mb-3">
+                                <label htmlFor="SigninConfirmPassword" className="form-label">Nhập lại mật khẩu</label>
+                                <input type="password" className="form-control" id="SigninConfirmPassword" required />
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="button" class="btn btn-primary">Đăng ký</button>
+                        <div className="modal-footer d-flex justify-content-between">
+                            <a className='text-decoration-underline link-underline link-underline-primary link-underline-opacity-75"' data-bs-toggle="modal" data-bs-target="#loginDialog">Bạn đã có tài khoản? - đăng nhập</a>
+                            <div>
+                                <button type="button" className="btn btn-secondary me-1" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" className="btn btn-primary">Đăng ký</button>
+                            </div>
                         </div>
                     </form>
                 </div>

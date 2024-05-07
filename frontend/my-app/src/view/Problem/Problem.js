@@ -1,13 +1,15 @@
-import { HashRouter, Link, Route, Routes, useParams } from "react-router-dom"
+import { Link, useLocation, useParams } from "react-router-dom"
 import Markdown from 'react-markdown'
 import filemd from './test.md'
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import './markdown.css'
 import Editor from '@monaco-editor/react';
 
 
 export default function Problem() {
     const { id } = useParams('id');
+    const hashId = useLocation().hash;
+    let [problemData, setProblemData] = useState(null)
     let [text, setText] = useState('');
     let [lang, setLang] = useState({ id: 'cpp', name: 'C++ 11' });
     fetch(filemd)
@@ -18,21 +20,34 @@ export default function Problem() {
         { id: 'java', name: 'Java 17' },
         { id: 'py', name: 'Python 3' },
     ]
-
-    // const requestOptions = {
-    //     method: "GET",
-    //     redirect: "follow"
-    // };
-
-    // fetch("http://127.0.0.1:5000/Problems", requestOptions)
-    //     .then((response) => response.text())
-    //     .then((result) => {
-    //         setRes(result);
-    //     })
-    //     .catch((error) => {
-    //         setRes(null);
-    //         console.error(error)
-    //     });
+    useEffect(()=>{
+        setTimeout(()=>{
+            if(hashId=='#editor'){
+                scorllToSubmit();
+            }
+        },500)
+    },[])
+    useEffect(() => {
+        setProblemData(null);
+        setTimeout(() => {
+            const requestOptions = {
+                method: "GET",
+                redirect: "follow"
+            };
+            var url = new URL("http://127.0.0.1:5000/problem/id");
+            fetch(url, requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    let data = JSON.parse(result);
+                    setProblemData(data);
+                    
+                })
+                .catch((error) => {
+                    setProblemData('[]');
+                    console.error(error)
+                })
+        }, 1000)
+    }, []);
     const editorRef = useRef(null);
 
     function handleEditorDidMount(editor, monaco) {
@@ -41,6 +56,12 @@ export default function Problem() {
 
     function showValue() {
         alert(editorRef.current.getValue());
+    }
+    function scorllToSubmit(){
+        const element = document.getElementById('editor');
+                            if (element) {
+                                element.scrollIntoView();
+                            }
     }
     return (
         <div className="ivu-row" style={{ marginLeft: '-9px', marginRight: '-9px' }}>
@@ -109,10 +130,7 @@ export default function Problem() {
                     </div>
                     <div className="ivu-card-body pt-0">
                         <Link className="btn btn-primary col-12" to='#editor' onClick={() => {
-                            const element = document.getElementById('editor');
-                            if (element) {
-                                element.scrollIntoView();
-                            }
+                            scorllToSubmit()
                         }}>Nộp bài</Link>
                     </div>
                 </div>
