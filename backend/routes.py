@@ -2,33 +2,30 @@ import flask
 from SQLQuery import *
 from Main import executeSqlQuery
 all=flask.Blueprint('all', __name__)
-
-@all.route('/Problems', methods=['GET'])
-def getAllProblem():
-    return executeSqlQuery(SQLGETALLPROBLEM)
-@all.route('/Problem/<name>', methods=['GET'])
-def getProblemByName(name="hello"):
-    return executeSqlQuery(SQLGETPROBLEMBYNAME,f"%{name}%")
-@all.route('/Problem/<typeid>', methods=['GET'])
-def getProblemByType(typeid="pbt1"):
-    return executeSqlQuery(SQLGETPROBLEMBYTYPE,f"%{typeid}%")
-
-@all.route('/Accounts', methods=['GET'])
-def getAllAccount():
-    return executeSqlQuery(SQLGETALLACCOUNT)
-@all.route('/Account/<name>', methods=['GET'])
-def getAccountByName(name="hello"):
-    return executeSqlQuery(SQLGETACCOUNTBYNAME,f"%{name}%")
-
-@all.route('/Contests', methods=['GET'])
-def getAllContest():
-    return executeSqlQuery(SQLGETALLCONTEST)
-@all.route('/Contest/<name>', methods=['GET'])
-def getContestByName(name=""):
-    return executeSqlQuery(SQLGETCONTESTBYNAME,f"%{name}%")
-
-@all.route('/Submissions', methods=['GET'])
-@all.route('/Submissions/<isAsc>', methods=['GET'])
-def getAllSubmission(isAsc=1):
-    isAsc=(int)(isAsc)
-    return executeSqlQuery(SQLGETALLSUBMITSSIONS+("asc" if isAsc else "desc"))
+@all.route('/problems', methods=['GET'])
+def getProblems():
+    name=flask.request.args.get('name',"")
+    dif=flask.request.args.get('dif',"")
+    type=flask.request.args.get('type',"")
+    return executeSqlQuery(SQLGETPROBLEMS,f"%{name}%",f"%{dif}%",f"%{type}%")
+@all.route('/problems/ac/<username>',methods=['GET'])
+def getProblemsAC(username=""):
+    return executeSqlQuery(SQLGETPROBLEMSAC,f"%{username}%")
+@all.route('/typeproblems/ac/<username>',methods=['GET'])
+def getTypeProblemsAC(username=""):
+    return executeSqlQuery(SQLGETTYPEPROBLEMSAC,f"%{username}%")
+@all.route('/inforaccount/<username>',methods=['GET'])
+def getInforAccount(username=""):
+    return executeSqlQuery(SQLGETINFACCOUNT,f"%{username}%",f"%{username}%")
+@all.route('/submissions', methods=['GET'])
+def getSubmitssions():
+    idp=flask.request.args.get('idp',"")
+    un=flask.request.args.get('un',"")
+    subs=flask.request.args.get('subs',"")
+    lg=flask.request.args.get('lg',"")
+    # name=dif=type=""
+    return executeSqlQuery(SQLGETSUBMITSSIONS,f"%{idp}%",f"%{idp}%",f"%{un}%",f"%{subs}%",f"%{lg}%")
+@all.route('/rank', methods=['GET'])
+def getRanking():
+    return executeSqlQuery(SQLGETRANKING)
+# @all.route('/typeproblems')
