@@ -16,12 +16,11 @@ go
 create table tblAccount(
 	UserName	nvarchar(100)	not null	primary key,
 	PassWord	nvarchar(100)	not null,
-	PhoneNumber	nvarchar(100),
-	Email		nvarchar(100),
 	PermissionId	nvarchar(100) not null
 		foreign key references tblPermission(PermissionId),
 	FullName	nvarchar(100)	not null,
-	IsDeleted	int	default	0
+	isActive	int	default	1,
+	DateCreate	time	not null
 );
 
 go
@@ -45,7 +44,7 @@ create table tblProblem(
 		foreign key references tblProblemType(ProblemTypeId),
 	Point int not null,
 	Decribe nvarchar(100),
-	IsDeleted int default 0
+	isActive int default 1
 );
 
 create table tblTestCaseFile(

@@ -16,9 +16,20 @@ from (
 	group by tblProblemInContest.ProblemId
 	) temp1 right join tblProblem on temp1.id=tblProblem.ProblemId
 where tblProblem.isActive=1
-	and tblProblem.ProblemName like '%%' 
+	and tblProblem.ProblemName like N'%%' 
 	and tblProblem.Point like '%%'
 	and tblProblem.ProblemTypeId like '%%'
+
+--Thông tin 1 bài tập
+select * 
+from tblProblem
+where tblProblem.isActive=1
+	and tblProblem.ProblemId like '%%'
+
+--tất cả loại đề bài
+select tblProblemType.ProblemTypeId,tblProblemType.ProblemTypeName 
+from tblProblemType
+where tblProblemType.ProblemTypeName like N'%C%'
 
 --Tìm tất cả bài tập đã AC của 1 người
 select tblProblem.ProblemId,
@@ -79,7 +90,7 @@ select a.TotalSubmit,
 from (
 	select count(tblSubmissions.SubmissionId) as TotalSubmit,
 		count(case when tblSubmissions.SubStatus like '%AC%' then 1 end) as TotalSubAC,
-		count(case when tblSubmissions.SubStatus like '%AC%' then 1 end)*100.0/count(tblSubmissions.SubmissionId) as RateAC
+		concat(count(case when tblSubmissions.SubStatus like '%AC%' then 1 end)*100/count(tblSubmissions.SubmissionId),'%') as RateAC
 	from tblSubmissions
 	where tblSubmissions.UserName like '%lvminh%'
 		and(
@@ -172,18 +183,21 @@ from tblAccount
 where tblAccount.isActive=1
 order by TotalPointProblemAC desc
 
---tất cả loại đề bài
-select tblProblemType.ProblemTypeId,tblProblemType.ProblemTypeName 
-from tblProblemType
-where tblProblemType.ProblemTypeName like '%%'
 
---Thông tin 1 bài tập
-select * 
-from tblProblem
-where tblProblem.isActive=1
-	and tblProblem.ProblemId like '%%'
+
+
 
 --thêm bt
 insert into tblProblem
 values(N'Hello World',N'pb1',N'pbt1'
 	,1,N'In ra dòng chữ "hello world" ra màn hình',1) 
+
+
+select N'cơ bản' as temp
+--sửa bt
+update tblProblem 
+set Decribe='a',
+	Point=2,
+	IsDelete
+
+--xóa bt

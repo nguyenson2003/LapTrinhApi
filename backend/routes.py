@@ -1,6 +1,7 @@
 import flask
-from SQLQuery import *
-from Main import executeSqlQuery
+from SQLQuery import * 
+from SQLEdit import *
+from Main import execuleSqlEdit, executeSqlQuery
 all=flask.Blueprint('all', __name__)
 
 @all.route('/problems', methods=['GET'])
@@ -45,3 +46,13 @@ def getSubmitssions():
 def getRanking():
     return executeSqlQuery(SQLGETRANKING)
 
+
+@all.route('/problems/edit', methods=['put'])
+def delProblems():
+    id = flask.request.json.get('ProblemId')
+    temp=executeSqlQuery(SQLGETPROBLEM,f"%{id}%")
+    des = flask.request.json.get('Decribe',temp[0]['Decribe'])
+    p = flask.request.json.get('Point',temp[0]['Point'])
+    name = flask.request.json.get('ProblemName',temp[0]['ProblemName'])
+    return execuleSqlEdit(SQLUPDPROBLEM,des,p,name,id)
+    

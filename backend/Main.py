@@ -21,6 +21,15 @@ def executeSqlQuery(sqlQuery,*args):
         return resp
     except Exception as e:
         return flask.jsonify({"lỗi":e})
+
+def execuleSqlEdit(sqlEdit,*args):
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sqlEdit,args)
+        conn.commit()
+        return flask.jsonify({"mess":"success"})
+    except Exception as e:
+        return flask.jsonify({"lỗi":e})
 try:
     if __name__ == "__main__":
         from routes import all
