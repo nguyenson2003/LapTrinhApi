@@ -13,7 +13,7 @@ export default function Nav() {
                     <NavItem to="/problems" text="Các vấn đề" fa="fa-list" />
                     <NavItem to="/submissions" text="Bài nộp" fa="fa-sliders" />
                     <NavItem to="/rank" text="Bảng xếp hạng" fa="fa-ranking-star" />
-                    <NavItem to="/contests" text="Cuộc thi" fa="fa-trophy" />
+                    {/* <NavItem to="/contests" text="Cuộc thi" fa="fa-trophy" /> */}
 
                     <NavLogin user={null} />
 

@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 
-export default function SubmissionList() {
+export default function UserRank() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [res, setRes] = useState(null);
     const [curPage, setCurPage] = useState(1);
