@@ -7,5 +7,6 @@ cd my-app
 ```
 * Bước 3: Chạy web
 ```
+npm install
 npm start
 ```
