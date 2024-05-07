@@ -74,7 +74,7 @@ function NavLogin({ user }) {
 }
 function LoginDialog() {
     return (
-        <div className="modal fade" id="loginDialog" tabindex="-1" aria-labelledby="LoginLabel" aria-hidden="true">
+        <div className="modal fade" id="loginDialog" tabIndex="-1" aria-labelledby="LoginLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
@@ -111,7 +111,7 @@ function LoginDialog() {
 }
 function SigninDialog() {
     return (
-        <div className="modal fade" id="signinDialog" tabindex="-1" aria-labelledby="SigninLabel" aria-hidden="true">
+        <div className="modal fade" id="signinDialog" tabIndex="-1" aria-labelledby="SigninLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
@@ -123,6 +123,12 @@ function SigninDialog() {
                             <div className="mb-3">
                                 <label htmlFor="SigninUsername" className="form-label">Tên tài khoản</label>
                                 <input type="text" className="form-control" id="SigninUsername" required />
+                                <div id="usernameHelp" class="form-text">Đây là tên để đăng nhập tài khoản của bạn. Hai tài khoản không thể có cùng một tên tài khoản</div>
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="SigninFullName" className="form-label">Tên hiển thị</label>
+                                <input type="text" className="form-control" id="SigninFullName" required />
+                                <div id="FullNameHelp" class="form-text">Đây là tên hiển thị, tất mọi người sẽ thấy tên hiển thị này của bạn</div>
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="SigninPassword" className="form-label">Mật khẩu</label>

@@ -4,6 +4,7 @@ import Problem from './view/Problem/Problem.js';
 import SubmissionList from './view/Submission/SubmissionList.js';
 import UserRank from './view/Rank/UserRank.js'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import UserProfile from './view/UserProfile/UserProfile.js';
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
             <Route path='/problem/:id' element={<Problem />} />
             <Route path='/submissions' element={<SubmissionList />} />
             <Route path='/rank' element={<UserRank />} />
+            <Route path='/user/:id' element={<UserProfile />} />
             <Route path='*' element={<h1>404 Not Found</h1>} />
           </Routes>
         </div>

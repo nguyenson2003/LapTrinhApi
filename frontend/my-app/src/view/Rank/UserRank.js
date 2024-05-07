@@ -1,5 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import PageList from "../../component/PageList";
 
 export default function UserRank() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -17,17 +18,6 @@ export default function UserRank() {
         { id: 3, name: 'Xử lý chuỗi' },
         { id: 4, name: 'Quy hoạch động' },
     ]
-    function filterSubmitHandle(event) {
-        event.preventDefault();
-        let param = {}
-        let nameProblem = filterName;
-        let tag = filterTag;
-        let difficult = filterDifficult;
-        if (nameProblem !== '') param['nameProblem'] = nameProblem
-        if (tag != null) param['tag'] = tag.id
-        if (difficult !== 0) param['difficult'] = difficult
-        setSearchParams(param);
-    }
     useEffect(() => {
         if (searchParams.has('nameProblem')) {
             setFilterName(searchParams.get('nameProblem'))
@@ -49,7 +39,7 @@ export default function UserRank() {
                 method: "GET",
                 redirect: "follow"
             };
-            fetch("http://127.0.0.1:5000/submissions", requestOptions)
+            fetch("http://127.0.0.1:5000/rank", requestOptions)
                 .then((response) => response.text())
                 .then((result) => {
                     let data = JSON.parse(result)
@@ -77,16 +67,16 @@ export default function UserRank() {
                     <div className="ivu-card-head">
                         <div className="panel-title d-flex justify-content-between align-items-center">
                             <h2>
-                                Danh sách bài nộp
+                                Bảng xếp hạng
                             </h2>
-                            <div className="btn btn-primary">
-                                Lọc kết quả
-                            </div>
+                            {/* <div className="">
+                                <input type="text" className="form-control" placeholder="Tìm người dùng"/>
+                            </div> */}
                         </div>
                     </div>
                     <div className="ivu-card-body">
                         <PageList curPage={curPage} maxPage={maxPage} setCurPage={setCurPage} />
-                        <table cellSpacing="0" cellPadding="0" border="1" className="table table-hover transitions align-middle m-0 mt-2 mb-2" >
+                        <table cellSpacing="0" cellPadding="0" border="1" className="table table-hover transitions align-middle m-0 mt-2 mb-2 " >
                             <thead>
                                 <HeadRow />
                             </thead>
@@ -141,13 +131,10 @@ export default function UserRank() {
 function HeadRow() {
     return (
         <tr className="table-light table-row text-center">
-            <th className="col-2">Tên bài tập</th>
-            <th className="col-1">Trạng thái</th>
-            <th className="col-1">Ngày nộp</th>
-            <th className="col-1">Ngôn ngữ</th>
-            <th className="col-2">Thời gian, bộ nhớ</th>
-            <th className="col-1">Điểm bài nộp</th>
-            <th className="col-1">Người nộp</th>
+            <th className="col-1">Xếp hạng</th>
+            <th className="col-2">Tên người dùng</th>
+            <th className="col-1">Số bài đã giải</th>
+            <th className="col-1">Tổng điểm</th>
         </tr>
     );
 }
@@ -162,38 +149,32 @@ function RowList({ result, curPage, maxPage, setMaxPage, numPerPage }) {
         for (let i = (curPage - 1) * numPerPage; i < curPage * numPerPage && i < result.length; i++) {
             let element = result[i];
 
-            rowList.push(<ProblemRow
-                key={element['ProblemId']}
-                id={element['ProblemId']}
-                name={element['ProblemName']}
-                status={element['SubStatus']}
-                dateSubmit={element['SubmissionTime']}
-                lang={element['LanguageName']}
-                timeAndMemory={element['TotalTime'] + " - " + element['Memory']}
-                point={element['Point']}
-                username={element['UserName']}
+            rowList.push(<UserRow
+                key={element['UserName']}
+                rankNumber={i+1}
+                id={element['UserName']}
+                name={element['FullName']}
+                TotalProblemAC={element['TotalProblemAC']}
+                TotalPointProblemAC={element['TotalPointProblemAC']}
             />);
         }
     }
     if (rowList.length === 0) rowList.push(<NoDataRow />)
     return rowList;
 }
-function ProblemRow({ id, name, status, dateSubmit, lang, timeAndMemory, point, username }) {
+function UserRow({rankNumber, id, name, TotalProblemAC, TotalPointProblemAC}) {
     return (
         <tr>
-            <td >
-                <Link to={'/problem/' + id}>
+            <td className="text-center">{rankNumber}</td>
+            <td className="" >
+                <Link to={'/user/' + id}>
                     <button type="button" className="btn btn-problem p-0">
                         {name}
                     </button>
                 </Link>
             </td>
-            <td className="text-center"><StatusBadge status={status}/></td>
-            <td className="text-center">{dateSubmit}</td>
-            <td className="text-center">{lang}</td>
-            <td className="text-center">{timeAndMemory}</td>
-            <td className="text-center">{point}</td>
-            <td className="text-center">{username}</td>
+            <td className="text-center">{TotalProblemAC}</td>
+            <td className="text-center">{TotalPointProblemAC}</td>
         </tr>
     )
 }
@@ -210,68 +191,11 @@ function NoDataRow({ text }) {
 function LoadingRow() {
     return (
         <tr>
-            <td className="placeholder-wave placeholder-glow"><span className={"placeholder col-" + parseInt(Math.random() * 5 + 8)}></span></td>
             <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
-            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-12"></span></td>
+            <td className="placeholder-wave placeholder-glow"><span className={"placeholder col-" + parseInt(Math.random() * 5+4)}></span></td>
             <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
             <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
-            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-5"></span></td>
-            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-12"></span></td>
         </tr>
-    )
-}
-function StatusBadge({ status }) {
-    let className;
-    if (status == 'AC') className = 'text-bg-success'
-    else if (status == 'WA') className = 'text-bg-danger'
-    else className = 'text-bg-warning'
-    return (
-        <div className={"ivu-tag ivu-tag-checked "+className+" rounded fw-bold text-white"}>
-            {status}
-        </div>
-    )
-}
-function PageList({ curPage, maxPage, setCurPage }) {
-    const compList = [];
-    for (let i = 1; i <= maxPage; i++) {
-        compList.push(<PageButton
-            key={i}
-            curPage={curPage}
-            setCurPage={setCurPage}
-            numThisPage={i}
-            maxPage={maxPage}
-        />)
-    }
-    return (
-        <div className="page">
-            <ul className="ivu-page p-0 m-0">
-                <PageButton curPage={curPage} setCurPage={setCurPage} maxPage={maxPage} numThisPage={curPage - 1} text="&lt;" />
-                {compList}
-                <PageButton curPage={curPage} setCurPage={setCurPage} maxPage={maxPage} numThisPage={curPage + 1} text="&gt;" />
-                {/* <li title="Trang tiếp theo" className="ivu-page-next">
-                    <a>
-                        <i className="ivu-icon ivu-icon-ios-arrow-right">&gt;</i>
-                    </a>
-                </li> */}
-            </ul>
-        </div>
-    )
-}
-function PageButton({ curPage, setCurPage, maxPage, numThisPage, text }) {
-    if (text == null) text = numThisPage;
-    return (
-        <li className="ivu-page-item border-0">
-            <button
-                className={
-                    "btn btn-outline-primary m-0 p-0 w-100 h-100"
-                    + (numThisPage < 1 || numThisPage > maxPage ? " disabled" : "")
-                    + (numThisPage === curPage ? " active" : "")
-                }
-                onClick={() => setCurPage(numThisPage)}
-            >
-                <font>{text}</font>
-            </button>
-        </li>
     )
 }
 function TagList({ tags, filterTagSearch, setFilterTag }) {
