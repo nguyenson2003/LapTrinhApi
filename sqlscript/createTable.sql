@@ -20,7 +20,8 @@ create table tblAccount(
 	Email		nvarchar(100),
 	PermissionId	nvarchar(100) not null
 		foreign key references tblPermission(PermissionId),
-	FullName	nvarchar(100)	not null
+	FullName	nvarchar(100)	not null,
+	IsDeleted	int	default	0
 );
 
 go
@@ -43,7 +44,8 @@ create table tblProblem(
 	ProblemTypeId nvarchar(100) not null
 		foreign key references tblProblemType(ProblemTypeId),
 	Point int not null,
-	Decribe nvarchar(100)
+	Decribe nvarchar(100),
+	IsDeleted int default 0
 );
 
 create table tblTestCaseFile(
@@ -71,6 +73,7 @@ create table tblProblemInContest(
 		foreign key references tblContest(ContestName),
 	ProblemId nvarchar(100) not null
 		foreign key references tblProblem(ProblemId),
+	isActive int default 1
 );
 go 
 create table tblSubmissions(
@@ -85,7 +88,8 @@ create table tblSubmissions(
 	TheAnswer varchar(max) not null,
 	Memory varchar(100) not null,
 	TotalTime time not null,
-	SubStatus varchar(100) not null
+	SubStatus varchar(100) not null,
+	isActive int default 1
 );
 go 
 create table tblJoinContestDetail(
@@ -93,4 +97,5 @@ create table tblJoinContestDetail(
 		foreign key references tblContest(ContestName),
 	UserName	nvarchar(100)	not null
 		foreign key references tblAccount(UserName),
+	isActive int default 1
 );
