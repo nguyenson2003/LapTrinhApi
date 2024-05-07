@@ -1,30 +1,11 @@
 ﻿--Các câu lệnh truy vấn 
-select * from tblProblem
 
-select * from tblProblem where tblProblem.ProblemName like '%ab%'
-
-select * from tblProblem where tblProblem.ProblemTypeId='pbt2'
-
-select * from tblContest
-
-select * from tblContest where tblContest.ContestName like '%ab%'
-
-select * from tblAccount
-
-select * from tblAccount where tblAccount.FullName like '%ab%'
-
-select * from tblSubmissions
-order by tblSubmissions.SubmissionTime desc
-
-select * from tblSubmissions
-where tblSubmissions.UserName = 'lvminh'
-order by tblSubmissions.SubmissionTime desc
 
 --TÌm tất cả bài tập
-select tblProblem.ProblemId,tblProblem.ProblemName,tblProblem.Point,isnull(temp1.TotalSubmit,0) as TotalSubmit,ISNULL(temp1.RateAC,0) as RateAC
+select tblProblem.ProblemId,tblProblem.ProblemName,tblProblem.Point,isnull(temp1.TotalSubmit,0) as TotalSubmit,CONCAT(ISNULL(temp1.RateAC,0),'%') as RateAC
 from (select tblProblemInContest.ProblemId as id, 
 	count(tblSubmissions.SubmissionId) as TotalSubmit,
-	count(case when tblSubmissions.SubStatus='AC' then 1 end)*100.0/count(tblSubmissions.SubmissionId) as RateAC
+	count(case when tblSubmissions.SubStatus='AC' then 1 end)*100/count(tblSubmissions.SubmissionId) as RateAC
 from tblProblemInContest join tblSubmissions 
 	on tblProblemInContest.ProblemInContestId=tblSubmissions.ProblemInContestId
 group by tblProblemInContest.ProblemId) temp1 right join tblProblem on temp1.id=tblProblem.ProblemId
@@ -99,8 +80,7 @@ select tblAccount.UserName,tblAccount.FullName,
 from tblAccount
 order by TotalPointProblemAC desc
 
-
-select *
-	from tblSubmissions join tblSubmissions 
-		on tblProblemInContest.ProblemInContestId=tblSubmissions.ProblemInContestId
-SELECT ROUND(12.3456789,3) as Result;
+--tất cả loại đề bài
+select tblProblemType.ProblemTypeId,tblProblemType.ProblemTypeName 
+from tblProblemType
+where tblProblemType.ProblemTypeName like '%%'

@@ -28,4 +28,7 @@ def getSubmitssions():
 @all.route('/rank', methods=['GET'])
 def getRanking():
     return executeSqlQuery(SQLGETRANKING)
-# @all.route('/typeproblems')
+@all.route('/typeproblems', methods=['get'])
+def getTypeProblems():
+    type=flask.request.args.get('type',"")
+    return executeSqlQuery(SQLGETTYPEPROPLEMS,f"%{type}%")

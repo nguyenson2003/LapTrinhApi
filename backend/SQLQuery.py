@@ -79,17 +79,13 @@ SQLGETRANKING="""
 	order by TotalPointProblemAC desc
 """
 
+SQLGETTYPEPROPLEMS="""
+	select tblProblemType.ProblemTypeId,tblProblemType.ProblemTypeName 
+	from tblProblemType
+	where tblProblemType.ProblemTypeName like ?
+"""
 
 
 
 
 
-
-SQLGETALLPROBLEM="select * from tblProblem"
-SQLGETALLACCOUNT="select * from tblAccount"
-SQLGETALLCONTEST="select * from tblContest"
-SQLGETALLSUBMITSSIONS="select * from tblSubmissions order by tblSubmissions.SubmissionTime "
-SQLGETCONTESTBYNAME="select * from tblContest where tblContest.ContestName like ?"
-SQLGETACCOUNTBYNAME="select * from tblAccount where tblAccount.FullName like ?"
-SQLGETPROBLEMBYTYPE="select * from tblProblem where tblProblem.ProblemTypeId=?"
-SQLGETPROBLEMBYNAME="select * from tblProblem where tblProblem.ProblemName like ?"
