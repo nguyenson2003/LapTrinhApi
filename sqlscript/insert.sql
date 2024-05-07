@@ -75,23 +75,23 @@ insert into tblProblemInContest
 values(N'pbic7',null,N'pb5',1)
 go
 insert into tblSubmissions
-values(N'sms1',N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',0)
+values(N'sms1',N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',100,0)
 
 insert into tblSubmissions
-values(N'sms2',N'pbic2',N'lvminh','2024-01-02 13:20:00',N'python','','1MB','00:00:00.004','AC',1)
+values(N'sms2',N'pbic2',N'lvminh','2024-01-02 13:20:00',N'python','','1MB','00:00:00.004','AC',100,1)
 insert into tblSubmissions
-values(N'sms3',N'pbic4',N'lvminh','2024-01-02 13:20:00',N'python','','1MB','00:00:00.004','AC',1)
+values(N'sms3',N'pbic4',N'lvminh','2024-01-02 13:20:00',N'python','','1MB','00:00:00.004','AC',100,1)
 insert into tblSubmissions
-values(N'sms4',N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',1)
+values(N'sms4',N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',100,1)
 insert into tblSubmissions
-values(N'sms5',N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','WA',1)
+values(N'sms5',N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','WA',30,1)
 insert into tblSubmissions
-values(N'sms6',N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','WA',1)
+values(N'sms6',N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','WA',30,1)
 insert into tblSubmissions
-values(N'sms7',N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','WA',1)
+values(N'sms7',N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','WA',20,1)
 insert into tblSubmissions
-values(N'sms8',N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','RTE',1)
+values(N'sms8',N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','RTE',40,1)
 insert into tblSubmissions
-values(N'sms9',N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','RTE',1)
+values(N'sms9',N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','RTE',50,1)
 insert into tblSubmissions
-values(N'sms10',N'pbic7',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',1)
+values(N'sms10',N'pbic7',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',100,1)

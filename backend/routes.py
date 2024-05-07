@@ -29,9 +29,13 @@ def getProblemsAC(username=""):
 def getTypeProblemsAC(username=""):
     return executeSqlQuery(SQLGETTYPEPROBLEMSAC,f"%{username}%",f"%{username}%")
 
+@all.route('/typeprob/<username>/orderbydif',methods=['GET'])
+def getTypeProblemsAC(username=""):
+    return executeSqlQuery(SQLGETPROBLEMSACORDERBYDIFFICULT,f"%{username}%",f"%{username}%")
+
 @all.route('/infacc/<username>',methods=['GET'])
 def getInforAccount(username=""):
-    return executeSqlQuery(SQLGETINFACCOUNT,f"%{username}%",f"%{username}%",f"%{username}%",f"%{username}%")
+    return executeSqlQuery(SQLGETINFACCOUNT,f"%{username}%",f"%{username}%",f"%{username}%")
 
 @all.route('/submissions', methods=['GET'])
 def getSubmitssions():
@@ -40,7 +44,7 @@ def getSubmitssions():
     subs=flask.request.args.get('substate',"")
     lg=flask.request.args.get('sublg',"")
     # name=dif=type=""
-    return executeSqlQuery(SQLGETSUBMITSSIONS,f"%{idp}%",f"%{idp}%",f"%{un}%",f"%{subs}%",f"%{lg}%")
+    return executeSqlQuery(SQLGETSUBMITSSIONS,f"%{un}%",f"%{subs}%",f"%{idp}%",f"%{lg}%")
 
 @all.route('/rank', methods=['GET'])
 def getRanking():

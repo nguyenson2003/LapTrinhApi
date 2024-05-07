@@ -82,103 +82,102 @@ where tblProblem.isActive=1
 group by tblProblem.ProblemTypeId
 order by Quantity desc
 
+--Số lượng bài tập đã AC theo độ khó của 1 người
+select tblProblem.Point,
+	count(tblProblem.ProblemId) as Quantity
+from (
+	select distinct ProblemId 
+	from(
+		select distinct ProblemInContestId 
+		from tblSubmissions
+		where tblSubmissions.SubStatus like'%AC%' 
+			and tblSubmissions.UserName like '%lvminh%'
+			and(
+				select count(*) 
+				from tblAccount 
+				where tblAccount.isActive=1 
+					and tblAccount.UserName like '%lvminh%'
+				)>=1
+		)temp1 join tblProblemInContest 
+			on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId
+	)temp2 join tblProblem 
+		on temp2.ProblemId=tblProblem.ProblemId
+where tblProblem.isActive=1 
+group by tblProblem.Point
+order by Quantity desc
+
 --thông tin tài khoản
-select a.TotalSubmit,
+select tblAccount.UserName,
+	tblAccount.DateCreate,
+	a.TotalSubmit,
 	a.TotalSubAC,
 	b.TotalProblemAC,
 	a.RateAC
-from (
-	select count(tblSubmissions.SubmissionId) as TotalSubmit,
+from tblAccount,
+	(select count(tblSubmissions.SubmissionId) as TotalSubmit,
 		count(case when tblSubmissions.SubStatus like '%AC%' then 1 end) as TotalSubAC,
 		concat(count(case when tblSubmissions.SubStatus like '%AC%' then 1 end)*100/count(tblSubmissions.SubmissionId),'%') as RateAC
 	from tblSubmissions
-	where tblSubmissions.UserName like '%lvminh%'
-		and(
-			select count(*) 
-			from tblAccount 
-			where tblAccount.isActive=1 
-				and tblAccount.UserName like '%lvminh%'
-		)>=1
-	) a, 
+	where tblSubmissions.UserName like '%lvminh%') a,
 	(select count(ProblemId) as TotalProblemAC 
 	from(
 		select distinct ProblemInContestId 
 		from tblSubmissions
-		where tblSubmissions.isActive=1 
-			and tblSubmissions.SubStatus like '%AC%' 
+		where tblSubmissions.SubStatus like '%AC%' 
 			and tblSubmissions.UserName like '%lvminh%'
-			and (
-				select count(*) 
-				from tblAccount 
-				where tblAccount.isActive=1  
-					and tblAccount.UserName like '%lvminh%')>=1
 		)temp1 join tblProblemInContest 
 			on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId
 	) b
-
+where tblAccount.isActive=1
+	and tblAccount.UserName like '%lvminh%'
 --các bài nộp
-select tblSubmissions.SubmissionId, 
-	(select 
-		(select tblProblem.ProblemName 
-		from tblProblem 
-		where tblProblem.ProblemId=temp1.ProblemId
-			and tblProblem.isActive=1) 
-	from 
-		(select tblProblemInContest.ProblemId 
-		from tblProblemInContest 
-		where tblProblemInContest.ProblemInContestId=tblSubmissions.ProblemInContestId 
-			and tblProblemInContest.ProblemId like '%%'
-		) temp1
-	) as ProblemName,
+select tblSubmissions.SubmissionId,
+	tblProblemInContest.ProblemId,
+	(select tblProblem.ProblemName
+	from tblProblem
+	where tblProblem.ProblemId=tblProblemInContest.ProblemId) as ProblemName,
 	tblSubmissions.SubStatus,
-	tblSubmissions.SubmissionTime,
+	CONVERT(VARCHAR(20),tblSubmissions.SubmissionTime, 108)+'-'+CONVERT(VARCHAR(20), tblSubmissions.SubmissionTime, 103) AS DateSub,
 	tblSubmissions.LanguageName,
-	tblSubmissions.TotalTime,
+	concat(DATEPART(SECOND, tblSubmissions.TotalTime) + (DATEPART(MILLISECOND,tblSubmissions.TotalTime) / 1000.0),'s') AS RunTime,
 	tblSubmissions.Memory,
-	(select (
-		select tblProblem.Point 
-		from tblProblem 
-		where tblProblem.ProblemId=temp1.ProblemId
-			and tblProblem.isActive=1) 
-	from 
-		(select tblProblemInContest.ProblemId 
-		from tblProblemInContest 
-		where tblProblemInContest.ProblemInContestId=tblSubmissions.ProblemInContestId 
-			and tblProblemInContest.ProblemId like '%%') 
-		temp1) as Point,
+	concat(tblSubmissions.Point,'/100'),
+	(select tblAccount.FullName
+	from tblAccount
+	where tblAccount.UserName=tblSubmissions.UserName) as FullName,
 	tblSubmissions.UserName
-from tblSubmissions
-where tblSubmissions.UserName like '%lvminh%' 
+from tblSubmissions join tblProblemInContest
+	on tblSubmissions.ProblemInContestId=tblProblemInContest.ProblemInContestId
+where tblSubmissions.isActive=1
+	and tblSubmissions.UserName like '%lvminh%'
 	and tblSubmissions.SubStatus like '%AC%'
+	and tblProblemInContest.ProblemId like '%pb1%'
 	and tblSubmissions.LanguageName like '%java%'
-order by tblSubmissions.SubmissionTime desc
---order by tblSubmissions.TotalTime
-
 --bảng xếp hạng
 select tblAccount.UserName,
 	tblAccount.FullName, 
-	(	select count(ProblemId)  
-		from
-			(select distinct ProblemInContestId 
-			from tblSubmissions
-			where tblSubmissions.SubStatus like '%%' 
-				and tblSubmissions.UserName=tblAccount.UserName
-		)temp1 join tblProblemInContest 
-		on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId) as TotalProblemAC,
-		isnull((
-			select sum(tblProblem.Point) 
-			from (
-				select ProblemId  
-				from
-					(select distinct ProblemInContestId 
-					from tblSubmissions
-					where tblSubmissions.SubStatus like '%AC%' 
-						and tblSubmissions.UserName=tblAccount.UserName
-					)
-				temp1 join tblProblemInContest 
-				on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId
-			) temp2 join tblProblem 
-			on temp2.ProblemId=tblProblem.ProblemId),0) as TotalPointProblemAC
+	(select count(ProblemId)  
+	from
+		(select distinct ProblemInContestId 
+		from tblSubmissions
+		where tblSubmissions.SubStatus like '%%' 
+			and tblSubmissions.UserName=tblAccount.UserName
+	)temp1 join tblProblemInContest 
+	on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId) as TotalProblemAC,
+	isnull((
+		select sum(tblProblem.Point) 
+		from (
+			select ProblemId  
+			from
+				(select distinct ProblemInContestId 
+				from tblSubmissions
+				where tblSubmissions.SubStatus like '%AC%' 
+					and tblSubmissions.UserName=tblAccount.UserName
+				)
+			temp1 join tblProblemInContest 
+			on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId
+		) temp2 join tblProblem 
+		on temp2.ProblemId=tblProblem.ProblemId),0) as TotalPointProblemAC
 from tblAccount
 where tblAccount.isActive=1
 order by TotalPointProblemAC desc

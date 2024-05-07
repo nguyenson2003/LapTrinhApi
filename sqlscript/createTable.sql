@@ -20,7 +20,7 @@ create table tblAccount(
 		foreign key references tblPermission(PermissionId),
 	FullName	nvarchar(100)	not null,
 	isActive	int	default	1,
-	DateCreate	time	not null
+	DateCreate	datetime	not null
 );
 
 go
@@ -88,6 +88,7 @@ create table tblSubmissions(
 	Memory varchar(100) not null,
 	TotalTime time not null,
 	SubStatus varchar(100) not null,
+	Point int not null,
 	isActive int default 1
 );
 go 

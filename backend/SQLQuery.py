@@ -74,77 +74,82 @@ SQLGETTYPEPROBLEMSAC="""
 	group by tblProblem.ProblemTypeId
 	order by Quantity desc
 """
-SQLGETINFACCOUNT="""
-	select a.TotalSubmit,
-		a.TotalSubAC,
-		b.TotalProblemAC,
-		a.RateAC
-	from (
-		select count(tblSubmissions.SubmissionId) as TotalSubmit,
-			count(case when tblSubmissions.SubStatus like '%AC%' then 1 end) as TotalSubAC,
-			concat(count(case when tblSubmissions.SubStatus like '%AC%' then 1 end)*100/count(tblSubmissions.SubmissionId),'%') as RateAC
+
+SQLGETPROBLEMSACORDERBYDIFFICULT="""
+select tblProblem.Point,
+	count(tblProblem.ProblemId) as Quantity
+from (
+	select distinct ProblemId 
+	from(
+		select distinct ProblemInContestId 
 		from tblSubmissions
-		where tblSubmissions.UserName like ?
+		where tblSubmissions.SubStatus like'%AC%' 
+			and tblSubmissions.UserName like ?
 			and(
 				select count(*) 
 				from tblAccount 
 				where tblAccount.isActive=1 
 					and tblAccount.UserName like ?
-			)>=1
-		) a, 
-		(select count(ProblemId) as TotalProblemAC 
-		from(
-			select distinct ProblemInContestId 
-			from tblSubmissions
-			where tblSubmissions.isActive=1 
-				and tblSubmissions.SubStatus like '%AC%' 
-				and tblSubmissions.UserName like ?
-				and (
-					select count(*) 
-					from tblAccount 
-					where tblAccount.isActive=1  
-						and tblAccount.UserName like ?)>=1
-			)temp1 join tblProblemInContest 
-				on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId
-		) b
+				)>=1
+		)temp1 join tblProblemInContest 
+			on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId
+	)temp2 join tblProblem 
+		on temp2.ProblemId=tblProblem.ProblemId
+where tblProblem.isActive=1 
+group by tblProblem.Point
+order by Quantity desc
+
+"""
+
+
+SQLGETINFACCOUNT="""
+	select tblAccount.UserName,
+	tblAccount.DateCreate,
+	a.TotalSubmit,
+	a.TotalSubAC,
+	b.TotalProblemAC,
+	a.RateAC
+from tblAccount,
+	(select count(tblSubmissions.SubmissionId) as TotalSubmit,
+		count(case when tblSubmissions.SubStatus like '%AC%' then 1 end) as TotalSubAC,
+		concat(count(case when tblSubmissions.SubStatus like '%AC%' then 1 end)*100/count(tblSubmissions.SubmissionId),'%') as RateAC
+	from tblSubmissions
+	where tblSubmissions.UserName like ?) a,
+	(select count(ProblemId) as TotalProblemAC 
+	from(
+		select distinct ProblemInContestId 
+		from tblSubmissions
+		where tblSubmissions.SubStatus like '%AC%' 
+			and tblSubmissions.UserName like ?
+		)temp1 join tblProblemInContest 
+			on temp1.ProblemInContestId=tblProblemInContest.ProblemInContestId
+	) b
+where tblAccount.isActive=1
+	and tblAccount.UserName like ?
 """
 SQLGETSUBMITSSIONS="""
-	select tblSubmissions.SubmissionId, 
-		(select 
-			(select tblProblem.ProblemName 
-			from tblProblem 
-			where tblProblem.ProblemId=temp1.ProblemId
-				and tblProblem.isActive=1) 
-		from 
-			(select tblProblemInContest.ProblemId 
-			from tblProblemInContest 
-			where tblProblemInContest.ProblemInContestId=tblSubmissions.ProblemInContestId 
-				and tblProblemInContest.ProblemId like ?
-			) temp1
-		) as ProblemName,
-		tblSubmissions.SubStatus,
-		tblSubmissions.SubmissionTime,
-		tblSubmissions.LanguageName,
-		tblSubmissions.TotalTime,
-		tblSubmissions.Memory,
-		(select (
-			select tblProblem.Point 
-			from tblProblem 
-			where tblProblem.ProblemId=temp1.ProblemId
-				and tblProblem.isActive=1) 
-		from 
-			(select tblProblemInContest.ProblemId 
-			from tblProblemInContest 
-			where tblProblemInContest.ProblemInContestId=tblSubmissions.ProblemInContestId 
-				and tblProblemInContest.ProblemId like ?) 
-			temp1) as Point,
-		tblSubmissions.UserName
-	from tblSubmissions
-	where tblSubmissions.UserName like ? 
-		and tblSubmissions.SubStatus like ?
-		and tblSubmissions.LanguageName like ?
-	order by tblSubmissions.SubmissionTime desc
-
+select tblSubmissions.SubmissionId,
+	tblProblemInContest.ProblemId,
+	(select tblProblem.ProblemName
+	from tblProblem
+	where tblProblem.ProblemId=tblProblemInContest.ProblemId) as ProblemName,
+	tblSubmissions.SubStatus,
+	CONVERT(VARCHAR(20),tblSubmissions.SubmissionTime, 108)+'-'+CONVERT(VARCHAR(20), tblSubmissions.SubmissionTime, 103) AS DateSub,
+	tblSubmissions.LanguageName,
+	concat(DATEPART(SECOND, tblSubmissions.TotalTime) + (DATEPART(MILLISECOND,tblSubmissions.TotalTime) / 1000.0),'s') AS RunTime,
+	tblSubmissions.Memory,
+	concat(tblSubmissions.Point,'/100'),
+	(select tblAccount.FullName
+	from tblAccount
+	where tblAccount.UserName=tblSubmissions.UserName) as FullName,
+	tblSubmissions.UserName
+from tblSubmissions join tblProblemInContest
+	on tblSubmissions.ProblemInContestId=tblProblemInContest.ProblemInContestId
+where tblSubmissions.isActive=1
+	and tblSubmissions.UserName like ?
+	and tblSubmissions.SubStatus like ?
+	and tblProblemInContest.ProblemId like ?
+	and tblSubmissions.LanguageName like ?
 """
 SQLGETRANKING="""
 	select tblAccount.UserName,
