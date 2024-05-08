@@ -7,6 +7,7 @@ import AddProblem from './view/admin/Them_Bai_Tap.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import UserProfile from './view/UserProfile/UserProfile.js';
 import Home from './view/Home/Home.js';
+import EditProblem from './view/admin/Sua_Bai_Tap.js';
 function App() {
   return (
     <Router>
@@ -23,6 +24,7 @@ function App() {
             <Route path='/rank' element={<UserRank />} />
             <Route path='/user/:id' element={<UserProfile />} />
             <Route path='/admin/problem/add' element={<AddProblem />} />
+            <Route path='/admin/problem/edit' element={<EditProblem />} />
             <Route path='*' element={<h1>404 Not Found</h1>} />
           </Routes>
         </div>

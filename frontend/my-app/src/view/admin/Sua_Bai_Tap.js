@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from "react-router-dom";
 import Editor from '@monaco-editor/react';
 
-export default function AddProblem() {
+export default function EditProblem() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [tagData, setTagData] = useState([]);
     const [filterTagSearch, setFilterTagSearch] = useState('');
@@ -115,7 +115,7 @@ export default function AddProblem() {
                         <form id="filter" onSubmit={filterSubmitHandle}>
                             <div className='mb-3'>
                                 <label className="form-label" htmlFor="idProblem">ID bài tập</label>
-                                <input onChange={(e) => setFilterId(e.target.value)} type="text" className="form-control col-6" id="idProblem" placeholder="Ví dụ: pb1" />
+                                <input onChange={(e) => setFilterId(e.target.value)} type="text" className="form-control col-6" id="idProblem" placeholder="Ví dụ: pb1" disabled />
                                 <div className="form-text">Hai bài tập không được trùng ID</div>
                             </div>
 
