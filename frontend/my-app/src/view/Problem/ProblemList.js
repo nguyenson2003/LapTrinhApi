@@ -61,10 +61,10 @@ export default function ProblemList() {
                     setProblemData(data);
                     if (data == null) return;
                     let temp = Math.floor((data.length - 1) / numPerPage) + 1;
-                    setMaxPage(Math.max(1,temp));
+                    setMaxPage(Math.max(1, temp));
                 })
                 .catch((error) => {
-                    setProblemData('[]');
+                    setProblemData([]);
                     setMaxPage(1);
                     console.error(error)
                 })
@@ -129,13 +129,13 @@ export default function ProblemList() {
                                 <input type="hidden" value={filterTag === null ? 0 : filterTag.id} name="tag" />
                                 <label className="form-label col-12">Kiểu bài tập:</label>
                                 <div className="dropdown btn-group">
-                                    <button type="button" className="btn btn-outline-primary">
+                                    <button type="button" className="btn btn-outline-primary ">
                                         {filterTag === null ? "Tất cả" : filterTag.name}
                                     </button>
                                     <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className="visually-hidden">Toggle Dropdown</span>
                                     </button>
-                                    <div className="dropdown-menu p-4 dropdown-menu-lg-end" style={{ width: '300px' }}>
+                                    <div className="dropdown-menu p-4 dropdown-menu-lg-end" style={{ width: '300px',maxHeight:'40vh',overflowY:'auto' }}>
                                         <div className="mb-3">
                                             <input type="text" className="form-control" id="tagFind" placeholder="Tìm loại đề bài" onChange={(e) => setFilterTagSearch(e.target.value)} />
                                             <button type="button" onClick={() => setFilterTag(null)} className="btn p-0 m-0 link-primary text-decoration-underline">tất cả</button>

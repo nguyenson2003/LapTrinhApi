@@ -19,11 +19,12 @@ export default function UserProfile() {
                 method: "GET",
                 redirect: "follow"
             };
-            var url = new URL("http://127.0.0.1:5000/infacc/<username>");
+            var url = new URL("http://127.0.0.1:5000/infacc/"+id);
             fetch(url, requestOptions)
                 .then((response) => response.text())
                 .then((result) => {
                     let data = JSON.parse(result);
+                    console.log(data)
                     setProblemData(data);
                     
                 })

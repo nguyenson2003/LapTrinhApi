@@ -20,13 +20,13 @@ export default function Problem() {
         { id: 'java', name: 'Java 17' },
         { id: 'py', name: 'Python 3' },
     ]
-    useEffect(()=>{
-        setTimeout(()=>{
-            if(hashId=='#editor'){
+    useEffect(() => {
+        setTimeout(() => {
+            if (hashId == '#editor') {
                 scorllToSubmit();
             }
-        },500)
-    },[])
+        }, 500)
+    }, [])
     useEffect(() => {
         setProblemData(null);
         setTimeout(() => {
@@ -34,13 +34,14 @@ export default function Problem() {
                 method: "GET",
                 redirect: "follow"
             };
-            var url = new URL("http://127.0.0.1:5000/problem/id");
+            var url = new URL("http://127.0.0.1:5000/problem/" + id);
             fetch(url, requestOptions)
                 .then((response) => response.text())
                 .then((result) => {
-                    let data = JSON.parse(result);
+                    let data = JSON.parse(result)[0];
+                    console.log(data)
                     setProblemData(data);
-                    
+
                 })
                 .catch((error) => {
                     setProblemData('[]');
@@ -57,26 +58,17 @@ export default function Problem() {
     function showValue() {
         alert(editorRef.current.getValue());
     }
-    function scorllToSubmit(){
+    function scorllToSubmit() {
         const element = document.getElementById('editor');
-                            if (element) {
-                                element.scrollIntoView();
-                            }
+        if (element) {
+            element.scrollIntoView();
+        }
     }
     return (
         <div className="ivu-row" style={{ marginLeft: '-9px', marginRight: '-9px' }}>
             <div className="ivu-col ivu-col-span-18" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
                 <div className="ivu-card mb-3">
-                    <div className="ivu-card-head">
-                        <div className="panel-title">
-                            <h2>
-                                Demo markdown
-                            </h2>
-                        </div>
-                    </div>
-                    <div className="ivu-card-body">
-                        <Markdown className={'markdown'}>{text}</Markdown>
-                    </div>
+                    <ProblemContent data={problemData}/>
                 </div>
 
                 <div className="ivu-card mb-3" id="editor">
@@ -131,7 +123,7 @@ export default function Problem() {
                     <div className="ivu-card-body pt-0">
                         <Link className="btn btn-primary col-12" to='#editor' onClick={() => {
                             scorllToSubmit()
-                        }}>Nộp bài</Link>
+                        }}>Làm bài</Link>
                     </div>
                 </div>
                 <div className="ivu-card ivu-card-bordered mt-3">
@@ -139,28 +131,57 @@ export default function Problem() {
                         <h3>Thông tin bài tập</h3>
                     </div>
                     <div className="ivu-card-body">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>Độ khó</td>
-                                    <td>Trung bình</td>
-                                </tr>
-                                <tr>
-                                    <td>Giới hạn thời gian</td>
-                                    <td>1s</td>
-                                </tr>
-                                <tr>
-                                    <td>Giới hạn bộ nhớ</td>
-                                    <td>1000MB</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <ProblemInfo data={problemData}/>
                     </div>
                 </div>
 
             </div>
         </div>
     )
+}
+function ProblemContent({ data }) {
+    if (data == null) return <LoadingContent />;
+    return (
+        <>
+            <div className="ivu-card-head">
+                <div className="panel-title">
+                    <h2>
+                        {data['ProblemName']}
+                    </h2>
+                </div>
+            </div>
+            <div className="ivu-card-body">
+                <Markdown className={'markdown'}>{data['Decribe']}</Markdown>
+            </div>
+        </>
+    )
+}
+function LoadingContent() {
+
+}
+function ProblemInfo({ data }) {
+    if(data==null) return <LoadingInfo/>
+    return (
+        <table>
+            <tbody>
+                <tr>
+                    <td>Độ khó</td>
+                    <td>data['Point']</td>
+                </tr>
+                <tr>
+                    <td>Giới hạn thời gian</td>
+                    <td>1s</td>
+                </tr>
+                <tr>
+                    <td>Giới hạn bộ nhớ</td>
+                    <td>1000MB</td>
+                </tr>
+            </tbody>
+        </table>
+    )
+}
+function LoadingInfo() {
+
 }
 function LangButton({ lang, setLang }) {
     return (

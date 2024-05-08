@@ -1,78 +1,89 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import PageList from "../../component/PageList";
+const langDemo = [
+    { id: 'all', name: 'Tất cả' },
+    { id: 'cpp', name: 'C++ 11' },
+    { id: 'java', name: 'Java 17' },
+    { id: 'py', name: 'Python 3' },
+]
+const statusDemo = [
+    { id: 'all', name: 'Tất cả' },
+    { id: 'AC', name: 'AC' },
+    { id: 'WA', name: 'WA' },
+    { id: 'TLE', name: 'TLE' },
+]
 
 export default function SubmissionList() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [res, setRes] = useState(null);
+    const [submitData, setSubmitData] = useState(null);
     const [curPage, setCurPage] = useState(1);
     const [maxPage, setMaxPage] = useState(0);
-    const [filterTagSearch, setFilterTagSearch] = useState('');
-    const [filterName, setFilterName] = useState('');
-    const [filterTag, setFilterTag] = useState(null);
-    const [filterDifficult, setFilterDifficult] = useState(0);
     const numPerPage = 10;
-    const tagDemo = [
-        { id: 1, name: 'Adhoc' },
-        { id: 2, name: 'Quay lui' },
-        { id: 3, name: 'Xử lý chuỗi' },
-        { id: 4, name: 'Quy hoạch động' },
-    ]
+    let [filterProblemId, setFilterProblemId] = useState(null);
+    let [filterUsername, setFilterUsername] = useState(null);
+    let [filterLang, setFilterLang] = useState(0);
+    let [filterStatus, setfilterStatus] = useState(0);
     function filterSubmitHandle(event) {
         event.preventDefault();
         let param = {}
-        let nameProblem = filterName;
-        let tag = filterTag;
-        let difficult = filterDifficult;
-        if (nameProblem !== '') param['nameProblem'] = nameProblem
-        if (tag != null) param['tag'] = tag.id
-        if (difficult !== 0) param['difficult'] = difficult
+        let problemId = filterProblemId;
+        let username = filterUsername;
+        let lang = filterLang;
+        let status = filterStatus;
+        if (problemId != null) param['problemId'] = problemId
+        if (username != null) param['username'] = username
+        if (lang != 0) param['lang'] = lang
+        if (status !== 0) param['status'] = status
         setSearchParams(param);
     }
-    useEffect(() => {
-        if (searchParams.has('nameProblem')) {
-            setFilterName(searchParams.get('nameProblem'))
-            // searchParams.delete('nameProblem');
+    useState(() => {
+        if (searchParams.has('problemId')) {
+            setFilterProblemId(searchParams.get('problemId'))
         };
-        if (searchParams.has('tag')) {
-            let tag = (searchParams.get('tag'))
-            tagDemo.forEach(e => { if (e.id == tag.id) setFilterTag(e) })
-            // searchParams.delete('tag');
+        if (searchParams.has('username')) {
+            setFilterUsername(searchParams.get('username'))
         };
-        if (searchParams.has('difficult')) {
-            setFilterDifficult(searchParams.get('difficult'))
-            // searchParams.delete('difficult');
+        if (searchParams.has('lang')) {
+            setFilterLang(searchParams.get('lang'))
+        };
+        if (searchParams.has('status')) {
+            setfilterStatus(searchParams.get('status'))
         };
     }, [searchParams])
     useEffect(() => {
+        setSubmitData(null);
+
         setTimeout(() => {
             const requestOptions = {
                 method: "GET",
                 redirect: "follow"
             };
-            fetch("http://127.0.0.1:5000/submissions", requestOptions)
+            var url = new URL("http://127.0.0.1:5000/submissions");
+            if (filterProblemId != null && filterProblemId !== '') url.searchParams.set('idprob', filterProblemId);
+            if (filterUsername != null && filterUsername !== '') url.searchParams.set('un', filterUsername);
+            if (filterLang != 0) url.searchParams.set('sublg', langDemo[filterLang].id);
+            if (filterStatus != 0) url.searchParams.set('substate', statusDemo[filterStatus].id);
+
+            fetch(url, requestOptions)
                 .then((response) => response.text())
                 .then((result) => {
                     let data = JSON.parse(result)
                     console.log(data)
-                    setRes(result);
+                    setSubmitData(data);
+                    if (data == null) return;
+                    let temp = Math.floor((data.length - 1) / numPerPage) + 1;
+                    if (temp !== maxPage) setMaxPage(temp);
 
                 })
                 .catch((error) => {
-                    setRes('[]');
+                    setSubmitData('[]');
                     console.error(error)
                 })
         }, 1000)
     }, [searchParams]);
-    useEffect(() => {
-        if (res == null) return;
-        let data = JSON.parse(res);
-        let temp = Math.floor((data.length - 1) / numPerPage) + 1;
-        if (temp !== maxPage) setMaxPage(temp);
-    }, [res])
     return (
         <div className="ivu-row" style={{ marginLeft: '-9px', marginRight: '-9px' }}>
-            {/* <LoadParam setFilterName={setFilterName} tags={tagDemo} setFilterTag={setFilterTag} setFilterDifficult={setFilterDifficult} searchParams={searchParams} /> */}
             <div className="ivu-col ivu-col-span-24" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
                 <div className="ivu-card ">
                     <div className="ivu-card-head">
@@ -80,7 +91,7 @@ export default function SubmissionList() {
                             <h2>
                                 Danh sách bài nộp
                             </h2>
-                            <div className="btn btn-primary">
+                            <div className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterDialog">
                                 Lọc kết quả
                             </div>
                         </div>
@@ -92,50 +103,14 @@ export default function SubmissionList() {
                                 <HeadRow />
                             </thead>
                             <tbody className="ivu-table-tbody">
-                                <RowList result={res} numPerPage={numPerPage} curPage={curPage} maxPage={maxPage} setMaxPage={setMaxPage} />
+                                <RowList data={submitData} numPerPage={numPerPage} curPage={curPage} maxPage={maxPage} setMaxPage={setMaxPage} />
                             </tbody>
                         </table>
                         <PageList curPage={curPage} maxPage={maxPage} setCurPage={setCurPage} />
                     </div>
                 </div>
             </div>
-            {/* <div className="ivu-col ivu-col-span-6" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
-                <div className="ivu-card ivu-card-bordered">
-                    <div className="ivu-card-head">
-                        <h3>Tìm kiếm bài tập</h3>
-                    </div>
-                    <div className="ivu-card-body">
-                        <form onSubmit={filterSubmitHandle}>
-                            <div className="mt-2 row">
-                                <input type="hidden" value={filterTag === null ? 0 : filterTag.id} name="tag" />
-                                <label className="form-label col-12">Kiểu bài tập:</label>
-                                <div className="dropdown btn-group">
-                                    <button type="button" className="btn btn-outline-primary">
-                                        {filterTag === null ? "Tất cả" : filterTag.name}
-                                    </button>
-                                    <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span className="visually-hidden">Toggle Dropdown</span>
-                                    </button>
-                                    <div className="dropdown-menu p-4 dropdown-menu-lg-end" style={{ width: '300px' }}>
-                                        <div className="mb-3">
-                                            <input type="text" className="form-control" id="tagFind" placeholder="Tìm loại đề bài" onChange={(e) => setFilterTagSearch(e.target.value)} />
-                                            <button type="button" onClick={() => setFilterTag(null)} className="btn p-0 m-0 link-primary text-decoration-underline">tất cả</button>
-                                        </div>
-                                        <div className="d-flex flex-wrap">
-                                            <TagList tags={tagDemo} filterTagSearch={filterTagSearch} setFilterTag={setFilterTag} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="d-grid gap-2 mt-3">
-                                <button className="btn btn-primary btn-submit" type="submit">
-                                    Tìm kiếm
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div> */}
+            <FormFilter filterLang={filterLang} setFilterLang={setFilterLang} filterStatus={filterStatus} setfilterStatus={setfilterStatus} filterSubmitHandle={filterSubmitHandle} />
         </div>
     );
 }
@@ -149,61 +124,75 @@ function HeadRow() {
             <th className="col-2">Thời gian, bộ nhớ</th>
             <th className="col-1">Điểm bài nộp</th>
             <th className="col-1">Người nộp</th>
+            <th className="col-1"></th>
         </tr>
     );
 }
-function RowList({ result, curPage, maxPage, setMaxPage, numPerPage }) {
+function RowList({ data, curPage, maxPage, setMaxPage, numPerPage }) {
     if (numPerPage === 0 || numPerPage == null) numPerPage = 10;
     const rowList = [];
-    if (result == null) {
+    if (data == null) {
         for (let i = 0; i < numPerPage; i++)
             rowList.push(<LoadingRow />)
     } else {
-        result = JSON.parse(result);
-        for (let i = (curPage - 1) * numPerPage; i < curPage * numPerPage && i < result.length; i++) {
-            let element = result[i];
+        for (let i = (curPage - 1) * numPerPage; i < curPage * numPerPage && i < data.length; i++) {
+            let element = data[i];
 
             rowList.push(<ProblemRow
-                key={element['ProblemId']}
-                id={element['ProblemId']}
+                key={element['SubmissionId']}
+                problemid={element['ProblemId']}
                 name={element['ProblemName']}
                 status={element['SubStatus']}
-                dateSubmit={element['SubmissionTime']}
+                dateSubmit={element['DateSub']}
                 lang={element['LanguageName']}
-                timeAndMemory={element['TotalTime'] + " - " + element['Memory']}
+                timeAndMemory={element['RunTime'] + " - " + element['Memory']}
                 point={element['Point']}
                 username={element['UserName']}
+                fullName={element['FullName']}
+                submitId={element['SubmissionId']}
             />);
         }
     }
     if (rowList.length === 0) rowList.push(<NoDataRow />)
     return rowList;
 }
-function ProblemRow({ id, name, status, dateSubmit, lang, timeAndMemory, point, username }) {
+function ProblemRow({ problemid, name, status, dateSubmit, lang, timeAndMemory, point, username, fullName, submitId }) {
     return (
         <tr>
             <td >
-                <Link to={'/problem/' + id}>
+                <Link to={'/problem/' + problemid}>
                     <button type="button" className="btn btn-problem p-0">
                         {name}
                     </button>
                 </Link>
             </td>
-            <td className="text-center"><StatusBadge status={status}/></td>
+            <td className="text-center"><StatusBadge status={status} /></td>
             <td className="text-center">{dateSubmit}</td>
             <td className="text-center">{lang}</td>
             <td className="text-center">{timeAndMemory}</td>
             <td className="text-center">{point}</td>
-            <td className="text-center">{username}</td>
+            <td className="text-center">
+                <Link to={'/user/' + username}>
+                    <button type="button" className="btn btn-problem p-0">
+                        {fullName}
+                    </button>
+                </Link>
+            </td>
+            <td className="text-center">
+                <Link to={'/problem/' + submitId}>
+                    <button type="button" className="btn p-0">
+                        Xem
+                    </button>
+                </Link>
+            </td>
         </tr>
     )
 }
-function NoDataRow({ text }) {
-    if (text == null) text = "Không có bài tập"
+function NoDataRow() {
     return (
         <tr>
-            <td colSpan='5' className="text-center">
-                {text}
+            <td colSpan='8' className="text-center">
+                Không có bài tập
             </td>
         </tr>
     )
@@ -218,6 +207,7 @@ function LoadingRow() {
             <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
             <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-5"></span></td>
             <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-10"></span></td>
+            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
         </tr>
     )
 }
@@ -227,7 +217,7 @@ function StatusBadge({ status }) {
     else if (status == 'WA') className = 'text-bg-danger'
     else className = 'text-bg-warning'
     return (
-        <div className={"ivu-tag ivu-tag-checked "+className+" rounded fw-bold text-white"}>
+        <div className={"ivu-tag ivu-tag-checked " + className + " rounded fw-bold text-white"}>
             {status}
         </div>
     )
@@ -250,4 +240,72 @@ function TagButton({ tag, setFilterTag }) {
             {tag.name}
         </button>
     )
+}
+function FormFilter({ filterLang, setFilterLang, filterStatus, setfilterStatus, filterSubmitHandle }) {
+    return (
+        <div className="modal fade" id="filterDialog" tabIndex="-1" aria-labelledby="filterLabel" aria-hidden="true">
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h1 className="modal-title fs-5" id="filterLabel">Lọc kết quả</h1>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form onSubmit={filterSubmitHandle}>
+                        <div className="modal-body">
+                            <div className="row">
+                                <div className="col-6">
+                                    <input type="hidden" name="lang" />
+                                    <label className="form-label">Trạng thái: </label>
+                                    <div className="dropdown btn-group col-12">
+                                        <button type="button" className="btn btn-outline-primary">
+                                            {statusDemo[filterStatus].name}
+                                        </button>
+                                        <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span className="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+                                        <ul className="dropdown-menu dropdown-menu-end">
+                                            <LangButton index={0} lang={statusDemo[0]} setLang={setfilterStatus} />
+                                            <LangButton index={1} lang={statusDemo[1]} setLang={setfilterStatus} />
+                                            <LangButton index={2} lang={statusDemo[2]} setLang={setfilterStatus} />
+                                            <LangButton index={3} lang={statusDemo[3]} setLang={setfilterStatus} />
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div className="col-6">
+                                    <input type="hidden" name="lang" />
+                                    <label className="form-label">Ngôn ngữ: </label>
+                                    <div className="dropdown btn-group col-12">
+                                        <button type="button" className="btn btn-outline-primary">
+                                            {langDemo[filterLang].name}
+                                        </button>
+                                        <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span className="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+                                        <ul className="dropdown-menu dropdown-menu-end">
+                                            <LangButton index={0} lang={langDemo[0]} setLang={setFilterLang} />
+                                            <LangButton index={1} lang={langDemo[1]} setLang={setFilterLang} />
+                                            <LangButton index={2} lang={langDemo[2]} setLang={setFilterLang} />
+                                            <LangButton index={3} lang={langDemo[3]} setLang={setFilterLang} />
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <div>
+                                <button type="button" className="btn btn-secondary me-1" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Lọc</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    )
+}
+function LangButton({ index, lang, setLang }) {
+    return (
+        <li><button type="button" className="dropdown-item" onClick={() => setLang(index)}>{lang.name}</button></li>
+    )
+
 }
