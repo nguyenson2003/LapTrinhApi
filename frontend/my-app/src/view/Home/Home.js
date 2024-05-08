@@ -30,15 +30,6 @@ export default function Home() {
             .then((response) => response.blob())
             .then((result) => console.log(result))
             .catch((error) => console.error(error));
-        // async function fetchBlob(url) {
-        //     const response = await fetch(url);
-        
-        //     // Here is the significant part 
-        //     // reading the stream as a blob instead of json
-        //     return response.blob();
-        // }
-        // const temp = async () => await fetchBlob('http://127.0.0.1:5000/testfile')
-        // console.log(temp.call());
         
     }, [])
     return (

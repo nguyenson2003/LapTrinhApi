@@ -9,9 +9,11 @@ const langDemo = [
 ]
 const statusDemo = [
     { id: 'all', name: 'Tất cả' },
-    { id: 'AC', name: 'AC' },
-    { id: 'WA', name: 'WA' },
-    { id: 'TLE', name: 'TLE' },
+    { id: 'AC', name: 'AC (Kết quả chấp nhận)' },
+    { id: 'WA', name: 'WA (Kết quả sai)' },
+    { id: 'TLE', name: 'TLE (Chạy quá thời gian)' },
+    { id: 'RTE', name: 'RTE (Lỗi trong khi chạy)' },
+    { id: 'CE', name: 'CE (Lỗi biên dịch)' },
 ]
 
 export default function SubmissionList() {
@@ -77,7 +79,7 @@ export default function SubmissionList() {
 
                 })
                 .catch((error) => {
-                    setSubmitData('[]');
+                    setSubmitData([]);
                     console.error(error)
                 })
         }, 1000)
@@ -133,7 +135,7 @@ function RowList({ data, curPage, maxPage, setMaxPage, numPerPage }) {
     const rowList = [];
     if (data == null) {
         for (let i = 0; i < numPerPage; i++)
-            rowList.push(<LoadingRow />)
+            rowList.push(<LoadingRow key={i}/>)
     } else {
         for (let i = (curPage - 1) * numPerPage; i < curPage * numPerPage && i < data.length; i++) {
             let element = data[i];
@@ -268,6 +270,8 @@ function FormFilter({ filterLang, setFilterLang, filterStatus, setfilterStatus, 
                                             <LangButton index={1} lang={statusDemo[1]} setLang={setfilterStatus} />
                                             <LangButton index={2} lang={statusDemo[2]} setLang={setfilterStatus} />
                                             <LangButton index={3} lang={statusDemo[3]} setLang={setfilterStatus} />
+                                            <LangButton index={4} lang={statusDemo[4]} setLang={setfilterStatus} />
+                                            <LangButton index={5} lang={statusDemo[5]} setLang={setfilterStatus} />
                                         </ul>
                                     </div>
                                 </div>

@@ -21,7 +21,9 @@ export default function ProblemList() {
         { id: 4, name: 'Quy hoạch động' },
     ]
     function filterSubmitHandle(event) {
-        event.preventDefault();
+        event.preventDefault();        
+        var form = document.querySelector('#filter')
+        console.log(new FormData(form))
         let param = {}
         let nameProblem = filterName;
         let tag = filterTag;
@@ -122,7 +124,7 @@ export default function ProblemList() {
                         <h3>Tìm kiếm bài tập</h3>
                     </div>
                     <div className="ivu-card-body">
-                        <form onSubmit={filterSubmitHandle}>
+                        <form id="filter" onSubmit={filterSubmitHandle}>
                             <label className="form-label" htmlFor="nameProblem">Tên đề bài</label>
                             <input onChange={(e) => setFilterName(e.target.value)} type="text" className="form-control " id="nameProblem" name="nameProblem" placeholder="Ví dụ: Hello World!" value={filterName} />
                             <div className="mt-2 row">
@@ -183,7 +185,7 @@ function RowList({ data, curPage, maxPage, setMaxPage, numPerPage }) {
     const rowList = [];
     if (data == null) {
         for (let i = 0; i < numPerPage; i++)
-            rowList.push(<LoadingRow />)
+            rowList.push(<LoadingRow key={i}/>)
     } else {
         for (let i = (curPage - 1) * numPerPage; i < curPage * numPerPage && i < data.length; i++) {
             let element = data[i];
@@ -240,29 +242,29 @@ function LoadingRow() {
         <tr>
             <td>
                 <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class="placeholder col-6"></span>
+                    <span className="placeholder col-6"></span>
                 </p>
 
             </td>
             <td>
                 <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class={"placeholder col-" + parseInt(Math.random() * 6 + 7)}></span>
+                    <span className={"placeholder col-" + parseInt(Math.random() * 6 + 7)}></span>
                 </p>
             </td>
             <td>
                 <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class={"placeholder col-" + parseInt(Math.random() * 6 + 1)}></span>
+                    <span className={"placeholder col-" + parseInt(Math.random() * 6 + 1)}></span>
                 </p>
 
             </td>
             <td>
                 <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class="placeholder col-3"></span>
+                    <span className="placeholder col-3"></span>
                 </p>
             </td>
             <td>
                 <p aria-hidden="true" className="placeholder-glow placeholder-wave p-0 m-0 mb-1">
-                    <span class="placeholder col-3"></span>
+                    <span className="placeholder col-3"></span>
                 </p>
             </td>
         </tr>

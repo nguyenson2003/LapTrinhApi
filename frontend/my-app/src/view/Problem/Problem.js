@@ -68,55 +68,57 @@ export default function Problem() {
         <div className="ivu-row" style={{ marginLeft: '-9px', marginRight: '-9px' }}>
             <div className="ivu-col ivu-col-span-18" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
                 <div className="ivu-card mb-3">
-                    <ProblemContent data={problemData}/>
+                    <ProblemContent data={problemData} />
                 </div>
-
-                <div className="ivu-card mb-3" id="editor">
-                    <div className="ivu-card-head d-flex align-items-center" >
-                        <div className="panel-title col-6">
-                            <h2>
-                                Nộp bài
-                            </h2>
+                {problemData != null ? (
+                    <div className="ivu-card mb-3" id="editor">
+                        <div className="ivu-card-head d-flex align-items-center" >
+                            <div className="panel-title col-6">
+                                <h2>
+                                    Nộp bài
+                                </h2>
+                            </div>
+                            <div className="row col-6">
+                                <input type="hidden" name="lang" />
+                                <label className="form-label">Ngôn ngữ:</label>
+                                <div className="dropdown btn-group col-8">
+                                    <button type="button" className="btn btn-outline-primary">
+                                        {lang.name}
+                                    </button>
+                                    <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span className="visually-hidden">Toggle Dropdown</span>
+                                    </button>
+                                    <ul className="dropdown-menu dropdown-menu-end">
+                                        <LangButton lang={langDemo[0]} setLang={setLang} />
+                                        <LangButton lang={langDemo[1]} setLang={setLang} />
+                                        <LangButton lang={langDemo[2]} setLang={setLang} />
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <div className="row col-6">
-                            <input type="hidden" name="lang" />
-                            <label className="form-label">Ngôn ngữ:</label>
-                            <div className="dropdown btn-group col-8">
-                                <button type="button" className="btn btn-outline-primary">
-                                    {lang.name}
-                                </button>
-                                <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span className="visually-hidden">Toggle Dropdown</span>
-                                </button>
-                                <ul className="dropdown-menu dropdown-menu-end">
-                                    <LangButton lang={langDemo[0]} setLang={setLang} />
-                                    <LangButton lang={langDemo[1]} setLang={setLang} />
-                                    <LangButton lang={langDemo[2]} setLang={setLang} />
-                                </ul>
+                        <div className="ivu-card-body">
+                            <div style={{ height: "300px" }}>
+                                <Editor
+                                    defaultLanguage="cpp"
+                                    defaultValue={'//some code here'}
+                                    theme="vs-dark"
+                                    onMount={handleEditorDidMount}
+                                />
+                            </div>
+                            <div className="text-end mt-3">
+                                <button type="button" className="btn btn-primary" onClick={showValue}>Nộp bài</button>
                             </div>
                         </div>
                     </div>
-                    <div className="ivu-card-body">
-                        <div style={{ height: "300px" }}>
-                            <Editor
-                                defaultLanguage="cpp"
-                                defaultValue={'//some code here'}
-                                theme="vs-dark"
-                                onMount={handleEditorDidMount}
-                            />
-                        </div>
-                        <div className="text-end mt-3">
-                            <button type="button" className="btn btn-primary" onClick={showValue}>Nộp bài</button>
-                        </div>
-                    </div>
-                </div>
+                ) : <></>}
+
             </div>
             <div className="ivu-col ivu-col-span-6" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
                 <div className="ivu-card ivu-card-bordered">
                     <div className="ivu-card-head d-flex justify-content-between align-items-center">
                         <h3>Bài nộp</h3>
                         <div className="">
-                            <Link >Tất cả</Link> | <Link >Của tôi</Link>
+                            <Link to={'/submissions?problemId='+id}>Tất cả</Link> | <Link >Của tôi</Link>
                         </div>
 
                     </div>
@@ -131,7 +133,7 @@ export default function Problem() {
                         <h3>Thông tin bài tập</h3>
                     </div>
                     <div className="ivu-card-body">
-                        <ProblemInfo data={problemData}/>
+                        <ProblemInfo data={problemData} />
                     </div>
                 </div>
 
@@ -157,20 +159,41 @@ function ProblemContent({ data }) {
     )
 }
 function LoadingContent() {
-
+    return (
+        <>
+            <div className="ivu-card-head">
+                <div className="placeholder-wave placeholder-glow"><h2 className="placeholder col-6"></h2></div>
+            </div>
+            <div className="ivu-card-body markdown">
+                <div className="placeholder-wave placeholder-glow"><h1 className="placeholder col-8"></h1></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-12"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-12"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-4"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-12"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-12"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-12"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-7"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-12"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-3"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-12"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-12"></p></div>
+                <div className="placeholder-wave placeholder-glow"><p className="placeholder col-4"></p></div>
+            </div>
+        </>
+    )
 }
 function ProblemInfo({ data }) {
-    if(data==null) return <LoadingInfo/>
+    if (data == null) return <LoadingInfo />
     return (
         <table>
             <tbody>
                 <tr>
                     <td>Độ khó</td>
-                    <td>data['Point']</td>
+                    <td><DifficultBadge difficult={data['Point']} /></td>
                 </tr>
                 <tr>
                     <td>Giới hạn thời gian</td>
-                    <td>1s</td>
+                    <td>{data['TimeLimit']}</td>
                 </tr>
                 <tr>
                     <td>Giới hạn bộ nhớ</td>
@@ -181,11 +204,43 @@ function ProblemInfo({ data }) {
     )
 }
 function LoadingInfo() {
-
+    return (
+        <table>
+            <tbody>
+                <tr>
+                    <td>Độ khó</td>
+                    <td className="col-6 placeholder-wave"><span className="placeholder col-6"></span></td>
+                </tr>
+                <tr>
+                    <td>Giới hạn thời gian</td>
+                    <td className="col-6 placeholder-wave"><span className="placeholder col-6"></span></td>
+                </tr>
+                <tr>
+                    <td>Giới hạn bộ nhớ</td>
+                    <td className="col-6 placeholder-wave"><span className="placeholder col-6"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    )
 }
 function LangButton({ lang, setLang }) {
     return (
         <li><button type="button" className="dropdown-item" onClick={() => setLang(lang)}>{lang.name}</button></li>
     )
-
+}
+function DifficultBadge({ difficult }) {
+    let component;
+    if (difficult == 1)
+        component = <div className="ivu-tag ivu-tag-checked text-bg-success rounded fw-bold text-white">
+            Dễ
+        </div>
+    if (difficult == 2)
+        component = <div className="ivu-tag ivu-tag-checked text-bg-warning rounded fw-bold text-white">
+            Trung bình
+        </div>
+    if (difficult == 3)
+        component = <div className="ivu-tag ivu-tag-checked text-bg-danger rounded fw-bold text-white">
+            Khó
+        </div>
+    return component
 }

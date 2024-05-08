@@ -16,7 +16,7 @@ function App() {
             {/* <h1>test</h1> */}
             <Route path='/' element={<Home/>} />
             <Route path='/home' element={<h1>Hello World</h1>} />
-            <Route path='/problems/*' element={<ProblemList />} />
+            <Route path='/problems' element={<ProblemList />} />
             <Route path='/problem/:id' element={<Problem />} />
             <Route path='/submissions' element={<SubmissionList />} />
             <Route path='/rank' element={<UserRank />} />
