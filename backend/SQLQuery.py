@@ -223,4 +223,8 @@ SQLGETALLSTATE="""
 	select distinct tblSubmissions.SubStatus
 	from tblSubmissions
 """
+SQLGETALLTESTFILE="""
+	select * 
+	from tblTestCaseFile
+"""
 

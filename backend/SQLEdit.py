@@ -38,3 +38,9 @@ insert into tblSubmissions
 values(?,?,?,?,?,?,?,?,?,?)
 """
 
+SQLADDTESTCASEFILE="""
+insert into tblTestCaseFile
+values(?,?)
+
+"""
+

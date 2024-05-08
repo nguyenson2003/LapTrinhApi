@@ -20,7 +20,7 @@ def executeSqlQuery(sqlQuery,*args):
         resp.headers.add("Access-Control-Allow-Origin","*")
         return resp
     except Exception as e:
-        return e
+        print("lỗi ",e)
 def justExeSqlQuery(sql,*args):
     try:
         cursor = conn.cursor()
@@ -32,7 +32,7 @@ def justExeSqlQuery(sql,*args):
             results.append(dict(zip(keys, i)))
         return results
     except Exception as e:
-        return e
+        print("lỗi ",e)
     
 def execuleSqlEdit(sqlEdit,*args):
     try:
@@ -41,7 +41,7 @@ def execuleSqlEdit(sqlEdit,*args):
         conn.commit()
         return flask.jsonify({"mess":"success"})
     except Exception as e:
-        return flask.jsonify({"lỗiiiiiiiiiii":e})
+        return flask.jsonify({"mess":e})
 try:
     if __name__ == "__main__":
         from routes import all

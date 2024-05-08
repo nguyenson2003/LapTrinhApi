@@ -255,3 +255,7 @@ where tblLanguage.LanguageName=''
 --lấy tất cả loại trạng thái khi sub
 select distinct tblSubmissions.SubStatus
 from tblSubmissions
+
+--get all test file
+select * 
+from tblTestCaseFile

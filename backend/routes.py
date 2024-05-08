@@ -57,10 +57,12 @@ def getRanking():
 def getAllState():
     return executeSqlQuery(SQLGETALLSTATE)
 
+@all.route('/testfile', methods=['GET'])
+def getAllTestFile():
+    return executeSqlQuery(SQLGETALLTESTFILE)
 
 
-
-
+#route edit #############################################################################
 @all.route('/problems',methods=['post'])
 def addProblem():
     name =flask.request.json.get('ProblemName',"")
@@ -98,9 +100,6 @@ def upProblem():
 @all.route('/problems',methods=['delete'])
 def delProblem():
     id = flask.request.json.get('ProblemId',"")
-    if len(justExeSqlQuery(SQLGETPROBLEM,id))>1:
-        # TODO: id problem sai
-        return flask.jsonify({"mess":'id problem sai'})
     return execuleSqlEdit(SQLDELPROBLEM,id)
 
 
@@ -188,3 +187,13 @@ def addSubmission():
     return execuleSqlEdit(SQLADDSUBMISSION,ProblemInContestId,UserName,SubmissionTime,LanguageName,
                           TheAnswer,Memory,TotalTime,SubStatus,Point,isActive)
 
+
+@all.route('/testfile',methods=['post'])
+def addTestcaseFile():
+    ProblemId=flask.request.json.get('ProblemId',"")
+    FileZip=flask.request.files.get('attachment')
+    # return FileZip
+    if len(justExeSqlQuery(SQLGETPROBLEM,ProblemId))==0 :
+        # TODO: id problem k tồn tại
+        return flask.jsonify({"mess":'id problem không tồn tại'})
+    return execuleSqlEdit(SQLADDTESTCASEFILE,ProblemId,FileZip)
