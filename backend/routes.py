@@ -1,5 +1,6 @@
 import datetime
 import string
+import zipfile
 import flask
 from flask import json
 from SQLQuery import * 
@@ -70,17 +71,19 @@ def addProblem():
     idt=flask.request.json.get('ProblemTypeId',"")
     p=flask.request.json.get('Point',"")
     des=flask.request.json.get('Decribe',"")
+    TimeLimit=flask.request.json.get('TimeLimit',"")
+    MemoryLimit=flask.request.json.get('MemoryLimit',"")
     isActive=1
     if len(justExeSqlQuery(SQLGETPROBLEM,id))>0: 
         # TODO: đã tồn tại id problem
         return flask.jsonify({"mess":"đã tồn tại id problem"}) 
-    if id=='' or idt=='' or not isinstance(p,int) or name=='':
-        # TODO: id rỗng hoặc idtype rỗng hoặc điểm không nguyên hoặc name rỗng
-        return flask.jsonify({"mess":"id rỗng hoặc idtype rỗng hoặc điểm không nguyên hoặc name rỗng"})
+    if id=='' or idt=='' or not isinstance(p,int) or name=='' or TimeLimit=="" or MemoryLimit=="":
+        # TODO: có 1 cái not null bị null
+        return flask.jsonify({"mess":"có 1 cái not null bị null"})
     if len(justExeSqlQuery(SQLGETPROBLEMTYPEBYID,idt))==0: 
         # TODO: không tồn tại kiểu bt này
-        return flask.jsonify({"mess":"không tồn tại kiểu bt này"}) 
-    return execuleSqlEdit(SQLINSPROBLEM,name,id,idt,p,des,isActive)
+        return flask.jsonify({"mess":"không tồn tại kiểu bt này"})
+    return execuleSqlEdit(SQLINSPROBLEM,name,id,idt,p,des,TimeLimit,MemoryLimit,isActive)
 @all.route('/problems', methods=['put'])
 def upProblem():
     id = flask.request.json.get('ProblemId',"")
@@ -157,7 +160,7 @@ def addSubmission():
     Point=flask.request.json.get('Point',"")
     isActive=1
     if ProblemInContestId=='' or UserName=='' or LanguageName=='' or\
-        TheAnswer=='' or Memory=='' or TotalTime=="" or SubStatus==''or Point=='':
+        TheAnswer=='':
         # TODO: 1 trong các giá trị not null bị null
         return flask.jsonify({"mess":"1 trong các giá trị not null bị null"})
     if len(justExeSqlQuery(SQLGETACCOUNTBYUSERNAME,UserName))==0: 
@@ -176,14 +179,6 @@ def addSubmission():
         # TODO: Point phải nhỏ hơn 100
         return flask.jsonify({"mess":"Point phải nhỏ hơn 100"}) 
     
-    temp =TotalTime.split(':')
-    if len(temp) != 3:
-        return flask.jsonify({"mess":"Tổng thời gian phải ở dạng H:M:S.f với 00<=H<=23, 00<=m,s<=59"})
-    hours = int(temp[0])
-    minutes = int(temp[1])
-    seconds = float(temp[2])
-    if not(0 <= hours <= 23 and 0 <= minutes <= 59 and 0 <= seconds < 60):
-        return flask.jsonify({"mess":"Tổng thời gian phải ở dạng H:M:S.f với 00<=H<=23, 00<=m,s<=59"}) 
     return execuleSqlEdit(SQLADDSUBMISSION,ProblemInContestId,UserName,SubmissionTime,LanguageName,
                           TheAnswer,Memory,TotalTime,SubStatus,Point,isActive)
 
@@ -202,10 +197,37 @@ def addSubmission():
 def addTestcaseFile():  
     ProblemId = flask.request.form.get('ProblemId')
     FileZip = flask.request.files.get('file')
+    NumberTestcase=flask.request.form.get('NumberTestcase')
     if len(justExeSqlQuery(SQLGETPROBLEM,ProblemId))==0 :
         # TODO: id problem k tồn tại
         return flask.jsonify({"mess":'id problem không tồn tại'})
-    return execuleSqlEdit(SQLADDTESTCASEFILE,ProblemId,FileZip.stream.read())
+    NumberTestcase=int(NumberTestcase)
+    ck=[0]*(NumberTestcase+10)
+    file_list = FileZip.name
+    with zipfile.ZipFile(FileZip, 'r') as zip_ref:
+        # Lấy danh sách các tệp tin và thư mục trong thư mục
+        file_list = zip_ref.namelist()
+    for file_name in file_list:
+        if file_name.startswith('in') and file_name.endswith('.txt'):
+            ck[int(file_name[2:-4])]+=1
+        elif file_name.startswith('out') and file_name.endswith('.txt'):
+            ck[int(file_name[3:-4])]-=1
+    if any(element != 0 for element in ck):
+        return flask.jsonify({"mess":'số file in và file out không khớp với nhau',
+                              "files_name":file_list,
+                              'num':NumberTestcase})
+        
+    if len(file_list)/2!=NumberTestcase:
+        # TODO: id problem k tồn tại
+        return flask.jsonify({"mess":'số file in và file out không phải từ 1 đến number testcase',
+                              "files_name":file_list,
+                              'num':NumberTestcase})
+    try:
+        justExeSqlQuery(SQLDELOLDFILEZIP,ProblemId)
+    except Exception as e:
+        print("lỗi ",e)
+    
+    return execuleSqlEdit(SQLADDTESTCASEFILE,ProblemId,FileZip.stream.read(),NumberTestcase)
 
 from Main import executeGetFileZip
 @all.route('/testfile', methods = ['get'])   

@@ -18,7 +18,6 @@ def executeSqlQuery(sqlQuery,*args):
             results.append(dict(zip(keys, i)))
         resp = flask.jsonify(results)
         resp.status_code = 200
-        resp.headers.add("Access-Control-Allow-Origin","*")
         return resp
     except Exception as e:
         print("lỗi ",e)

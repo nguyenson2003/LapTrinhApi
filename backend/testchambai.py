@@ -14,8 +14,7 @@ subprocess.run(["g++", filename, "-o",
 
 # Chạy file C++ và lấy kết quả đầu ra
 start_time = time.time()
-process = psutil.Process()
-memory_info = process.memory_info().rss
+memory_info = psutil.Process().memory_info().rss
 # result=subprocess.run([fileexe], 
 #                         input='1', capture_output=True, text=True)
 try:
@@ -33,7 +32,7 @@ end_time = time.time()
 
 # Tính thời gian chạy
 execution_time = end_time - start_time
-memory_info2 = process.memory_info().rss
+memory_info2 = psutil.Process().memory_info().rss
 # In thời gian chạy
 print("Thời gian chạy: ", execution_time, " giây")
 

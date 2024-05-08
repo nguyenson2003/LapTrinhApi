@@ -44,23 +44,16 @@ create table tblProblem(
 		foreign key references tblProblemType(ProblemTypeId),
 	Point int not null,
 	Decribe nvarchar(100),
-	TimeLimit time,
-	MemoryLimit nvarchar(100),
+	TimeLimit float not null,
+	MemoryLimit int not null,
 	isActive int default 1
 );
 
 create table tblTestCaseFile(
 	ProblemId nvarchar(100) not null primary key
 		foreign key references tblProblem(ProblemId),
-	FileZip varbinary(max) not null
-);
-go
-create table tblTestCaseDetail(
-	ProblemId nvarchar(100) not null
-		foreign key references tblTestCaseFile(ProblemId),
-	TestCaseId nvarchar(100) not null,
-	FileInputName nvarchar(100) not null,
-	FileOutputName nvarchar(100) not null
+	FileZip varbinary(max) not null,
+	NumberTestcase int not null
 );
 go
 create table tblLanguage(
@@ -87,10 +80,10 @@ create table tblSubmissions(
 	LanguageName nvarchar(100) not null
 		foreign key references tblLanguage(LanguageName),
 	TheAnswer varchar(max) not null,
-	Memory varchar(100) not null,
-	TotalTime time not null,
-	SubStatus varchar(100) not null,
-	Point int not null,
+	Memory int ,
+	TotalTime float,
+	SubStatus varchar(100),
+	Point int ,
 	isActive int default 1
 );
 go 

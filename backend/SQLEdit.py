@@ -40,7 +40,12 @@ values(?,?,?,?,?,?,?,?,?,?)
 
 SQLADDTESTCASEFILE="""
 insert into tblTestCaseFile
-values(?,?)
+values(?,?,?)
 
+"""
+
+SQLDELOLDFILEZIP="""
+DELETE FROM tblTestCaseFile
+WHERE tblTestCaseFile.ProblemId=?
 """
 

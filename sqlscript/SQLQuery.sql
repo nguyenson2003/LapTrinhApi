@@ -6,7 +6,9 @@ select tblProblem.ProblemId,
 		tblProblem.ProblemName,
 		tblProblem.Point,
 		isnull(temp1.TotalSubmit,0) as TotalSubmit,
-		CONCAT(ISNULL(temp1.RateAC,0),'%') as RateAC
+		CONCAT(ISNULL(temp1.RateAC,0),'%') as RateAC,
+		tblProblem.TimeLimit,
+		tblProblem.MemoryLimit
 from (	
 	select tblProblemInContest.ProblemId as id, 
 		sum(tblSubmissions.isActive) as TotalSubmit,
@@ -259,3 +261,14 @@ from tblSubmissions
 --get all test file
 select * 
 from tblTestCaseFile
+--delete file zip cũ
+DELETE FROM tblTestCaseFile
+WHERE tblTestCaseFile.ProblemId=''
+--get infilename 
+select tblTestCaseDetail.FileInputName
+from tblTestCaseDetail
+where tblTestCaseDetail.ProblemId=''
+--get outfilename 
+select tblTestCaseDetail.FileOutputName
+from tblTestCaseDetail
+where tblTestCaseDetail.ProblemId=''
