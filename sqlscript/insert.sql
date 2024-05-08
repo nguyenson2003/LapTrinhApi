@@ -1,6 +1,7 @@
 ﻿--delete bảng
 delete from tblSubmissions
 delete from tblProblemInContest
+delete from tblTestCaseFile
 delete from tblProblem
 delete from tblProblemType
 delete from tblAccount
@@ -42,22 +43,22 @@ values(N'pbt3',N'Cơ bản-Thuật toán')
 go
 insert into tblProblem
 values(N'Hello World',N'pb1',N'pbt1'
-	,1,N'In ra dòng chữ "hello world" ra màn hình','00:00:01','1MB',1) 
+	,1,N'In ra dòng chữ "hello world" ra màn hình',1,1,1) 
 insert into tblProblem
 values(N'SumAB',N'pb2',N'pbt1'
-	,1,N'In ra màn hình kết quả của a+b','00:00:01','1MB',1)
+	,1,N'In ra màn hình kết quả của a+b',1,1,1) 
 insert into tblProblem
 values(N'MulAB',N'pb3',N'pbt2'
-	,1,N'In ra màn hình kết quả của a*b','00:00:01','1MB',1)
+	,1,N'In ra màn hình kết quả của a*b',1,1,1) 
 insert into tblProblem
 values(N'DivAB',N'pb4',N'pbt2'
-	,1,N'In ra màn hình kết quả của a/b','00:00:01','1MB',1)
+	,1,N'In ra màn hình kết quả của a/b',1,1,1) 
 insert into tblProblem
 values(N'SubAB',N'pb5',N'pbt2'
-	,2,N'In ra màn hình kết quả của a-b','00:00:01','1MB',1)
+	,2,N'In ra màn hình kết quả của a-b',1,1,1) 
 insert into tblProblem
 values(N'Fib(a)',N'pb6',N'pbt3'
-	,2,N'Tính số fibo thứ a với Fib(0)=1, Fib(1)=1','00:00:01','1MB',1)
+	,2,N'Tính số fibo thứ a với Fib(0)=1, Fib(1)=1',1,1,1) 
 go
 insert into tblProblemInContest
 values(N'pbic1',N'contest1',N'pb1',1)
@@ -75,23 +76,23 @@ insert into tblProblemInContest
 values(N'pbic7',null,N'pb5',1)
 go
 insert into tblSubmissions
-values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',100,0)
+values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,0)
 
 insert into tblSubmissions
-values(N'pbic2',N'lvminh','2024-01-02 13:20:00',N'python','','1MB','00:00:00.004','AC',100,1)
+values(N'pbic2',N'lvminh','2024-01-02 13:20:00',N'python','',1,0.001,'AC',100,1)
 insert into tblSubmissions
-values(N'pbic4',N'lvminh','2024-01-02 13:20:00',N'python','','1MB','00:00:00.004','AC',100,1)
+values(N'pbic4',N'lvminh','2024-01-02 13:20:00',N'python','',1,0.001,'AC',100,1)
 insert into tblSubmissions
-values(N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',100,1)
+values(N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,1)
 insert into tblSubmissions
-values(N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','WA',30,1)
+values(N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'WA',30,1)
 insert into tblSubmissions
-values(N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','WA',30,1)
+values(N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'WA',30,1)
 insert into tblSubmissions
-values(N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','WA',20,1)
+values(N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'WA',20,1)
 insert into tblSubmissions
-values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','RTE',40,1)
+values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'RTE',40,1)
 insert into tblSubmissions
-values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','RTE',50,1)
+values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'RTE',50,1)
 insert into tblSubmissions
-values(N'pbic7',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',100,1)
+values(N'pbic7',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,1)

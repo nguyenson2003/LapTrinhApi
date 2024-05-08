@@ -230,7 +230,13 @@ SQLGETALLTESTFILE="""
  	from tblTestCaseFile
 """
 SQLGETNUMTESBYID="""
-	select tblTestCaseFile.NumberTestcase 
+	select tblTestCaseFile.NumberTestcase,tblTestCaseFile.FileZip
 	from tblTestCaseFile
-	where tblTestCaseFile.ProblemId=''
+	where tblTestCaseFile.ProblemId=?
+"""
+
+SQLGETTIMELIMBYIDP="""
+select tblProblem.TimeLimit,tblProblem.MemoryLimit
+from tblProblem
+where tblProblem.ProblemId=?
 """

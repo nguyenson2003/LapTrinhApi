@@ -226,11 +226,11 @@ def addTestcaseFile():
         justExeSqlQuery(SQLDELOLDFILEZIP,ProblemId)
     except Exception as e:
         print("lỗi ",e)
-    
+    FileZip.stream.seek(0)
     return execuleSqlEdit(SQLADDTESTCASEFILE,ProblemId,FileZip.stream.read(),NumberTestcase)
 
 from Main import executeGetFileZip
 @all.route('/testfile', methods = ['get'])   
 def getTestcaseFile():
-    return executeGetFileZip('pb2')
+    return executeGetFileZip('pb1')
 

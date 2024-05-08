@@ -268,4 +268,9 @@ WHERE tblTestCaseFile.ProblemId=''
 select tblTestCaseFile.NumberTestcase 
 from tblTestCaseFile
 where tblTestCaseFile.ProblemId=''
-select * from tblProblem
+select tblTestCaseFile.FileZip
+from tblTestCaseFile
+where tblProblem.ProblemId=''
+select tblTestCaseFile.NumberTestcase,tblTestCaseFile.FileZip
+	from tblTestCaseFile
+	where tblTestCaseFile.ProblemId='pb1'
