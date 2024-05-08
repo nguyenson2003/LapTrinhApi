@@ -57,9 +57,9 @@ def getRanking():
 def getAllState():
     return executeSqlQuery(SQLGETALLSTATE)
 
-@all.route('/testfile', methods=['GET'])
-def getAllTestFile():
-    return executeSqlQuery(SQLGETALLTESTFILE)
+# @all.route('/testfile', methods=['GET'])
+# def getAllTestFile():
+#     return executeSqlQuery(SQLGETALLTESTFILE)
 
 
 #route edit #############################################################################
@@ -188,12 +188,27 @@ def addSubmission():
                           TheAnswer,Memory,TotalTime,SubStatus,Point,isActive)
 
 
-@all.route('/testfile',methods=['post'])
-def addTestcaseFile():
-    ProblemId=flask.request.json.get('ProblemId',"")
-    FileZip=flask.request.files.get('attachment')
-    # return FileZip
+# @all.route('/testfile',methods=['post'])
+# def addTestcaseFile():
+#     ProblemId=flask.request.json.get('ProblemId',"")
+#     FileZip=flask.request.files.get('attachment')
+#     # return FileZip
+#     if len(justExeSqlQuery(SQLGETPROBLEM,ProblemId))==0 :
+#         # TODO: id problem k tồn tại
+#         return flask.jsonify({"mess":'id problem không tồn tại'})
+#     return execuleSqlEdit(SQLADDTESTCASEFILE,ProblemId,FileZip)
+
+@all.route('/testfile', methods = ['POST'])   
+def addTestcaseFile():  
+    ProblemId = flask.request.form.get('ProblemId')
+    FileZip = flask.request.files.get('file')
     if len(justExeSqlQuery(SQLGETPROBLEM,ProblemId))==0 :
         # TODO: id problem k tồn tại
         return flask.jsonify({"mess":'id problem không tồn tại'})
-    return execuleSqlEdit(SQLADDTESTCASEFILE,ProblemId,FileZip)
+    return execuleSqlEdit(SQLADDTESTCASEFILE,ProblemId,FileZip.stream.read())
+
+from Main import executeGetFileZip
+@all.route('/testfile', methods = ['get'])   
+def getTestcaseFile():
+    return executeGetFileZip('pb2')
+

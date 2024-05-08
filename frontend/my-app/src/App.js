@@ -5,6 +5,7 @@ import SubmissionList from './view/Submission/SubmissionList.js';
 import UserRank from './view/Rank/UserRank.js'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import UserProfile from './view/UserProfile/UserProfile.js';
+import Home from './view/Home/Home.js';
 function App() {
   return (
     <Router>
@@ -13,7 +14,7 @@ function App() {
         <div className="content-app ms-3 me-3 mt-3" style={{ background: 'none' }}>
           <Routes>
             {/* <h1>test</h1> */}
-            <Route path='/' element={<h1>Hello World</h1>} />
+            <Route path='/' element={<Home/>} />
             <Route path='/home' element={<h1>Hello World</h1>} />
             <Route path='/problems/*' element={<ProblemList />} />
             <Route path='/problem/:id' element={<Problem />} />

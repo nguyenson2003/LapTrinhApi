@@ -1,5 +1,6 @@
 import flask
 import pyodbc
+import io
 from SQLQuery import *
 from config import con_str
 #tạo chuỗi kết nối
@@ -42,10 +43,25 @@ def execuleSqlEdit(sqlEdit,*args):
         return flask.jsonify({"mess":"success"})
     except Exception as e:
         return flask.jsonify({"mess":e})
+def executeGetFileZip(problemId):
+    try:
+        cursor = conn.cursor()
+        cursor.execute('select filezip from tblTestCaseFile where problemid = ?',problemId)
+        f = io.BytesIO()
+        f.write(cursor.fetchall()[0][0])
+        f.seek(0)
+        return flask.send_file(f,download_name='test.zip',mimetype='zip',as_attachment=True)
+    except Exception as e:
+        print("lỗi ",e)
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 try:
     if __name__ == "__main__":
         from routes import all
         app.register_blueprint(all)
         app.run(host = '127.0.0.1', port=5000)
-except:
-    print("lỗi")
+except Exception as e:
+    print("lỗi ", e)
