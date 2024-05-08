@@ -143,7 +143,7 @@ function RowList({ result, curPage, maxPage, setMaxPage, numPerPage }) {
     const rowList = [];
     if (result == null) {
         for (let i = 0; i < numPerPage; i++)
-            rowList.push(<LoadingRow />)
+            rowList.push(<LoadingRow key={i}/>)
     } else {
         result = JSON.parse(result);
         for (let i = (curPage - 1) * numPerPage; i < curPage * numPerPage && i < result.length; i++) {
