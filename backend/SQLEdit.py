@@ -1,14 +1,40 @@
 SQLINSPROBLEM="""
-
+insert into tblProblem
+values(?,?,?
+	,?,?,?) 
 """
 SQLUPDPROBLEM="""
     update tblProblem 
     set Decribe=?,
         Point=?,
-        ProblemName=?,
-    where tblProblem.ProblemId like ?
+        ProblemName=?
+        ProblemTypeId=?
+    where tblProblem.ProblemId = ?
 """
 SQLDELPROBLEM="""
+update tblProblem 
+set isActive=0
+where tblProblem.ProblemId = ?
+"""
+SQLADDACCOUNT="""
+insert into tblAccount
+values(?,?,?,?,?,?)
+"""
+SQLEDITACCOUNT="""
+update tblAccount 
+set PassWord=?,
+	PermissionId=?,
+	FullName=?
+where tblAccount.UserName = ?
+"""
+SQLDELACCOUNT="""
+    update tblAccount 
+    set isActive=0
+    where tblAccount.UserName = ?
+"""
 
+SQLADDSUBMISSION="""
+insert into tblSubmissions
+values(?,?,?,?,?,?,?,?,?,?)
 """
 

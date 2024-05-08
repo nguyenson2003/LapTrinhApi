@@ -139,7 +139,7 @@ select tblSubmissions.SubmissionId,
 	tblSubmissions.SubStatus,
 	CONVERT(VARCHAR(20),tblSubmissions.SubmissionTime, 108)+'-'+CONVERT(VARCHAR(20), tblSubmissions.SubmissionTime, 103) AS DateSub,
 	tblSubmissions.LanguageName,
-	concat(DATEPART(SECOND, tblSubmissions.TotalTime) + (DATEPART(MILLISECOND,tblSubmissions.TotalTime) / 1000.0),'s') AS RunTime,
+	concat(DATEPART(MINUTE, tblSubmissions.TotalTime)*60+DATEPART(SECOND, tblSubmissions.TotalTime) + (DATEPART(MILLISECOND,tblSubmissions.TotalTime) / 1000.0),'s') AS RunTime,
 	tblSubmissions.Memory,
 	concat(tblSubmissions.Point,'/100'),
 	(select tblAccount.FullName
@@ -202,3 +202,56 @@ set Decribe='a',
 where tblProblem.ProblemId like '%pb1%'
 select * from tblProblem
 --xóa bt
+update tblProblem 
+set isActive=0
+where tblProblem.ProblemId like '%pb1%'
+
+--tìm problem type by id
+select * 
+from tblProblemType
+where tblProblemType.ProblemTypeId like '%pbt1%'
+
+--thêm tk
+insert into tblAccount
+values(N'lvminh',N'123',N'pms3',N'Le van minh',1,'2024-01-01')
+
+--sửa tk
+update tblAccount 
+set PassWord='',
+	PermissionId='pms3',
+	FullName=''
+where tblAccount.UserName = 'lvminh'
+
+--del tk
+update tblAccount 
+set isActive=0
+where tblAccount.UserName = 'lvminh'
+
+--get account by un
+select * 
+from tblAccount
+where tblAccount.UserName='lvminh'
+
+--get quyền by id
+select * 
+from tblPermission
+where tblPermission.PermissionId=''
+
+--nộp bài tập
+insert into tblSubmissions
+values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','','1MB','00:00:00.004','AC',100,0)
+
+
+--getProblemInContestby id
+select * 
+from tblProblemInContest
+where tblProblemInContest.ProblemInContestId=''
+
+--getlanguage
+select * 
+from tblLanguage
+where tblLanguage.LanguageName=''
+
+--lấy tất cả loại trạng thái khi sub
+select distinct tblSubmissions.SubStatus
+from tblSubmissions

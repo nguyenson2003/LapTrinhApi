@@ -76,7 +76,7 @@ create table tblProblemInContest(
 );
 go 
 create table tblSubmissions(
-	SubmissionId nvarchar(100) not null primary key,
+	SubmissionId INT IDENTITY(1,1) primary key,
 	ProblemInContestId nvarchar(100) not null
 		foreign key references tblProblemInContest(ProblemInContestId),
 	UserName nvarchar(100) not null

@@ -20,8 +20,20 @@ def executeSqlQuery(sqlQuery,*args):
         resp.headers.add("Access-Control-Allow-Origin","*")
         return resp
     except Exception as e:
-        return flask.jsonify({"lỗi":e})
-
+        return e
+def justExeSqlQuery(sql,*args):
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql,args)
+        results ,keys = [],[]
+        for i in cursor.description: # lấy các key
+            keys.append(i[0])
+        for i in cursor.fetchall(): # lấy tất cả bản ghi
+            results.append(dict(zip(keys, i)))
+        return results
+    except Exception as e:
+        return e
+    
 def execuleSqlEdit(sqlEdit,*args):
     try:
         cursor = conn.cursor()
@@ -29,7 +41,7 @@ def execuleSqlEdit(sqlEdit,*args):
         conn.commit()
         return flask.jsonify({"mess":"success"})
     except Exception as e:
-        return flask.jsonify({"lỗi":e})
+        return flask.jsonify({"lỗiiiiiiiiiii":e})
 try:
     if __name__ == "__main__":
         from routes import all

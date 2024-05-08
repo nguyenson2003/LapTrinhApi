@@ -136,9 +136,9 @@ select tblSubmissions.SubmissionId,
 	tblSubmissions.SubStatus,
 	CONVERT(VARCHAR(20),tblSubmissions.SubmissionTime, 108)+'-'+CONVERT(VARCHAR(20), tblSubmissions.SubmissionTime, 103) AS DateSub,
 	tblSubmissions.LanguageName,
-	concat(DATEPART(SECOND, tblSubmissions.TotalTime) + (DATEPART(MILLISECOND,tblSubmissions.TotalTime) / 1000.0),'s') AS RunTime,
+	concat(DATEPART(MINUTE, tblSubmissions.TotalTime)*60+DATEPART(SECOND, tblSubmissions.TotalTime) + (DATEPART(MILLISECOND,tblSubmissions.TotalTime) / 1000.0),'s') AS RunTime,
 	tblSubmissions.Memory,
-	concat(tblSubmissions.Point,'/100'),
+	concat(tblSubmissions.Point,'/100') as Point,
 	(select tblAccount.FullName
 	from tblAccount
 	where tblAccount.UserName=tblSubmissions.UserName) as FullName,
@@ -187,12 +187,40 @@ SQLGETPROBLEM="""
 	select * 
 	from tblProblem
 	where tblProblem.isActive=1
-		and tblProblem.ProblemId like ?
+		and tblProblem.ProblemId = ?
 """
 
 SQLTEMP="""
 	select ? as temp
 """
 
-
+SQLGETPROBLEMTYPEBYID="""
+	select * 
+	from tblProblemType
+	where tblProblemType.ProblemTypeId = ?
+"""
+SQLGETACCOUNTBYUSERNAME="""
+	select * 
+	from tblAccount
+	where tblAccount.UserName=?
+"""
+SQLGETPERMISSIONTYPEBYID="""
+	select * 
+	from tblPermission
+	where tblPermission.PermissionId=?
+"""
+SQLGETPROBLEMINCONTESTTYPEBYID="""
+	select * 
+	from tblProblemInContest
+	where tblProblemInContest.ProblemInContestId=?
+"""
+SQLGETLANGUAGEBYNAME="""
+	select * 
+	from tblLanguage
+	where tblLanguage.LanguageName=?
+"""
+SQLGETALLSTATE="""
+	select distinct tblSubmissions.SubStatus
+	from tblSubmissions
+"""
 
