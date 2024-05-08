@@ -30,7 +30,7 @@ def getTypeProblemsAC(username=""):
     return executeSqlQuery(SQLGETTYPEPROBLEMSAC,f"%{username}%",f"%{username}%")
 
 @all.route('/typeprob/<username>/orderbydif',methods=['GET'])
-def getTypeProblemsAC(username=""):
+def getTypeProblemsOrderbydif(username=""):
     return executeSqlQuery(SQLGETPROBLEMSACORDERBYDIFFICULT,f"%{username}%",f"%{username}%")
 
 @all.route('/infacc/<username>',methods=['GET'])
@@ -59,4 +59,6 @@ def delProblems():
     p = flask.request.json.get('Point',temp[0]['Point'])
     name = flask.request.json.get('ProblemName',temp[0]['ProblemName'])
     return execuleSqlEdit(SQLUPDPROBLEM,des,p,name,id)
+
+
     
