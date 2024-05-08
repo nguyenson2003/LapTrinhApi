@@ -3,7 +3,9 @@ SQLGETPROBLEMS="""
 			tblProblem.ProblemName,
 			tblProblem.Point,
 			isnull(temp1.TotalSubmit,0) as TotalSubmit,
-			CONCAT(ISNULL(temp1.RateAC,0),'%') as RateAC
+			CONCAT(ISNULL(temp1.RateAC,0),'%') as RateAC,
+			tblProblem.TimeLimit,
+			tblProblem.MemoryLimit
 	from (	
 		select tblProblemInContest.ProblemId as id, 
 			sum(tblSubmissions.isActive) as TotalSubmit,
@@ -222,9 +224,5 @@ SQLGETLANGUAGEBYNAME="""
 SQLGETALLSTATE="""
 	select distinct tblSubmissions.SubStatus
 	from tblSubmissions
-"""
-SQLGETALLTESTFILE="""
-	select * 
-	from tblTestCaseFile
 """
 

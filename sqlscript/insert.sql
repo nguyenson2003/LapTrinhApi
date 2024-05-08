@@ -42,22 +42,22 @@ values(N'pbt3',N'Cơ bản-Thuật toán')
 go
 insert into tblProblem
 values(N'Hello World',N'pb1',N'pbt1'
-	,1,N'In ra dòng chữ "hello world" ra màn hình',1) 
+	,1,N'In ra dòng chữ "hello world" ra màn hình','00:00:01','1MB',1) 
 insert into tblProblem
 values(N'SumAB',N'pb2',N'pbt1'
-	,1,N'In ra màn hình kết quả của a+b',1)
+	,1,N'In ra màn hình kết quả của a+b','00:00:01','1MB',1)
 insert into tblProblem
 values(N'MulAB',N'pb3',N'pbt2'
-	,1,N'In ra màn hình kết quả của a*b',1)
+	,1,N'In ra màn hình kết quả của a*b','00:00:01','1MB',1)
 insert into tblProblem
 values(N'DivAB',N'pb4',N'pbt2'
-	,1,N'In ra màn hình kết quả của a/b',1)
+	,1,N'In ra màn hình kết quả của a/b','00:00:01','1MB',1)
 insert into tblProblem
 values(N'SubAB',N'pb5',N'pbt2'
-	,2,N'In ra màn hình kết quả của a-b',1)
+	,2,N'In ra màn hình kết quả của a-b','00:00:01','1MB',1)
 insert into tblProblem
 values(N'Fib(a)',N'pb6',N'pbt3'
-	,2,N'Tính số fibo thứ a với Fib(0)=1, Fib(1)=1',1)
+	,2,N'Tính số fibo thứ a với Fib(0)=1, Fib(1)=1','00:00:01','1MB',1)
 go
 insert into tblProblemInContest
 values(N'pbic1',N'contest1',N'pb1',1)

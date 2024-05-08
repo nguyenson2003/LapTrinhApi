@@ -44,6 +44,8 @@ create table tblProblem(
 		foreign key references tblProblemType(ProblemTypeId),
 	Point int not null,
 	Decribe nvarchar(100),
+	TimeLimit time,
+	MemoryLimit nvarchar(100),
 	isActive int default 1
 );
 
