@@ -241,3 +241,9 @@ select tblProblem.TimeLimit,tblProblem.MemoryLimit
 from tblProblem
 where tblProblem.ProblemId=?
 """
+SQLGETSOMEVALUEFORMAYCHAM="""
+	select tblProblemInContest.ProblemId,tblSubmissions.LanguageName,tblSubmissions.TheAnswer
+	from tblSubmissions join tblProblemInContest 
+	on tblSubmissions.ProblemInContestId=tblProblemInContest.ProblemInContestId
+	where tblSubmissions.SubmissionId=?
+"""
