@@ -1,7 +1,7 @@
 SQLINSPROBLEM="""
 insert into tblProblem
 values(?,?,?
-	,?,?,?) 
+	,?,?,?,?,?) 
 """
 SQLUPDPROBLEM="""
     update tblProblem 

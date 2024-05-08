@@ -4,8 +4,8 @@ SQLGETPROBLEMS="""
 			tblProblem.Point,
 			isnull(temp1.TotalSubmit,0) as TotalSubmit,
 			CONCAT(ISNULL(temp1.RateAC,0),'%') as RateAC,
-			tblProblem.TimeLimit,
-			tblProblem.MemoryLimit
+			concat(tblProblem.TimeLimit,'s') as TimeLimit,
+			concat(tblProblem.MemoryLimit,'kb')as MemoryLimit
 	from (	
 		select tblProblemInContest.ProblemId as id, 
 			sum(tblSubmissions.isActive) as TotalSubmit,
@@ -138,8 +138,8 @@ select tblSubmissions.SubmissionId,
 	tblSubmissions.SubStatus,
 	CONVERT(VARCHAR(20),tblSubmissions.SubmissionTime, 108)+'-'+CONVERT(VARCHAR(20), tblSubmissions.SubmissionTime, 103) AS DateSub,
 	tblSubmissions.LanguageName,
-	concat(DATEPART(MINUTE, tblSubmissions.TotalTime)*60+DATEPART(SECOND, tblSubmissions.TotalTime) + (DATEPART(MILLISECOND,tblSubmissions.TotalTime) / 1000.0),'s') AS RunTime,
-	tblSubmissions.Memory,
+	concat(TotalTime,'s') AS RunTime,
+	concat(tblSubmissions.Memory,'kb') as memory,
 	concat(tblSubmissions.Point,'/100') as Point,
 	(select tblAccount.FullName
 	from tblAccount
@@ -228,4 +228,9 @@ SQLGETALLSTATE="""
 SQLGETALLTESTFILE="""
 	select * 
  	from tblTestCaseFile
+"""
+SQLGETNUMTESBYID="""
+	select tblTestCaseFile.NumberTestcase 
+	from tblTestCaseFile
+	where tblTestCaseFile.ProblemId=''
 """
