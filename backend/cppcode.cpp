@@ -5,6 +5,5 @@ using namespace std;
 main(){
 	int a;
     cin>>a;
-    while(true){}
-    cout<<a;
+    cout<<a<<' ';
 }
