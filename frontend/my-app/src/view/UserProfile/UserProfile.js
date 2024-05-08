@@ -5,72 +5,78 @@ import { useState, useRef, useEffect } from "react";
 export default function UserProfile() {
     const { id } = useParams('id');
     const hashId = useLocation().hash;
-    let [problemData, setProblemData] = useState(null)
-    let [lang, setLang] = useState({ id: 'cpp', name: 'C++ 11' });
-    const langDemo = [
-        { id: 'cpp', name: 'C++ 11' },
-        { id: 'java', name: 'Java 17' },
-        { id: 'py', name: 'Python 3' },
-    ]
+    let [userData, setUserData] = useState(null)
+    let [tagAcData, setTagAcData] = useState(null)
+    let [diffAcData, setDiffAcData] = useState([0, 0, 0])
     useEffect(() => {
-        setProblemData(null);
-        setTimeout(() => {
-            const requestOptions = {
-                method: "GET",
-                redirect: "follow"
-            };
-            var url = new URL("http://127.0.0.1:5000/infacc/"+id);
-            fetch(url, requestOptions)
-                .then((response) => response.text())
-                .then((result) => {
-                    let data = JSON.parse(result);
-                    console.log(data)
-                    setProblemData(data);
-                    
-                })
-                .catch((error) => {
-                    setProblemData('[]');
-                    console.error(error)
-                })
-        }, 1000)
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow"
+        };
+        var url = new URL("http://127.0.0.1:5000/infacc/" + id);
+        fetch(url, requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                let data = JSON.parse(result)[0];
+                console.log(data)
+                setUserData(data);
+                var url = new URL("http://127.0.0.1:5000/typeprob/" + id + "/ac");
+                fetch(url, requestOptions)
+                    .then((response) => response.text())
+                    .then((result) => {
+                        let data = JSON.parse(result);
+                        console.log(data)
+                        setTagAcData(data);
+                        var url = new URL("http://127.0.0.1:5000/typeprob/" + id + "/orderbydif");
+                        fetch(url, requestOptions)
+                            .then((response) => response.text())
+                            .then((result) => {
+                                let data = JSON.parse(result);
+                                console.log(data)
+                                let temp = [0, 0, 0]
+                                for (let i = 0; i < data.length; i++) {
+                                    temp[data[i].Point - 1] = data[i].Quantity;
+                                }
+                                setDiffAcData(temp);
+                            })
+                            .catch((error) => {
+                                setUserData([]);
+                                console.error(error)
+                            })
+                    })
+                    .catch((error) => {
+                        setUserData([]);
+                        console.error(error)
+                    })
+            })
+            .catch((error) => {
+                setUserData([]);
+                console.error(error)
+            })
     }, []);
+
+    if (userData == null) return (<h1>404 Not Found</h1>)
     return (
         <div className="ivu-row" style={{ marginLeft: '-9px', marginRight: '-9px' }}>
             <div className="ivu-col ivu-col-span-6" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
                 <div className="ivu-card ivu-card-bordered">
                     <div className="ivu-card-head d-flex justify-content-between align-items-center">
-                        <h3>Bài nộp</h3>
-                        <div className="">
-                            <Link >Tất cả</Link> | <Link >Của tôi</Link>
-                        </div>
-
+                        <h3>{userData['FullName']}</h3>
                     </div>
                     <div className="ivu-card-body pt-0">
-                        basjd
+                        <div>Đã tham gia ngày: {userData.DateCreate}</div>
+                        <Link>Các bài đã nộp</Link><br />
+                        <Link>Các bài đã AC</Link>
                     </div>
                 </div>
                 <div className="ivu-card ivu-card-bordered mt-3">
                     <div className="ivu-card-head">
-                        <h3>Thông tin bài tập</h3>
+                        <h3>Các dạng bài tập đã giải</h3>
                     </div>
-                    <div className="ivu-card-body">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>Độ khó</td>
-                                    <td>Trung bình</td>
-                                </tr>
-                                <tr>
-                                    <td>Giới hạn thời gian</td>
-                                    <td>1s</td>
-                                </tr>
-                                <tr>
-                                    <td>Giới hạn bộ nhớ</td>
-                                    <td>1000MB</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div className="ivu-card-body pt-0">
+                        <TagList tags={tagAcData}></TagList>
                     </div>
+
                 </div>
 
             </div>
@@ -79,54 +85,64 @@ export default function UserProfile() {
                     <div className="ivu-card-head">
                         <div className="panel-title">
                             <h2>
-                                Demo markdown
+                                Thông số
                             </h2>
                         </div>
                     </div>
                     <div className="ivu-card-body">
-                        hbdsa
+                        <table>
+                            <tbody>
+                                <tr className="mb-3">
+                                    <td className="col-6"><h5>Số bài AC: </h5></td>
+                                    <td><h5>{userData.TotalProblemAC}</h5></td>
+                                </tr>
+                                <tr className="mb-3">
+                                    <td className="col-6"><h5>Tổng số bài nộp AC: </h5></td>
+                                    <td><h5>{userData.TotalSubAC}</h5></td>
+                                </tr>
+                                <tr className="mb-3 text-success">
+                                    <td className="col-6"><h5>Số bài dễ đã AC: </h5></td>
+                                    <td><h5>{diffAcData[0]}</h5></td>
+                                </tr>
+                                <tr className="mb-3 text-warning">
+                                    <td className="col-6"><h5>Số bài trung bình đã AC: </h5></td>
+                                    <td><h5>{diffAcData[1]}</h5></td>
+                                </tr>
+                                <tr className="mb-3 text-danger">
+                                    <td className="col-6"><h5>Số bài khó đã AC:  </h5></td>
+                                    <td><h5>{diffAcData[2]}</h5></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br></br>
+                        <h5>Tỷ lệ nộp bài AC:</h5>
+                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-success" style={{ width: userData.RateAC }}>{userData.RateAC}</div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="ivu-card mb-3" id="editor">
-                    <div className="ivu-card-head d-flex align-items-center" >
-                        <div className="panel-title col-6">
-                            <h2>
-                                Nộp bài
-                            </h2>
-                        </div>
-                        <div className="row col-6">
-                            <input type="hidden" name="lang" />
-                            <label className="form-label">Ngôn ngữ:</label>
-                            <div className="dropdown btn-group col-8">
-                                <button type="button" className="btn btn-outline-primary">
-                                    {lang.name}
-                                </button>
-                                <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span className="visually-hidden">Toggle Dropdown</span>
-                                </button>
-                                <ul className="dropdown-menu dropdown-menu-end">
-                                    <LangButton lang={langDemo[0]} setLang={setLang} />
-                                    <LangButton lang={langDemo[1]} setLang={setLang} />
-                                    <LangButton lang={langDemo[2]} setLang={setLang} />
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="ivu-card-body">
-                        <div style={{ height: "300px" }}>
-                            abc
-                        </div>
-                    </div>
-                </div>
             </div>
-            
+
         </div>
     )
 }
-function LangButton({ lang, setLang }) {
+function TagList({ tags }) {
+    if (tags == null) return (<></>)
+    const item = [];
+    tags.forEach((tag) => {
+        item.push(
+            <TagButton key={tag.ProblemTypeId} tag={tag} />
+        );
+    });
+    return item;
+}
+function TagButton({ tag }) {
     return (
-        <li><button type="button" className="dropdown-item" onClick={() => setLang(lang)}>{lang.name}</button></li>
+        <Link to={'/problems?tag=' + tag.ProblemTypeId}>
+            <button type="button" className="btn btn-secondary btn-sm m-1 flex-grow-1">
+                {tag.TypeProblem + " x" + tag.Quantity}
+            </button>
+        </Link>
     )
-
 }

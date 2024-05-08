@@ -11,9 +11,12 @@ const statusDemo = [
     { id: 'all', name: 'Tất cả' },
     { id: 'AC', name: 'AC (Kết quả chấp nhận)' },
     { id: 'WA', name: 'WA (Kết quả sai)' },
-    { id: 'TLE', name: 'TLE (Chạy quá thời gian)' },
+    { id: 'TLE', name: 'TLE (Quá thời gian)' },
+    { id: 'MLE', name: 'MLE (Tràn bộ nhớ)' },
     { id: 'RTE', name: 'RTE (Lỗi trong khi chạy)' },
     { id: 'CE', name: 'CE (Lỗi biên dịch)' },
+    { id: 'P', name: 'P (Đang chờ chấm)' },
+    { id: 'J', name: 'J (Đang chấm)' },
 ]
 
 export default function SubmissionList() {
@@ -105,7 +108,7 @@ export default function SubmissionList() {
                                 <HeadRow />
                             </thead>
                             <tbody className="ivu-table-tbody">
-                                <RowList data={submitData} numPerPage={numPerPage} curPage={curPage} maxPage={maxPage} setMaxPage={setMaxPage} />
+                                <RowList data={submitData} numPerPage={numPerPage} curPage={curPage} />
                             </tbody>
                         </table>
                         <PageList curPage={curPage} maxPage={maxPage} setCurPage={setCurPage} />
@@ -126,11 +129,11 @@ function HeadRow() {
             <th className="col-2">Thời gian, bộ nhớ</th>
             <th className="col-1">Điểm bài nộp</th>
             <th className="col-1">Người nộp</th>
-            <th className="col-1"></th>
+            {/* <th className="col-1"></th> */}
         </tr>
     );
 }
-function RowList({ data, curPage, maxPage, setMaxPage, numPerPage }) {
+function RowList({ data, curPage, numPerPage }) {
     if (numPerPage === 0 || numPerPage == null) numPerPage = 10;
     const rowList = [];
     if (data == null) {
@@ -147,7 +150,7 @@ function RowList({ data, curPage, maxPage, setMaxPage, numPerPage }) {
                 status={element['SubStatus']}
                 dateSubmit={element['DateSub']}
                 lang={element['LanguageName']}
-                timeAndMemory={element['RunTime'] + " - " + element['Memory']}
+                timeAndMemory={element['RunTime'] + " - " + element['memory']}
                 point={element['Point']}
                 username={element['UserName']}
                 fullName={element['FullName']}
@@ -180,13 +183,13 @@ function ProblemRow({ problemid, name, status, dateSubmit, lang, timeAndMemory, 
                     </button>
                 </Link>
             </td>
-            <td className="text-center">
+            {/* <td className="text-center">
                 <Link to={'/problem/' + submitId}>
                     <button type="button" className="btn p-0">
                         Xem
                     </button>
                 </Link>
-            </td>
+            </td> */}
         </tr>
     )
 }
@@ -194,7 +197,7 @@ function NoDataRow() {
     return (
         <tr>
             <td colSpan='8' className="text-center">
-                Không có bài tập
+                Không có bài nộp
             </td>
         </tr>
     )
@@ -209,7 +212,7 @@ function LoadingRow() {
             <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
             <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-5"></span></td>
             <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-10"></span></td>
-            <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td>
+            {/* <td className="text-center placeholder-wave placeholder-glow"><span className="placeholder col-6"></span></td> */}
         </tr>
     )
 }
@@ -272,6 +275,9 @@ function FormFilter({ filterLang, setFilterLang, filterStatus, setfilterStatus, 
                                             <LangButton index={3} lang={statusDemo[3]} setLang={setfilterStatus} />
                                             <LangButton index={4} lang={statusDemo[4]} setLang={setfilterStatus} />
                                             <LangButton index={5} lang={statusDemo[5]} setLang={setfilterStatus} />
+                                            <LangButton index={6} lang={statusDemo[6]} setLang={setfilterStatus} />
+                                            <LangButton index={7} lang={statusDemo[7]} setLang={setfilterStatus} />
+                                            <LangButton index={8} lang={statusDemo[8]} setLang={setfilterStatus} />
                                         </ul>
                                     </div>
                                 </div>

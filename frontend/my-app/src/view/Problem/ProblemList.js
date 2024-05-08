@@ -13,12 +13,10 @@ export default function ProblemList() {
     const [filterName, setFilterName] = useState('');
     const [filterTag, setFilterTag] = useState(null);
     const [filterDifficult, setFilterDifficult] = useState(0);
+    const [loadParam, setLoadParam] = useState(false);
     const numPerPage = 10;
     const tagDemo = [
-        { id: 1, name: 'Adhoc' },
-        { id: 2, name: 'Quay lui' },
-        { id: 3, name: 'Xử lý chuỗi' },
-        { id: 4, name: 'Quy hoạch động' },
+        { ProblemTypeId: 1, ProblemTypeName: 'Adhoc' },
     ]
     function filterSubmitHandle(event) {
         event.preventDefault();        
@@ -29,23 +27,33 @@ export default function ProblemList() {
         let tag = filterTag;
         let difficult = filterDifficult;
         if (nameProblem !== '') param['nameProblem'] = nameProblem
-        if (tag != null) param['tag'] = tag.id
+        if (tag != null) param['tag'] = tag.ProblemTypeId
         if (difficult !== 0) param['difficult'] = difficult
         setSearchParams(param);
+        setLoadParam(false)
     }
-    useState(() => {
+    useEffect(()=>{
+        setLoadParam(false);
+    },[searchParams,tagData])
+    useEffect(() => {
+        if(loadParam)return;
         if (searchParams.has('nameProblem')) {
             setFilterName(searchParams.get('nameProblem'))
         };
         if (searchParams.has('tag')) {
             let tag = (searchParams.get('tag'))
-            tagData.forEach(e => { if (e.id == tag.id) setFilterTag(e) })
+            tagData.forEach(e => { if (e.ProblemTypeId == tag) setFilterTag(e)})
         };
         if (searchParams.has('difficult')) {
             setFilterDifficult(searchParams.get('difficult'))
         };
-    }, [searchParams])
+        setLoadParam(true)
+        console.log(loadParam)
+    }, [loadParam])
     useEffect(() => {
+        if(!loadParam)return;
+        console.log(filterTag)
+        console.log('f')
         setProblemData(null);
         setTimeout(() => {
             const requestOptions = {
@@ -54,7 +62,7 @@ export default function ProblemList() {
             };
             var url = new URL("http://127.0.0.1:5000/problems");
             if (filterName != null && filterName !== '') url.searchParams.set('name', filterName);
-            if (filterTag != null) url.searchParams.set('type', filterTag.id);
+            if (filterTag != null) url.searchParams.set('type', filterTag.ProblemTypeId);
             if (filterDifficult != null && filterDifficult !== 0) url.searchParams.set('dif', filterDifficult);
             fetch(url, requestOptions)
                 .then((response) => response.text())
@@ -71,26 +79,27 @@ export default function ProblemList() {
                     console.error(error)
                 })
         }, 1000)
-    }, [searchParams]);
+    }, [loadParam]);
     useEffect(() => {
         setTimeout(() => {
             setTagData(tagDemo);
-            //         const requestOptions = {
-            //             method: "GET",
-            //             redirect: "follow"
-            //         };
-            //         var url = new URL("http://127.0.0.1:5000/typeprob");
-            //         fetch(url, requestOptions)
-            //             .then((response) => response.text())
-            //             .then((result) => {
-            //                 let temp = JSON.parse(result);
-            //                 setTagData(temp);
-            //             })
-            //             .catch((error) => {
-            //                 setTagData('[]');
-            //                 console.error(error)
-            //             })
-        }, 1000)
+            const requestOptions = {
+                method: "GET",
+                redirect: "follow"
+            };
+            var url = new URL("http://127.0.0.1:5000/typeprob");
+            fetch(url, requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    let temp = JSON.parse(result);
+                    console.log(temp)
+                    setTagData(temp);
+                })
+                .catch((error) => {
+                    setTagData([]);
+                    console.error(error)
+                })
+        }, 100)
     }, []);
     return (
         <div className="ivu-row">
@@ -111,7 +120,7 @@ export default function ProblemList() {
                                 <HeadRow />
                             </thead>
                             <tbody className="ivu-table-tbody">
-                                <RowList data={problemData} numPerPage={numPerPage} curPage={curPage} maxPage={maxPage} setMaxPage={setMaxPage} />
+                                <RowList data={problemData} numPerPage={numPerPage} curPage={curPage} />
                             </tbody>
                         </table>
                         <PageList curPage={curPage} maxPage={maxPage} setCurPage={setCurPage} />
@@ -128,11 +137,11 @@ export default function ProblemList() {
                             <label className="form-label" htmlFor="nameProblem">Tên đề bài</label>
                             <input onChange={(e) => setFilterName(e.target.value)} type="text" className="form-control " id="nameProblem" name="nameProblem" placeholder="Ví dụ: Hello World!" value={filterName} />
                             <div className="mt-2 row">
-                                <input type="hidden" value={filterTag === null ? 0 : filterTag.id} name="tag" />
+                                <input type="hidden" value={filterTag === null ? 0 : filterTag.ProblemTypeId} name="tag" />
                                 <label className="form-label col-12">Kiểu bài tập:</label>
                                 <div className="dropdown btn-group">
                                     <button type="button" className="btn btn-outline-primary ">
-                                        {filterTag === null ? "Tất cả" : filterTag.name}
+                                        {filterTag === null ? "Tất cả" : filterTag.ProblemTypeName}
                                     </button>
                                     <button type="button" className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split flex-grow-0" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className="visually-hidden">Toggle Dropdown</span>
@@ -180,7 +189,7 @@ function HeadRow() {
         </tr>
     );
 }
-function RowList({ data, curPage, maxPage, setMaxPage, numPerPage }) {
+function RowList({ data, curPage, numPerPage }) {
     if (numPerPage === 0 || numPerPage == null) numPerPage = 10;
     const rowList = [];
     if (data == null) {
@@ -291,19 +300,19 @@ function DifficultButton({ difficult, curDifficult, setFilterDifficult }) {
 function TagList({ tags, filterTagSearch, setFilterTag }) {
     const item = [];
     tags.forEach((tag) => {
-        if (tag.name.toLowerCase().indexOf(filterTagSearch.toLowerCase()) === -1) {
+        if (tag.ProblemTypeName.toLowerCase().indexOf(filterTagSearch.toLowerCase()) === -1) {
             return;
         }
         item.push(
-            <TagButton key={tag.id} tag={tag} setFilterTag={setFilterTag} />
+            <TagButton key={tag.ProblemTypeId} tag={tag} setFilterTag={setFilterTag} />
         );
     });
     return item;
 }
 function TagButton({ tag, setFilterTag }) {
     return (
-        <button type="button" className="btn btn-secondary btn-sm m-1 flex-grow-1" onClick={() => setFilterTag(tag)}>
-            {tag.name}
+        <button type="button" className="btn btn-secondary btn-sm m-1" onClick={() => setFilterTag(tag)}>
+            {tag.ProblemTypeName}
         </button>
     )
 }

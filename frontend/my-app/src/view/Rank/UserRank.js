@@ -81,7 +81,7 @@ export default function UserRank() {
                                 <HeadRow />
                             </thead>
                             <tbody className="ivu-table-tbody">
-                                <RowList result={res} numPerPage={numPerPage} curPage={curPage} maxPage={maxPage} setMaxPage={setMaxPage} />
+                                <RowList result={res} numPerPage={numPerPage} curPage={curPage} />
                             </tbody>
                         </table>
                         <PageList curPage={curPage} maxPage={maxPage} setCurPage={setCurPage} />
@@ -138,7 +138,7 @@ function HeadRow() {
         </tr>
     );
 }
-function RowList({ result, curPage, maxPage, setMaxPage, numPerPage }) {
+function RowList({ result, curPage, numPerPage }) {
     if (numPerPage === 0 || numPerPage == null) numPerPage = 10;
     const rowList = [];
     if (result == null) {
@@ -159,7 +159,7 @@ function RowList({ result, curPage, maxPage, setMaxPage, numPerPage }) {
             />);
         }
     }
-    if (rowList.length === 0) rowList.push(<NoDataRow />)
+    if (rowList.length === 0) rowList.push(<NoDataRow key={-1}/>)
     return rowList;
 }
 function UserRow({rankNumber, id, name, TotalProblemAC, TotalPointProblemAC}) {
@@ -179,7 +179,7 @@ function UserRow({rankNumber, id, name, TotalProblemAC, TotalPointProblemAC}) {
     )
 }
 function NoDataRow({ text }) {
-    if (text == null) text = "Không có bài tập"
+    if (text == null) text = "Không có người dùng"
     return (
         <tr>
             <td colSpan='5' className="text-center">
