@@ -3,6 +3,10 @@ insert into tblProblem
 values(?,?,?
 	,?,?,?,?,?) 
 """
+SQLINSPROBLEMINCONTEST="""
+insert into tblProblemInContest
+values(?,null,?,?) 
+"""
 SQLUPDPROBLEM="""
     update tblProblem 
     set Decribe=?,

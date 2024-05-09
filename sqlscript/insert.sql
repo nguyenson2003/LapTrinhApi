@@ -61,19 +61,17 @@ values(N'Fib(a)',N'pb6',N'pbt3'
 	,2,N'Tính số fibo thứ a với Fib(0)=1, Fib(1)=1',1,1,1) 
 go
 insert into tblProblemInContest
-values(N'pbic1',N'contest1',N'pb1',1)
+values(N'pb1',null,N'pb1',1)
 insert into tblProblemInContest
-values(N'pbic2',N'contest1',N'pb2',1)
+values(N'pb2',null,N'pb2',1)
 insert into tblProblemInContest
-values(N'pbic3',N'contest1',N'pb3',1)
+values(N'pb3',null,N'pb3',1)
 insert into tblProblemInContest
-values(N'pbic4',null,N'pb4',1)
+values(N'pb4',null,N'pb4',1)
 insert into tblProblemInContest
-values(N'pbic5',null,N'pb3',1)
+values(N'pb5',null,N'pb5',1)
 insert into tblProblemInContest
-values(N'pbic6',null,N'pb2',1)
-insert into tblProblemInContest
-values(N'pbic7',null,N'pb5',1)
+values(N'pb6',null,N'pb6',1)
 go
 insert into tblSubmissions
 values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,0)

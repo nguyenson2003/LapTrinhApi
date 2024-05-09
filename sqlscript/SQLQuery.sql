@@ -1,4 +1,5 @@
-﻿--Các câu lệnh truy vấn 
+﻿
+--Các câu lệnh truy vấn 
 
 
 --TÌm tất cả bài tập
@@ -295,4 +296,5 @@ where tblAccount.UserName='lvminh'
 
 select * from tblProblemInContest
 
+select * from tbl
 

@@ -99,7 +99,9 @@ def addProblem():
     if len(justExeSqlQuery(SQLGETPROBLEMTYPEBYID,idt))==0: 
         # TODO: không tồn tại kiểu bt này
         return flask.jsonify({"mess":"không tồn tại kiểu bt này"})
-    return execuleSqlEdit(SQLINSPROBLEM,name,id,idt,p,des,TimeLimit,MemoryLimit,isActive)
+    execuleSqlEdit(SQLINSPROBLEM,name,id,idt,p,des,TimeLimit,MemoryLimit,isActive)
+    return execuleSqlEdit(SQLINSPROBLEMINCONTEST,id,id,isActive)
+    
 @all.route('/problems', methods=['put'])
 def upProblem():
     id = flask.request.json.get('ProblemId',"")
