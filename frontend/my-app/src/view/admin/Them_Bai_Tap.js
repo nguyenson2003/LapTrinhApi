@@ -3,6 +3,30 @@ import { Link, useSearchParams } from "react-router-dom";
 import Editor from '@monaco-editor/react';
 
 export default function AddProblem() {
+    const [permision,setPermision] = useState(false);
+    useEffect(() => {
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow"
+        };
+        const username =(localStorage.getItem('username', ''))
+        const password =(localStorage.getItem('password', ''))
+        let url = "http://127.0.0.1:5000/account/check?isrequireadmin=pm1&UserName=" + username + "&PassWord=" + password
+        fetch(url, requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                console.log(result)
+                let mss = JSON.parse(result)[0].result;
+                if (mss == 'True') {
+                    setPermision(true)
+                } else {
+                    setPermision(false)
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+            });
+    }, [])
     const [searchParams, setSearchParams] = useSearchParams();
     const [tagData, setTagData] = useState([]);
     const [filterTagSearch, setFilterTagSearch] = useState('');
@@ -104,6 +128,7 @@ export default function AddProblem() {
         }, 100)
     }, []);
 
+    if(permision==false)return<h1>404 Not Found</h1>
     return (
         <div className="ivu-row">
             <div className="ivu-col ivu-col-span-24 ">
