@@ -6,8 +6,9 @@ import time
 import zipfile
 import psutil
 import pyodbc
-from Main import justExeSqlQuery
+from Main import execuleSqlEdit, justExeSqlQuery
 from SQLQuery import *
+from backend.SQLEdit import SQLUPDATESUB
 from config import con_str
 conn = pyodbc.connect(con_str)
 
@@ -17,7 +18,7 @@ file_path_python=os.path.join(rel_path, 'pythoncode.py')
 file_path_exe = os.path.join(rel_path, 'code.exe')
 file_path_class=os.path.join(rel_path, 'javacode.class')
 file_path_java=os.path.join(rel_path, 'javacode.java')
-numtes=0
+
 #c++ ###################################################################################
 def check_java_package(str):
     return re.search(r'^\s*package\s+[\w.]+\s*;', str, re.MULTILINE)
@@ -36,11 +37,12 @@ def cham():
     time.sleep(3)
     #tìm xem bài nào chưa được chấm
     
-    idsmt=justExeSqlQuery("select * from tblSubmissions where Point='-'")
+    idsmt=justExeSqlQuery("select * from tblSubmissions where Point='-1'")
     if len(idsmt)==0:
-        return
+        print("hết bài")
     idsmt=idsmt[0]["SubmissionId"]
     #đọc các dữ liệu cần thiết
+    numtes=0
     state=[]
     resSql=justExeSqlQuery(SQLGETSOMEVALUEFORMAYCHAM,idsmt)[0]
     idp=resSql["ProblemId"]
@@ -136,7 +138,21 @@ def cham():
             state.append({'test number':i,'status':"WA",'output':output,"fileout_data":fileout_data})
             continue 
         state.append({'test number':i,'status':"AC","memory_info":memory_info,"execution_time":execution_time})
-    return state
-
+    
+    
+    cntTestAC=0
+    #các dữ liệu cần insert
+    Point=TotalTime=Memory=''
+    SubStatus="AC"
+    
+    for x in state:
+        if x['status']=='AC':
+            cntTestAC+=1
+            TotalTime+=x['execution_time']
+            Memory+=x['memory_info']
+        else:
+            if(SubStatus!='AC'):
+                SubStatus=x['status']
+    Point=int(cntTestAC*1.0/numtes)
+    print(execuleSqlEdit(SQLUPDATESUB,Memory,TotalTime,SubStatus,Point,idsmt))
 #giả sử cần chấm 1 sub có sub id=1
-state=cham()
