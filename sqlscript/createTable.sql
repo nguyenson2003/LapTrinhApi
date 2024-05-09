@@ -43,7 +43,7 @@ create table tblProblem(
 	ProblemTypeId nvarchar(100) not null
 		foreign key references tblProblemType(ProblemTypeId),
 	Point int not null,
-	Decribe nvarchar(100),
+	Decribe nvarchar(max),
 	TimeLimit float not null,
 	MemoryLimit int not null,
 	isActive int default 1

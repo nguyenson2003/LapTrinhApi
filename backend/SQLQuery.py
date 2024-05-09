@@ -154,6 +154,10 @@ where tblSubmissions.isActive=1
 	and tblProblemInContest.ProblemId like ?
 	and tblSubmissions.LanguageName like ?
 """
+CONGETASUB="""
+and tblSubmissions.SubmissionId=?
+"""
+
 SQLGETRANKING="""
 	select tblAccount.UserName,
 		tblAccount.FullName, 
@@ -246,4 +250,13 @@ SQLGETSOMEVALUEFORMAYCHAM="""
 	from tblSubmissions join tblProblemInContest 
 	on tblSubmissions.ProblemInContestId=tblProblemInContest.ProblemInContestId
 	where tblSubmissions.SubmissionId=?
+"""
+SQLCHECKACCOUNT="""
+SELECT CASE
+    WHEN tblAccount.PassWord=? and tblAccount.PermissionId like ? THEN 'True'
+    ELSE 'False'
+END AS result
+FROM tblAccount
+where tblAccount.UserName=?
+
 """

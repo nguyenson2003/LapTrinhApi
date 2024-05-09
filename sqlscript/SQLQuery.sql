@@ -132,6 +132,10 @@ from tblAccount,
 	) b
 where tblAccount.isActive=1
 	and tblAccount.UserName like '%lvminh%'
+
+
+
+
 --các bài nộp
 select tblSubmissions.SubmissionId,
 	tblProblemInContest.ProblemId,
@@ -155,6 +159,7 @@ where tblSubmissions.isActive=1
 	and tblSubmissions.SubStatus like '%AC%'
 	and tblProblemInContest.ProblemId like '%pb1%'
 	and tblSubmissions.LanguageName like '%java%'
+	and tblSubmissions.SubmissionId=''
 --bảng xếp hạng
 select tblAccount.UserName,
 	tblAccount.FullName, 
@@ -274,3 +279,20 @@ where tblProblem.ProblemId=''
 select tblTestCaseFile.NumberTestcase,tblTestCaseFile.FileZip
 	from tblTestCaseFile
 	where tblTestCaseFile.ProblemId='pb1'
+select tblProblemInContest.ProblemId,tblSubmissions.LanguageName,tblSubmissions.TheAnswer
+from tblSubmissions join tblProblemInContest 
+on tblSubmissions.ProblemInContestId=tblProblemInContest.ProblemInContestId
+where tblSubmissions.SubmissionId=1
+
+--kiem tra tai khoan
+SELECT CASE
+    WHEN tblAccount.PassWord='123' and tblAccount.PermissionId like '%nhanvien%' THEN 'True'
+    ELSE 'False'
+END AS results
+FROM tblAccount
+where tblAccount.UserName='lvminh'
+
+
+
+
+

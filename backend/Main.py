@@ -1,7 +1,9 @@
+import threading
 import flask
 import pyodbc
 import io
 from SQLQuery import *
+from maycham import cham
 from config import con_str
 #tạo chuỗi kết nối
 
@@ -61,6 +63,8 @@ def after_request(response):
   return response
 try:
     if __name__ == "__main__":
+        t1 = threading.Thread(target=cham)
+        t1.start()
         from routes import all
         app.register_blueprint(all)
         app.run(host = '127.0.0.1', port=5000)

@@ -8,6 +8,13 @@ from SQLEdit import *
 from Main import execuleSqlEdit, executeSqlQuery, justExeSqlQuery
 all=flask.Blueprint('all', __name__)
 
+
+@all.route('/account/check', methods=['GET'])
+def checkAccount():
+    UserName =flask.request.json.get('UserName',"")
+    PassWord = flask.request.json.get('PassWord',"")
+    isrequireadmin=flask.request.args.get('isrequireadmin',"")
+    return executeSqlQuery(SQLCHECKACCOUNT,PassWord,f"%{isrequireadmin}%",UserName)
 @all.route('/problems', methods=['GET'])
 def getProblems():
     name=flask.request.args.get('name',"")
@@ -49,6 +56,15 @@ def getSubmitssions():
     lg=flask.request.args.get('sublg',"")
     # name=dif=type=""
     return executeSqlQuery(SQLGETSUBMITSSIONS,f"%{un}%",f"%{subs}%",f"%{idp}%",f"%{lg}%")
+@all.route('/submissions/<subid>', methods=['GET'])
+def getSubmitssion(subid=""):
+    idp=flask.request.args.get('idprob',"")
+    un=flask.request.args.get('un',"")
+    subs=flask.request.args.get('substate',"")
+    lg=flask.request.args.get('sublg',"")
+    # name=dif=type=""
+    return executeSqlQuery(SQLGETSUBMITSSIONS+CONGETASUB,f"%{un}%",f"%{subs}%",f"%{idp}%",f"%{lg}%",subid)
+
 
 @all.route('/rank', methods=['GET'])
 def getRanking():
@@ -154,10 +170,12 @@ def addSubmission():
     SubmissionTime=datetime.datetime.now()
     LanguageName=flask.request.json.get('LanguageName',"")
     TheAnswer=flask.request.json.get('TheAnswer',"")
-    Memory=flask.request.json.get('Memory',"")
-    TotalTime=flask.request.json.get('TotalTime',"")
-    SubStatus=flask.request.json.get('SubStatus',"")
-    Point=flask.request.json.get('Point',"")
+    
+    # gán dữ liệu là chưa được chấm
+    Point=SubStatus=TotalTime=Memory="-"
+    
+    
+    
     isActive=1
     if ProblemInContestId=='' or UserName=='' or LanguageName=='' or\
         TheAnswer=='':
@@ -178,6 +196,7 @@ def addSubmission():
     if Point>100:
         # TODO: Point phải nhỏ hơn 100
         return flask.jsonify({"mess":"Point phải nhỏ hơn 100"}) 
+    
     
     return execuleSqlEdit(SQLADDSUBMISSION,ProblemInContestId,UserName,SubmissionTime,LanguageName,
                           TheAnswer,Memory,TotalTime,SubStatus,Point,isActive)
