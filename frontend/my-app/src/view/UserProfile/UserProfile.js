@@ -18,21 +18,21 @@ export default function UserProfile() {
             .then((response) => response.text())
             .then((result) => {
                 let data = JSON.parse(result)[0];
-                console.log(data)
+                // console.log(data)
                 setUserData(data);
                 var url = new URL("http://127.0.0.1:5000/typeprob/" + id + "/ac");
                 fetch(url, requestOptions)
                     .then((response) => response.text())
                     .then((result) => {
                         let data = JSON.parse(result);
-                        console.log(data)
+                        // console.log(data)
                         setTagAcData(data);
                         var url = new URL("http://127.0.0.1:5000/typeprob/" + id + "/orderbydif");
                         fetch(url, requestOptions)
                             .then((response) => response.text())
                             .then((result) => {
                                 let data = JSON.parse(result);
-                                console.log(data)
+                                // console.log(data)
                                 let temp = [0, 0, 0]
                                 for (let i = 0; i < data.length; i++) {
                                     temp[data[i].Point - 1] = data[i].Quantity;

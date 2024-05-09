@@ -4,7 +4,7 @@ export default function Home() {
         var input = document.querySelector('#testcase')
         let f = input.files[0];
         if (f == null) return;
-        console.log(input.files[0])
+        // console.log(input.files[0])
         var data = new FormData()
         data.append('ProblemId', 'pb2')
         data.append('file', input.files[0])

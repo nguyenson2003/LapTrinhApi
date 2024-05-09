@@ -11,11 +11,11 @@ export default function AddProblem() {
         };
         const username =(localStorage.getItem('username', ''))
         const password =(localStorage.getItem('password', ''))
-        let url = "http://127.0.0.1:5000/account/check?isrequireadmin=pm1&UserName=" + username + "&PassWord=" + password
+        let url = "http://127.0.0.1:5000/account/check?isrequireadmin=1&UserName=" + username + "&PassWord=" + password
         fetch(url, requestOptions)
             .then((response) => response.text())
             .then((result) => {
-                console.log(result)
+                // console.log(result)
                 let mss = JSON.parse(result)[0].result;
                 if (mss == 'True') {
                     setPermision(true)
@@ -46,8 +46,9 @@ export default function AddProblem() {
         let f = input.files[0];
         if (f == null) return;
         var data = new FormData()
-        data.append('ProblemId', 'pb2')
+        data.append('ProblemId', filterId)
         data.append('file', input.files[0])
+        data.append('NumberTestcase', filterNumberTestcase)
         const requestOptions = {
             method: "POST",
             body: data,
@@ -55,8 +56,15 @@ export default function AddProblem() {
         };
         fetch("http://127.0.0.1:5000/testfile", requestOptions)
             .then((response) => response.text())
-            .then((result) => console.log(result))
+            .then((result) => {
+                let mss = JSON.parse(result).mess
+                if (mss == 'success') {
+                } else {
+                    setMess(mss)
+                }
+            })
             .catch((error) => console.error(error));
+            
     }
     const editorRef = useRef(null);
     function handleEditorDidMount(editor, monaco) {
@@ -102,9 +110,16 @@ export default function AddProblem() {
         };
         fetch("http://127.0.0.1:5000/problems", requestOptions)
             .then((response) => response.text())
-            .then((result) => setMess(JSON.parse(result).mess))
+            .then((result) => {
+                let mss = JSON.parse(result).mess
+                if (mss == 'success') {
+                } else {
+                    setMess(mss)
+                }
+            })
             .catch((error) => console.error(error));
-        console.log(param)
+        handleFile()
+
     }
     useEffect(() => {
         setTimeout(() => {
@@ -118,7 +133,7 @@ export default function AddProblem() {
                 .then((response) => response.text())
                 .then((result) => {
                     let temp = JSON.parse(result);
-                    console.log(temp)
+                    // console.log(temp)
                     setTagData(temp);
                 })
                 .catch((error) => {
@@ -140,13 +155,13 @@ export default function AddProblem() {
                         <form id="filter" onSubmit={filterSubmitHandle}>
                             <div className='mb-3'>
                                 <label className="form-label" htmlFor="idProblem">ID bài tập</label>
-                                <input onChange={(e) => setFilterId(e.target.value)} type="text" className="form-control col-6" id="idProblem" placeholder="Ví dụ: pb1" />
+                                <input onChange={(e) => setFilterId(e.target.value)} type="text" className="form-control col-6" id="idProblem" placeholder="Ví dụ: pb1"required />
                                 <div className="form-text">Hai bài tập không được trùng ID</div>
                             </div>
 
                             <div className='mb-3'>
                                 <label className="form-label" htmlFor="nameProblem">Tên đề bài</label>
-                                <input onChange={(e) => setFilterName(e.target.value)} type="text" className="form-control col-6" id="nameProblem" placeholder="Ví dụ: Hello World!" />
+                                <input onChange={(e) => setFilterName(e.target.value)} type="text" className="form-control col-6" id="nameProblem" placeholder="Ví dụ: Hello World!" required/>
                             </div>
                             <div className="mt-2">
                                 <label className="form-label col-12">Kiểu bài tập:</label>
@@ -160,7 +175,7 @@ export default function AddProblem() {
                                     <div className="dropdown-menu p-4 dropdown-menu-lg-end" style={{ width: '300px', maxHeight: '40vh', overflowY: 'auto' }}>
                                         <div className="mb-3">
                                             <input type="text" className="form-control" id="tagFind" placeholder="Tìm loại đề bài" onChange={(e) => setFilterTagSearch(e.target.value)} />
-                                            <button type="button" onClick={() => setFilterTag(null)} className="btn p-0 m-0 link-primary text-decoration-underline">Bỏ chọn</button>
+                                            {/* <button type="button" onClick={() => setFilterTag(null)} className="btn p-0 m-0 link-primary text-decoration-underline">Bỏ chọn</button> */}
                                         </div>
                                         <div className="d-flex flex-wrap">
                                             <TagList tags={tagData} filterTagSearch={filterTagSearch} setFilterTag={setFilterTag} />
@@ -179,11 +194,11 @@ export default function AddProblem() {
                             <div className='row'>
                                 <div className='mb-3 col-6'>
                                     <label className="form-label" htmlFor="secondProblem">Giới hạn thời gian (đơn vị: giây)</label>
-                                    <input onChange={(e) => setFilterSecond(e.target.value)} type="number" className="form-control col-6" id="secondProblem" />
+                                    <input onChange={(e) => setFilterSecond(e.target.value)} type="number" className="form-control col-6" id="secondProblem" required/>
                                 </div>
                                 <div className='mb-3 col-6'>
                                     <label className="form-label" htmlFor="memoryProblem">Giới hạn bộ nhớ (đơn vị: kilobyte)</label>
-                                    <input onChange={(e) => setFilterMemory(e.target.value)} type="number" className="form-control col-6" id="memoryProblem" />
+                                    <input onChange={(e) => setFilterMemory(e.target.value)} type="number" className="form-control col-6" id="memoryProblem" required/>
                                 </div>
                             </div>
                             <label className="form-label" htmlFor="contentProblem">Nội dung bài tập (Sử dụng <a href='https://vi.wikipedia.org/wiki/Markdown'>Markdown</a>)</label>
@@ -198,12 +213,12 @@ export default function AddProblem() {
                             <div className='row'>
                                 <div className='mb-3 col-6'>
                                     <label className="form-label" htmlFor="testcaseFile">File Testcase</label>
-                                    <input type="file" className="form-control col-6" id="testcaseFile" />
+                                    <input type="file" className="form-control col-6" id="testcaseFile" required/>
                                     <div className="form-text">File testcase là 1 file zip chứa các file "in#.txt" và "out#.txt" với "#" được đánh số từ 1 đến số lượng testcase</div>
                                 </div>
                                 <div className='mb-3 col-6'>
                                     <label className="form-label" htmlFor="testcaseLength">Số lượng testcase</label>
-                                    <input onChange={(e) => setNumberTestcase(e.target.value)} type="number" className="form-control col-6" id="testcaseLength" />
+                                    <input onChange={(e) => setNumberTestcase(e.target.value)} type="number" className="form-control col-6" id="testcaseLength" required/>
                                 </div>
                             </div>
                             <dib className="form-text text-warning">{mess}</dib>

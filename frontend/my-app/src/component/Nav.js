@@ -15,7 +15,7 @@ export default function Nav() {
         fetch(url, requestOptions)
             .then((response) => response.text())
             .then((result) => {
-                console.log(result)
+                // console.log(result)
                 let mss = JSON.parse(result)[0].result;
                 if (mss == 'True') {
 
@@ -103,8 +103,8 @@ function LoginDialog() {
         let param = {}
         param['UserName'] = UserName
         param['PassWord'] = PassWord
-        console.log(UserName)
-        console.log(PassWord)
+        // console.log(UserName)
+        // console.log(PassWord)
         let raw = JSON.stringify(param)
         const requestOptions = {
             method: "GET",
@@ -115,7 +115,7 @@ function LoginDialog() {
             .then((response) => response.text())
             .then((result) => {
                 let mss = JSON.parse(result)[0].result
-                console.log(result)
+                // console.log(result)
                 if (mss == 'True') {
                     localStorage.setItem("username", UserName);
                     localStorage.setItem("password", PassWord);
@@ -125,7 +125,7 @@ function LoginDialog() {
                 }
             })
             .catch((error) => { console.error(error); });
-        console.log(param)
+        // console.log(param)
     }
     return (
         <div className="modal fade" id="loginDialog" tabIndex="-1" aria-labelledby="LoginLabel" aria-hidden="true">
@@ -182,7 +182,7 @@ function SigninDialog() {
         param['PassWord'] = PassWord
         param['FullName'] = FullName
         param['PermissionId'] = PermissionId
-        console.log(param)
+        // console.log(param)
         let raw = JSON.stringify(param)
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -205,7 +205,7 @@ function SigninDialog() {
                 }
             })
             .catch((error) => { console.error(error); setMess(error) });
-        console.log(param)
+        // console.log(param)
     }
     return (
         <div className="modal fade" id="signinDialog" tabIndex="-1" aria-labelledby="SigninLabel" aria-hidden="true">

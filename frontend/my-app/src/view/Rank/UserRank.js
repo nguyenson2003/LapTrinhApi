@@ -43,7 +43,7 @@ export default function UserRank() {
                 .then((response) => response.text())
                 .then((result) => {
                     let data = JSON.parse(result)
-                    console.log(data)
+                    // console.log(data)
                     setRes(result);
 
                 })
