@@ -49,3 +49,8 @@ DELETE FROM tblTestCaseFile
 WHERE tblTestCaseFile.ProblemId=?
 """
 
+SQLUPDATESUB="""
+update tblSubmissions
+set Memory=?,TotalTime=?,SubStatus=?,Point=?
+where tblSubmissions.SubmissionId=?
+"""

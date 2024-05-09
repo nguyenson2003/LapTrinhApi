@@ -167,12 +167,14 @@ def delAccount():
 def addSubmission():
     ProblemInContestId=flask.request.json.get('ProblemInContestId',"")
     UserName=flask.request.json.get('UserName',"")
-    SubmissionTime=datetime.datetime.now()
+    SubmissionTime = datetime.datetime.now().strftime("20%y-%m-%d %H:%M:%S")
     LanguageName=flask.request.json.get('LanguageName',"")
     TheAnswer=flask.request.json.get('TheAnswer',"")
     
     # gán dữ liệu là chưa được chấm
-    Point=SubStatus=TotalTime=Memory="-"
+    Point='-1'
+    SubStatus="P"
+    TotalTime=Memory="-1"
     
     
     
@@ -190,12 +192,6 @@ def addSubmission():
     if len(justExeSqlQuery(SQLGETLANGUAGEBYNAME,LanguageName))==0: 
         # TODO: không tồn tại ngôn ngữ này
         return flask.jsonify({"mess":"không tồn tại ngôn ngữ này"}) 
-    if not isinstance(Point,int):
-        # TODO: Point phải là số nguyên
-        return flask.jsonify({"mess":"Point phải là số nguyên"}) 
-    if Point>100:
-        # TODO: Point phải nhỏ hơn 100
-        return flask.jsonify({"mess":"Point phải nhỏ hơn 100"}) 
     
     
     return execuleSqlEdit(SQLADDSUBMISSION,ProblemInContestId,UserName,SubmissionTime,LanguageName,

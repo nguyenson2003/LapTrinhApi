@@ -293,6 +293,6 @@ FROM tblAccount
 where tblAccount.UserName='lvminh'
 
 
-
+select * from tblProblemInContest
 
 

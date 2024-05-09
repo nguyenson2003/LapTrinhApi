@@ -6,8 +6,9 @@ import time
 import zipfile
 import psutil
 import pyodbc
-from Main import justExeSqlQuery
+from Main import execuleSqlEdit, justExeSqlQuery
 from SQLQuery import *
+from SQLEdit import SQLUPDATESUB
 from config import con_str
 conn = pyodbc.connect(con_str)
 
@@ -17,7 +18,7 @@ file_path_python=os.path.join(rel_path, 'pythoncode.py')
 file_path_exe = os.path.join(rel_path, 'code.exe')
 file_path_class=os.path.join(rel_path, 'javacode.class')
 file_path_java=os.path.join(rel_path, 'javacode.java')
-numtes=0
+
 #c++ ###################################################################################
 def check_java_package(str):
     return re.search(r'^\s*package\s+[\w.]+\s*;', str, re.MULTILINE)
@@ -35,12 +36,9 @@ def cham():
     #ngủ 3s
     time.sleep(3)
     #tìm xem bài nào chưa được chấm
-    
-    idsmt=justExeSqlQuery("select * from tblSubmissions where Point='-'")
-    if len(idsmt)==0:
-        return
-    idsmt=idsmt[0]["SubmissionId"]
+    idsmt=13
     #đọc các dữ liệu cần thiết
+    numtes=0
     state=[]
     resSql=justExeSqlQuery(SQLGETSOMEVALUEFORMAYCHAM,idsmt)[0]
     idp=resSql["ProblemId"]
@@ -48,22 +46,12 @@ def cham():
     language=resSql["LanguageName"]
     # language='java'
     theAnswer=resSql["TheAnswer"]
-    # theAnswer="""
-    #     import java.util.Scanner;
-
-    #     public class a {
-    #         public static void main(String[] args) {
-    #             try (Scanner scanner = new Scanner(System.in)) {
-    #                 int x = scanner.nextInt();
-    #                 System.out.println(x);
-    #             }
-    #         }
-    #     }
-    # """
+    theAnswer="""print(input())
+    """
     # timeLimit=1
     timeLimit=float(justExeSqlQuery(SQLGETTIMELIMBYIDP,idp)[0]['TimeLimit'])
-    # menoLimit=100
     menoLimit=int(justExeSqlQuery(SQLGETTIMELIMBYIDP,idp)[0]['MemoryLimit'])
+    menoLimit=100
     
     numtes=int(justExeSqlQuery(SQLGETNUMTESBYID,idp)[0]["NumberTestcase"])
     fileZip = io.BytesIO(justExeSqlQuery(SQLGETNUMTESBYID,idp)[0]["FileZip"])
@@ -136,7 +124,7 @@ def cham():
             state.append({'test number':i,'status':"WA",'output':output,"fileout_data":fileout_data})
             continue 
         state.append({'test number':i,'status':"AC","memory_info":memory_info,"execution_time":execution_time})
-    return state
-
+    print(state)
+    
 #giả sử cần chấm 1 sub có sub id=1
-state=cham()
+cham()
