@@ -39,7 +39,7 @@ export default function Problem() {
                 .then((response) => response.text())
                 .then((result) => {
                     let data = JSON.parse(result)[0];
-                    console.log(data)
+                    // console.log(data)
                     setProblemData(data);
 
                 })
@@ -55,14 +55,24 @@ export default function Problem() {
         editorRef.current = editor;
     }
 
-    function showValue() {
-        alert(editorRef.current.getValue());
+    function getCode() {
+        return(editorRef.current.getValue());
     }
     function scorllToSubmit() {
         const element = document.getElementById('editor');
         if (element) {
             element.scrollIntoView();
         }
+    }
+    function submitCode(){
+        let param = {}
+        let username = localStorage.getItem('username')
+        if(username=='' || username==null)return;
+        param['ProblemInContestId']=
+        param['UserName']=username
+        param['LanguageName']=lang.id
+        param['TheAnswer']=getCode();
+
     }
     return (
         <div className="ivu-row" style={{ marginLeft: '-9px', marginRight: '-9px' }}>
@@ -106,7 +116,7 @@ export default function Problem() {
                                 />
                             </div>
                             <div className="text-end mt-3">
-                                <button type="button" className="btn btn-primary" onClick={showValue}>Nộp bài</button>
+                                <button type="button" className="btn btn-primary" onClick={(e)=>submitCode()}>Nộp bài</button>
                             </div>
                         </div>
                     </div>

@@ -21,7 +21,7 @@ export default function ProblemList() {
     function filterSubmitHandle(event) {
         event.preventDefault();        
         var form = document.querySelector('#filter')
-        console.log(new FormData(form))
+        // console.log(new FormData(form))
         let param = {}
         let nameProblem = filterName;
         let tag = filterTag;
@@ -48,12 +48,12 @@ export default function ProblemList() {
             setFilterDifficult(searchParams.get('difficult'))
         };
         setLoadParam(true)
-        console.log(loadParam)
+        // console.log(loadParam)
     }, [loadParam])
     useEffect(() => {
         if(!loadParam)return;
-        console.log(filterTag)
-        console.log('f')
+        // console.log(filterTag)
+        // console.log('f')
         setProblemData(null);
         setTimeout(() => {
             const requestOptions = {
@@ -92,7 +92,7 @@ export default function ProblemList() {
                 .then((response) => response.text())
                 .then((result) => {
                     let temp = JSON.parse(result);
-                    console.log(temp)
+                    // console.log(temp)
                     setTagData(temp);
                 })
                 .catch((error) => {

@@ -74,7 +74,7 @@ export default function SubmissionList() {
                 .then((response) => response.text())
                 .then((result) => {
                     let data = JSON.parse(result)
-                    console.log(data)
+                    // console.log(data)
                     setSubmitData(data);
                     if (data == null) return;
                     let temp = Math.floor((data.length - 1) / numPerPage) + 1;
