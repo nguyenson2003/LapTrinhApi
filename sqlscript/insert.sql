@@ -74,23 +74,30 @@ insert into tblProblemInContest
 values(N'pb6',null,N'pb6',1)
 go
 insert into tblSubmissions
-values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,0)
+values(N'pb1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,0)
 
 insert into tblSubmissions
-values(N'pbic2',N'lvminh','2024-01-02 13:20:00',N'python','',1,0.001,'AC',100,1)
+values(N'pb2',N'lvminh','2024-01-02 13:20:00',N'python','',1,0.001,'AC',100,1)
 insert into tblSubmissions
-values(N'pbic4',N'lvminh','2024-01-02 13:20:00',N'python','',1,0.001,'AC',100,1)
+values(N'pb4',N'lvminh','2024-01-02 13:20:00',N'python','',1,0.001,'AC',100,1)
 insert into tblSubmissions
-values(N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,1)
+values(N'pb2',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,1)
 insert into tblSubmissions
-values(N'pbic2',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'WA',30,1)
+values(N'pb2',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'WA',30,1)
 insert into tblSubmissions
-values(N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'WA',30,1)
+values(N'pb6',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'WA',30,1)
 insert into tblSubmissions
-values(N'pbic6',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'WA',20,1)
+values(N'pb6',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'WA',20,1)
 insert into tblSubmissions
-values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'RTE',40,1)
+values(N'pb1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'RTE',40,1)
 insert into tblSubmissions
-values(N'pbic1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'RTE',50,1)
+values(N'pb1',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'RTE',50,1)
 insert into tblSubmissions
-values(N'pbic7',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,1)
+values(N'pb7',N'lvminh','2024-01-02 13:10:00',N'java','',1,0.001,'AC',100,1)
+
+
+
+insert into tblAccount
+values(N'admin',N'admin',N'pms1',N'admin',1,'2024-01-01')
+
+select * from tblSubmissions

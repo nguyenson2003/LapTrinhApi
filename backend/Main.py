@@ -15,11 +15,12 @@ import psutil
 #tạo chuỗi kết nối
 
 rel_path = os.path.dirname(__file__)#đường dẫn tương đối
+print(rel_path)
 file_path_cpp = os.path.join(rel_path, 'cppcode.cpp')
 file_path_cpp_temp=os.path.join(rel_path, 'cpptemp.cpp')
 file_path_python=os.path.join(rel_path, 'pythoncode.py')
 file_path_exe = os.path.join(rel_path, 'code.exe')
-file_path_class=os.path.join(rel_path, 'javacode.class')
+file_path_class=os.path.join(rel_path, 'javacode')
 file_path_java=os.path.join(rel_path, 'javacode.java')
 
 conn = pyodbc.connect(con_str)
@@ -121,7 +122,7 @@ def cham():
         # timeLimit=1
         menoLimit=int(justExeSqlQuery(SQLGETTIMELIMBYIDP,idp)[0]['MemoryLimit'])
         menoLimit=100
-        
+        temp=justExeSqlQuery(SQLGETNUMTESBYID,idp)
         numtes=int(justExeSqlQuery(SQLGETNUMTESBYID,idp)[0]["NumberTestcase"])
         fileZip = io.BytesIO(justExeSqlQuery(SQLGETNUMTESBYID,idp)[0]["FileZip"])
         zip_ref=zipfile.ZipFile(fileZip, 'r')
@@ -129,6 +130,8 @@ def cham():
         memory_info=0
     except Exception as e:
         print(e)
+        if len(temp)==0:
+            print("lỗi chưa có filezip và numbertest cho mã bài tập ",idp)
         cham()
     isBienDich=True
     #viết đáp án vào file tương ứng
@@ -152,7 +155,16 @@ def cham():
             state.append({'status':"CE",'e':"theAnswer không có public class <name>"})
             isBienDich=False
         theAnswer=replace_class_name(theAnswer,'javacode')
-        theAnswer='package backend;\n'+theAnswer  
+        # theAnswer='package backend;\n'+theAnswer  
+        execution_time2 = time.time()
+        memory_info2 = psutil.Process().memory_info().rss
+        temp=subprocess.run(["javac", file_path_java])#biên dịch
+        execution_time2 = time.time()-execution_time2
+        memory_info2=psutil.Process().memory_info().rss-memory_info2
+        print(temp.returncode)
+        if temp.returncode!=0:
+            state.append({'status':"CE",'e':"biên dịch lỗi"})
+            isBienDich=False
         with open(file_path_java, "w") as file:
             file.write(theAnswer)   
     TotalTime=Memory=0
@@ -161,7 +173,7 @@ def cham():
         if not isBienDich: continue
         #lấy dữ liệu từng file
         filein_data=zip_ref.read('in'+str(i)+'.txt').decode()
-        fileout_data=zip_ref.read('in'+str(i)+'.txt').decode()
+        fileout_data=zip_ref.read('out'+str(i)+'.txt').decode()
         # chạy code
         result=0
         execution_time = time.time()
@@ -173,13 +185,15 @@ def cham():
             elif language=='python':
                 result = subprocess.run(['python',file_path_python],input=filein_data,capture_output=True, text=True, timeout=timeLimit)
             elif language=='java':
-                result = subprocess.run(['javac',file_path_java],input=filein_data, capture_output=True, text=True,timeout=timeLimit)
+                result = subprocess.run(['java',file_path_java],input=filein_data, capture_output=True, text=True,timeout=timeLimit+execution_time2)
             
             execution_time=time.time()-execution_time
             memory_info =(psutil.Process().memory_info().rss-memory_info)/1024
             TotalTime+=execution_time
             Memory+=memory_info
         except subprocess.TimeoutExpired:
+            TotalTime+=execution_time
+            Memory+=memory_info
             state.append({'test number':i,'status':"TLE","timeLimit":timeLimit}) 
             continue 
         if result==0: continue 
@@ -188,7 +202,7 @@ def cham():
             continue    
         if result.stderr:
             state.append({'test number':i,'status':'RTE','e':result.stderr})
-            isBienDich=False
+            #isBienDich=False
             continue 
         output = result.stdout.rstrip("\n")
         if output!=fileout_data:
@@ -201,6 +215,9 @@ def cham():
     #các dữ liệu cần insert
     Point=""
     SubStatus=''
+    if language=='java':
+        TotalTime-=numtes*execution_time2
+        memory_info-=memory_info2*numtes
     for x in state:
         if x['status']=='AC':
             cntTestAC+=1
@@ -219,7 +236,7 @@ def cham():
         print(theAnswer,state,Memory,TotalTime,SubStatus,Point)
     else:
         cursor = conn.cursor()
-        cursor.execute('delete from tblSubmissions where tblSubmissions.SubmissionId=?',idsmt)
+        cursor.execute(SQLUPDATESUB,int(Memory),TotalTime,'CE',Point,idsmt)
         conn.commit()
         print('bien dich k thanh cong')
     cham()

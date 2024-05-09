@@ -113,12 +113,13 @@ export default function AddProblem() {
             .then((result) => {
                 let mss = JSON.parse(result).mess
                 if (mss == 'success') {
+                    setMess(mss)
                 } else {
                     setMess(mss)
                 }
             })
             .catch((error) => console.error(error));
-        handleFile()
+        setTimeout(handleFile,1000)
 
     }
     useEffect(() => {
@@ -149,7 +150,7 @@ export default function AddProblem() {
             <div className="ivu-col ivu-col-span-24 ">
                 <div className="ivu-card ivu-card-bordered">
                     <div className="ivu-card-head">
-                        <h3>Tìm kiếm bài tập</h3>
+                        <h3>Thêm bài tập</h3>
                     </div>
                     <div className="ivu-card-body">
                         <form id="filter" onSubmit={filterSubmitHandle}>

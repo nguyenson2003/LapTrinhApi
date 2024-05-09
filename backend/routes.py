@@ -121,6 +121,7 @@ def upProblem():
 @all.route('/problems',methods=['delete'])
 def delProblem():
     id = flask.request.json.get('ProblemId',"")
+    execuleSqlEdit(SQLDELPBIC,id)
     return execuleSqlEdit(SQLDELPROBLEM,id)
 
 

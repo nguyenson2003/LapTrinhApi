@@ -151,6 +151,7 @@ where tblSubmissions.isActive=1
 	and tblSubmissions.SubStatus like ?
 	and tblProblemInContest.ProblemId like ?
 	and tblSubmissions.LanguageName like ?
+order by tblSubmissions.SubmissionTime desc
 """
 CONGETASUB="""
 and tblSubmissions.SubmissionId=?

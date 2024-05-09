@@ -296,5 +296,8 @@ where tblAccount.UserName='lvminh'
 
 select * from tblProblemInContest
 
+
 select * from tbl
+
+delete from tblSubmissions where tblSubmissions.SubmissionId=?
 

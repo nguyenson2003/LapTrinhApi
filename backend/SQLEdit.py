@@ -15,6 +15,11 @@ SQLUPDPROBLEM="""
         ProblemTypeId=?
     where tblProblem.ProblemId = ?
 """
+SQLDELPBIC="""
+update tblProblemInContest
+set isActive=0
+where ProblemId=?
+"""
 SQLDELPROBLEM="""
 update tblProblem 
 set isActive=0
