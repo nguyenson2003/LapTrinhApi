@@ -11,8 +11,8 @@ all=flask.Blueprint('all', __name__)
 
 @all.route('/account/check', methods=['GET'])
 def checkAccount():
-    UserName =flask.request.json.get('UserName',"")
-    PassWord = flask.request.json.get('PassWord',"")
+    UserName =flask.request.args.get('UserName',"")
+    PassWord = flask.request.args.get('PassWord',"")
     isrequireadmin=flask.request.args.get('isrequireadmin',"")
     return executeSqlQuery(SQLCHECKACCOUNT,PassWord,f"%{isrequireadmin}%",UserName)
 @all.route('/problems', methods=['GET'])

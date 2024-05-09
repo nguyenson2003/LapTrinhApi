@@ -20,18 +20,18 @@ export default function Home() {
             .then((result) => console.log(result))
             .catch((error) => console.error(error));
     }
-    useEffect(() => {
-        const requestOptions = {
-            method: "GET",
-            redirect: "follow"
-        };
+    // useEffect(() => {
+    //     const requestOptions = {
+    //         method: "GET",
+    //         redirect: "follow"
+    //     };
 
-        fetch("http://127.0.0.1:5000/testfile", requestOptions)
-            .then((response) => response.blob())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
+    //     fetch("http://127.0.0.1:5000/testfile", requestOptions)
+    //         .then((response) => response.blob())
+    //         .then((result) => console.log(result))
+    //         .catch((error) => console.error(error));
         
-    }, [])
+    // }, [])
     return (
         <div>
             <input id='testcase' type="file" onChange={e => handle(e)} />
