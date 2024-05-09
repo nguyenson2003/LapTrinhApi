@@ -16,12 +16,27 @@ import psutil
 
 rel_path = os.path.dirname(__file__)#đường dẫn tương đối
 file_path_cpp = os.path.join(rel_path, 'cppcode.cpp')
+file_path_cpp_temp=os.path.join(rel_path, 'cpptemp.cpp')
 file_path_python=os.path.join(rel_path, 'pythoncode.py')
 file_path_exe = os.path.join(rel_path, 'code.exe')
 file_path_class=os.path.join(rel_path, 'javacode.class')
 file_path_java=os.path.join(rel_path, 'javacode.java')
 
 conn = pyodbc.connect(con_str)
+
+#c++ ###################################################################################
+def check_java_package(str):
+    return re.search(r'^\s*package\s+[\w.]+\s*;', str, re.MULTILINE)
+def replace_class_name(java_code, new_class_name):
+    pattern = r'public\s+class\s+(\w+)'
+    modified_code = re.sub(pattern, f'public class {new_class_name}', java_code)
+    return modified_code
+def find_public_class(java_code):
+    match = re.search(r'public\s+class\s+(\w+)', java_code)
+    if match:
+        return match.group(1)
+    else:
+        return None
 
 app = flask.Flask(__name__)
 def executeSqlQuery(sqlQuery,*args):
@@ -97,9 +112,14 @@ def cham():
         idp=resSql["ProblemId"]
         
         language=resSql["LanguageName"]
-        language='python'
+        # language='python'
         theAnswer=resSql["TheAnswer"]
-        # theAnswer="""print(input())
+        # theAnswer="""#include<bits/stdc++.h>
+        #             using namespace std;
+
+        #             main(){
+        #                 int a;cin>>a;cout<<a;
+        #             }
         # """
         
         timeLimit=float(justExeSqlQuery(SQLGETTIMELIMBYIDP,idp)[0]['TimeLimit'])
@@ -115,40 +135,32 @@ def cham():
     except Exception as e:
         print(e)
         cham()
+    isBienDich=True
     #viết đáp án vào file tương ứng
-    if language=='cpp':
+    if language=='c/c++':
         with open(file_path_cpp, "w") as file:
             file.write(theAnswer)
-        try:
-            subprocess.run(["g++", file_path_cpp, "-o", file_path_exe])#biên dịch
-        except Exception as e:
+        subprocess.run(["g++", file_path_cpp_temp, "-o", file_path_exe])
+        temp=subprocess.run(["g++", file_path_cpp, "-o", file_path_exe])#biên dịch
+        if temp.stderr:
             state.append({'status':"CE"})
-            return state
+            isBienDich=False
     elif language=='python':
         with open(file_path_python, "w") as file:
             file.write(theAnswer)
     elif language=='java':   
         if check_java_package(theAnswer):
             state.append({'status':"CE",'e':"theAnswer chứa dòng package"})
-            return state
+            isBienDich=False
         if find_public_class(theAnswer)==None:
             state.append({'status':"CE",'e':"theAnswer không có public class <name>"})
-            return state
+            isBienDich=False
         theAnswer=replace_class_name(theAnswer,'javacode')
-        
         theAnswer='package backend;\n'+theAnswer  
         with open(file_path_java, "w") as file:
-            file.write(theAnswer)    
-        
-        #TODO: biên dịch
-        #biên dịch ở đây
-        try:
-            # subprocess.run(['javac',file_path_java],capture_output=True, text=True,timeout=5)
-            True
-        except Exception as e:
-            state.append({'status':"CE",'e':e})
-            return state    
-    TotalTime=Memory=0       
+            file.write(theAnswer)   
+    TotalTime=Memory=0
+           
     for i in range(1,numtes+1):
         #lấy dữ liệu từng file
         filein_data=zip_ref.read('in'+str(i)+'.txt').decode()
@@ -157,26 +169,29 @@ def cham():
         result=0
         execution_time = time.time()
         memory_info = psutil.Process().memory_info().rss
+        # timeLimit+=1
         try:
-            if language=='cpp':
+            if language=='c/c++':
                 result = subprocess.run([file_path_exe], input=filein_data, capture_output=True, text=True, timeout=timeLimit)
             elif language=='python':
                 result = subprocess.run(['python',file_path_python],input=filein_data,capture_output=True, text=True, timeout=timeLimit)
             elif language=='java':
                 result = subprocess.run(['javac',file_path_java],input=filein_data, capture_output=True, text=True,timeout=timeLimit)
+            
             execution_time=time.time()-execution_time
-            TotalTime+=execution_time
             memory_info =(psutil.Process().memory_info().rss-memory_info)/1024
+            TotalTime+=execution_time
             Memory+=memory_info
         except subprocess.TimeoutExpired:
             state.append({'test number':i,'status':"TLE","timeLimit":timeLimit}) 
-            continue  
+            continue 
+        if result==0: continue 
         if memory_info>menoLimit :
             state.append({'test number':i,'status':"MLE","memory_info":memory_info,"menoLimit":menoLimit})
             continue    
-        error = result.stderr
-        if error:
-            state.append({'test number':i,'status':'RTE','e':"a"})
+        if result.stderr:
+            state.append({'test number':i,'status':'RTE','e':result.stderr})
+            isBienDich=False
             continue 
         output = result.stdout.rstrip("\n")
         if output!=fileout_data:
@@ -200,10 +215,13 @@ def cham():
         SubStatus='AC'
     if numtes!=0:
         Point=int(cntTestAC*100.0/numtes)
-    cursor = conn.cursor()
-    cursor.execute(SQLUPDATESUB,int(Memory),TotalTime,SubStatus,Point,idsmt)
-    conn.commit()
-    print(Memory,TotalTime,SubStatus,Point)
+    if isBienDich:
+        cursor = conn.cursor()
+        cursor.execute(SQLUPDATESUB,int(Memory),TotalTime,SubStatus,Point,idsmt)
+        conn.commit()
+        print(theAnswer,state,Memory,TotalTime,SubStatus,Point)
+    else:
+        print('bien dich k thanh cong')
     cham()
 
 try:
@@ -226,18 +244,6 @@ except Exception as e:
 
 
 
-#c++ ###################################################################################
-def check_java_package(str):
-    return re.search(r'^\s*package\s+[\w.]+\s*;', str, re.MULTILINE)
-def replace_class_name(java_code, new_class_name):
-    pattern = r'public\s+class\s+(\w+)'
-    modified_code = re.sub(pattern, f'public class {new_class_name}', java_code)
-    return modified_code
-def find_public_class(java_code):
-    match = re.search(r'public\s+class\s+(\w+)', java_code)
-    if match:
-        return match.group(1)
-    else:
-        return None
+
 
 #giả sử cần chấm 1 sub có sub id=1

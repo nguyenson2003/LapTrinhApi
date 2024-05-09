@@ -1,3 +1,3 @@
 #include<bits/stdc++.h>
 using namespace std;
-main(){ int a;cin>>a;cout<<a; }
+main(){int a[10];cout<<a[100];}
