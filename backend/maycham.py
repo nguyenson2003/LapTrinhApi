@@ -8,7 +8,7 @@ import psutil
 import pyodbc
 from Main import execuleSqlEdit, justExeSqlQuery
 from SQLQuery import *
-from backend.SQLEdit import SQLUPDATESUB
+from SQLEdit import SQLUPDATESUB
 from config import con_str
 conn = pyodbc.connect(con_str)
 
@@ -36,11 +36,7 @@ def cham():
     #ngủ 3s
     time.sleep(3)
     #tìm xem bài nào chưa được chấm
-    
-    idsmt=justExeSqlQuery("select * from tblSubmissions where Point='-1'")
-    if len(idsmt)==0:
-        print("hết bài")
-    idsmt=idsmt[0]["SubmissionId"]
+    idsmt=13
     #đọc các dữ liệu cần thiết
     numtes=0
     state=[]
@@ -50,22 +46,12 @@ def cham():
     language=resSql["LanguageName"]
     # language='java'
     theAnswer=resSql["TheAnswer"]
-    # theAnswer="""
-    #     import java.util.Scanner;
-
-    #     public class a {
-    #         public static void main(String[] args) {
-    #             try (Scanner scanner = new Scanner(System.in)) {
-    #                 int x = scanner.nextInt();
-    #                 System.out.println(x);
-    #             }
-    #         }
-    #     }
-    # """
+    theAnswer="""print(input())
+    """
     # timeLimit=1
     timeLimit=float(justExeSqlQuery(SQLGETTIMELIMBYIDP,idp)[0]['TimeLimit'])
-    # menoLimit=100
     menoLimit=int(justExeSqlQuery(SQLGETTIMELIMBYIDP,idp)[0]['MemoryLimit'])
+    menoLimit=100
     
     numtes=int(justExeSqlQuery(SQLGETNUMTESBYID,idp)[0]["NumberTestcase"])
     fileZip = io.BytesIO(justExeSqlQuery(SQLGETNUMTESBYID,idp)[0]["FileZip"])
@@ -138,21 +124,7 @@ def cham():
             state.append({'test number':i,'status':"WA",'output':output,"fileout_data":fileout_data})
             continue 
         state.append({'test number':i,'status':"AC","memory_info":memory_info,"execution_time":execution_time})
+    print(state)
     
-    
-    cntTestAC=0
-    #các dữ liệu cần insert
-    Point=TotalTime=Memory=''
-    SubStatus="AC"
-    
-    for x in state:
-        if x['status']=='AC':
-            cntTestAC+=1
-            TotalTime+=x['execution_time']
-            Memory+=x['memory_info']
-        else:
-            if(SubStatus!='AC'):
-                SubStatus=x['status']
-    Point=int(cntTestAC*1.0/numtes)
-    print(execuleSqlEdit(SQLUPDATESUB,Memory,TotalTime,SubStatus,Point,idsmt))
 #giả sử cần chấm 1 sub có sub id=1
+cham()

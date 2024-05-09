@@ -85,6 +85,7 @@ def cham():
     #tìm xem bài nào chưa được chấm
     try:
         idsmt=justExeSqlQuery("select * from tblSubmissions where Point='-1'")
+        # idsmt=13
         if len(idsmt)==0:
             print("hết bài")
             cham()
@@ -96,25 +97,15 @@ def cham():
         idp=resSql["ProblemId"]
         
         language=resSql["LanguageName"]
-        # language='java'
+        language='python'
         theAnswer=resSql["TheAnswer"]
-        # theAnswer="""
-        #     import java.util.Scanner;
-
-        #     public class a {
-        #         public static void main(String[] args) {
-        #             try (Scanner scanner = new Scanner(System.in)) {
-        #                 int x = scanner.nextInt();
-        #                 System.out.println(x);
-        #             }
-        #         }
-        #     }
+        # theAnswer="""print(input())
         # """
-        # timeLimit=1
         
         timeLimit=float(justExeSqlQuery(SQLGETTIMELIMBYIDP,idp)[0]['TimeLimit'])
-        # menoLimit=100
+        # timeLimit=1
         menoLimit=int(justExeSqlQuery(SQLGETTIMELIMBYIDP,idp)[0]['MemoryLimit'])
+        menoLimit=100
         
         numtes=int(justExeSqlQuery(SQLGETNUMTESBYID,idp)[0]["NumberTestcase"])
         fileZip = io.BytesIO(justExeSqlQuery(SQLGETNUMTESBYID,idp)[0]["FileZip"])
@@ -157,7 +148,7 @@ def cham():
         except Exception as e:
             state.append({'status':"CE",'e':e})
             return state    
-            
+    TotalTime=Memory=0       
     for i in range(1,numtes+1):
         #lấy dữ liệu từng file
         filein_data=zip_ref.read('in'+str(i)+'.txt').decode()
@@ -174,7 +165,9 @@ def cham():
             elif language=='java':
                 result = subprocess.run(['javac',file_path_java],input=filein_data, capture_output=True, text=True,timeout=timeLimit)
             execution_time=time.time()-execution_time
+            TotalTime+=execution_time
             memory_info =(psutil.Process().memory_info().rss-memory_info)/1024
+            Memory+=memory_info
         except subprocess.TimeoutExpired:
             state.append({'test number':i,'status':"TLE","timeLimit":timeLimit}) 
             continue  
@@ -185,7 +178,7 @@ def cham():
         if error:
             state.append({'test number':i,'status':'RTE','e':"a"})
             continue 
-        output = result.stdout
+        output = result.stdout.rstrip("\n")
         if output!=fileout_data:
             state.append({'test number':i,'status':"WA",'output':output,"fileout_data":fileout_data})
             continue 
@@ -194,20 +187,23 @@ def cham():
     
     cntTestAC=0
     #các dữ liệu cần insert
-    Point=TotalTime=Memory=''
-    SubStatus="AC"
-    
+    Point=""
+    SubStatus=''
     for x in state:
         if x['status']=='AC':
             cntTestAC+=1
-            TotalTime+=x['execution_time']
-            Memory+=x['memory_info']
+            
         else:
-            if(SubStatus!='AC'):
+            if SubStatus=='':
                 SubStatus=x['status']
-    Point=int(cntTestAC*1.0/numtes)
-    execuleSqlEdit(SQLUPDATESUB,Memory,TotalTime,SubStatus,Point,idsmt)
-    print("thành công")
+    if cntTestAC==numtes:
+        SubStatus='AC'
+    if numtes!=0:
+        Point=int(cntTestAC*100.0/numtes)
+    cursor = conn.cursor()
+    cursor.execute(SQLUPDATESUB,int(Memory),TotalTime,SubStatus,Point,idsmt)
+    conn.commit()
+    print(Memory,TotalTime,SubStatus,Point)
     cham()
 
 try:
