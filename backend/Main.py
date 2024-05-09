@@ -112,14 +112,9 @@ def cham():
         idp=resSql["ProblemId"]
         
         language=resSql["LanguageName"]
-        # language='python'
+        # language='c/c++'
         theAnswer=resSql["TheAnswer"]
-        # theAnswer="""#include<bits/stdc++.h>
-        #             using namespace std;
-
-        #             main(){
-        #                 int a;cin>>a;cout<<a;
-        #             }
+        # theAnswer="""//some code
         # """
         
         timeLimit=float(justExeSqlQuery(SQLGETTIMELIMBYIDP,idp)[0]['TimeLimit'])
@@ -142,7 +137,8 @@ def cham():
             file.write(theAnswer)
         subprocess.run(["g++", file_path_cpp_temp, "-o", file_path_exe])
         temp=subprocess.run(["g++", file_path_cpp, "-o", file_path_exe])#biên dịch
-        if temp.stderr:
+        print(temp.returncode)
+        if temp.returncode!=0:
             state.append({'status':"CE"})
             isBienDich=False
     elif language=='python':
@@ -160,8 +156,9 @@ def cham():
         with open(file_path_java, "w") as file:
             file.write(theAnswer)   
     TotalTime=Memory=0
-           
+      
     for i in range(1,numtes+1):
+        if not isBienDich: continue
         #lấy dữ liệu từng file
         filein_data=zip_ref.read('in'+str(i)+'.txt').decode()
         fileout_data=zip_ref.read('in'+str(i)+'.txt').decode()
@@ -221,6 +218,9 @@ def cham():
         conn.commit()
         print(theAnswer,state,Memory,TotalTime,SubStatus,Point)
     else:
+        cursor = conn.cursor()
+        cursor.execute('delete from tblSubmissions where tblSubmissions.SubmissionId=?',idsmt)
+        conn.commit()
         print('bien dich k thanh cong')
     cham()
 
