@@ -110,12 +110,10 @@ SQLGETINFACCOUNT="""
     tblAccount.FullName,
 	a.TotalSubmit,
 	a.TotalSubAC,
-	b.TotalProblemAC,
-	a.RateAC
+	b.TotalProblemAC
 from tblAccount,
 	(select count(tblSubmissions.SubmissionId) as TotalSubmit,
-		count(case when tblSubmissions.SubStatus like '%AC%' then 1 end) as TotalSubAC,
-		concat(count(case when tblSubmissions.SubStatus like '%AC%' then 1 end)*100/count(tblSubmissions.SubmissionId),'%') as RateAC
+		count(case when tblSubmissions.SubStatus like '%AC%' then 1 end) as TotalSubAC
 	from tblSubmissions
 	where tblSubmissions.UserName like ?) a,
 	(select count(ProblemId) as TotalProblemAC 

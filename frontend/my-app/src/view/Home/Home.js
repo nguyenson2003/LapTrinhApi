@@ -1,40 +1,25 @@
 import { useEffect } from 'react'
 export default function Home() {
-    function handle(e) {
-        var input = document.querySelector('#testcase')
-        let f = input.files[0];
-        if (f == null) return;
-        // console.log(input.files[0])
-        var data = new FormData()
-        data.append('ProblemId', 'pb2')
-        data.append('file', input.files[0])
-
-        const requestOptions = {
-            method: "POST",
-            body: data,
-            redirect: "follow"
-        };
-
-        fetch("http://127.0.0.1:5000/testfile", requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
-    }
-    // useEffect(() => {
-    //     const requestOptions = {
-    //         method: "GET",
-    //         redirect: "follow"
-    //     };
-
-    //     fetch("http://127.0.0.1:5000/testfile", requestOptions)
-    //         .then((response) => response.blob())
-    //         .then((result) => console.log(result))
-    //         .catch((error) => console.error(error));
-        
-    // }, [])
     return (
-        <div>
-            <input id='testcase' type="file" onChange={e => handle(e)} />
+        <div className="ivu-row" style={{ marginLeft: '-9px', marginRight: '-9px' }}>
+            <div className="ivu-col ivu-col-span-24" style={{ paddingLeft: '9px', paddingRight: '9px' }}>
+                <div className="ivu-card ">
+                    <div className="ivu-card-head">
+                        <div className="text-center">
+                            <h2>
+                                Chào mừng các bạn đến với MSC OJ
+                            </h2>
+                        </div>
+                    </div>
+                    <div className="ivu-card-body">
+                        <p>Đây là trang web chấm bài trực tuyến</p>
+                        <p>Để sử dụng các tính năng của trang web, hãy đăng ký một tài khoản mới. Nếu đã có tài khoản, ấn nút đăng nhập</p>
+                        <p>Bấm nút bài tập để xem và làm các bài tập trên trang web</p>
+                        <p>Xem kết quả bài làm ở mục bài nộp</p>
+                        <p>Mở bảng xếp hạng để kiểm tra thứ hạng của mình</p>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

@@ -36,7 +36,7 @@ export default function Nav() {
                         MSC OJ
                     </div>
                     <NavItem to="/" text="Trang chủ" fa="fa-home" />
-                    <NavItem to="/problems" text="Các vấn đề" fa="fa-list" />
+                    <NavItem to="/problems" text="Các bài tập" fa="fa-list" />
                     <NavItem to="/submissions" text="Bài nộp" fa="fa-sliders" />
                     <NavItem to="/rank" text="Bảng xếp hạng" fa="fa-ranking-star" />
                     {/* <NavItem to="/contests" text="Cuộc thi" fa="fa-trophy" /> */}
@@ -88,6 +88,7 @@ function NavLogin({ user }) {
                     {user}
                 </button>
                 <ul class="dropdown-menu">
+                    <li><Link to={'/user/'+user}><button class="dropdown-item btn">Thông tin</button></Link></li>
                     <li><button class="dropdown-item btn" onClick={logout}>Đăng xuất</button></li>
                 </ul>
             </div>

@@ -117,7 +117,7 @@ export default function UserProfile() {
                         <br></br>
                         <h5>Tỷ lệ nộp bài AC:</h5>
                         <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar bg-success" style={{ width: userData.RateAC }}>{userData.RateAC}</div>
+                            <div class="progress-bar bg-success" style={{ width: userData.TotalSubmit==0?'0':(userData.TotalSubAC/userData.TotalSubmit*100+"%") }}>{userData.TotalSubmit==0?'0':(userData.TotalSubAC/userData.TotalSubmit*100+"%")}</div>
                         </div>
                     </div>
                 </div>
