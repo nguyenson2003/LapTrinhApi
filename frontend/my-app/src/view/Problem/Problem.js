@@ -11,14 +11,15 @@ export default function Problem() {
     const hashId = useLocation().hash;
     let [problemData, setProblemData] = useState(null)
     let [text, setText] = useState('');
-    let [lang, setLang] = useState({ id: 'cpp', name: 'C++ 11' });
+    const [mess, setMess] = useState('')
+    let [lang, setLang] = useState({ id: 'c/c++', name: 'C++ 11' });
     fetch(filemd)
         .then(res => res.text())
         .then(text => setText(text));
     const langDemo = [
-        { id: 'cpp', name: 'C++ 11' },
+        { id: 'c/c++', name: 'C++ 11' },
         { id: 'java', name: 'Java 17' },
-        { id: 'py', name: 'Python 3' },
+        { id: 'python', name: 'Python 3' },
     ]
     useEffect(() => {
         setTimeout(() => {
@@ -56,7 +57,7 @@ export default function Problem() {
     }
 
     function getCode() {
-        return(editorRef.current.getValue());
+        return (editorRef.current.getValue());
     }
     function scorllToSubmit() {
         const element = document.getElementById('editor');
@@ -64,14 +65,36 @@ export default function Problem() {
             element.scrollIntoView();
         }
     }
-    function submitCode(){
+    function submitCode() {
         let param = {}
         let username = localStorage.getItem('username')
-        if(username=='' || username==null)return;
-        param['ProblemInContestId']=
-        param['UserName']=username
-        param['LanguageName']=lang.id
-        param['TheAnswer']=getCode();
+        if (username == '' || username == null) return;
+        param['ProblemInContestId'] = id
+        param['UserName'] = username
+        console.log(username)
+        param['LanguageName'] = lang.id
+        param['TheAnswer'] = getCode();
+        let raw = JSON.stringify(param)
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+        fetch("http://127.0.0.1:5000/submissions", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                let mss = JSON.parse(result).mess
+                if (mss == 'success') {
+                    window.location.href = '/submissions';
+                } else {
+                    setMess(mss)
+                }
+
+            })
+            .catch((error) => console.error(error));
 
     }
     return (
@@ -115,8 +138,9 @@ export default function Problem() {
                                     onMount={handleEditorDidMount}
                                 />
                             </div>
+                            <div className="text-danger">{mess}</div>
                             <div className="text-end mt-3">
-                                <button type="button" className="btn btn-primary" onClick={(e)=>submitCode()}>Nộp bài</button>
+                                <button type="button" className="btn btn-primary" onClick={(e) => submitCode()}>Nộp bài</button>
                             </div>
                         </div>
                     </div>
@@ -128,7 +152,7 @@ export default function Problem() {
                     <div className="ivu-card-head d-flex justify-content-between align-items-center">
                         <h3>Bài nộp</h3>
                         <div className="">
-                            <Link to={'/submissions?problemId='+id}>Tất cả</Link> | <Link >Của tôi</Link>
+                            <Link to={'/submissions?problemId=' + id}>Tất cả</Link> | <Link >Của tôi</Link>
                         </div>
 
                     </div>
